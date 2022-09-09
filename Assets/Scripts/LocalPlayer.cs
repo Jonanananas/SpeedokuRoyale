@@ -19,4 +19,10 @@ public class LocalPlayer : MonoBehaviour {
     public void SetLocalPlayerProfile(PlayerProfile profile) {
         this.profile = profile;
     }
+    public void IncrementVictories() {
+        profile.victories++;
+        if (GameStates.isOnlineMode) {
+            ServerUser.Instance.UpdateVictories(profile.username, profile.victories);
+        }
+    }
 }

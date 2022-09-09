@@ -3,9 +3,10 @@
 using UnityEngine;
 using UnityEngine.Networking;
 using SimpleJSON;
+using System;
 
-public class ServerConnection : MonoBehaviour {
-    public static ServerConnection Instance;
+public class ServerUser : MonoBehaviour {
+    public static ServerUser Instance;
     void Awake() {
         #region Singleton
         if (Instance != null) {
@@ -25,12 +26,23 @@ public class ServerConnection : MonoBehaviour {
         if (WasRequestSuccesful(req)) {
             JSONNode json = JSONNode.Parse(req.downloadHandler.text);
 
-            LocalPlayer.Instance.SetLocalPlayerProfile(new PlayerProfile(
-                json["username"].Value,
-                json["password"].Value,
-                json["bestScore"].Value
-            ));
-            Debug.Log("Login successful!");
+            int bestScore;
+            int victories;
+
+            if (Int32.TryParse(json["victories"].Value, out victories) &&
+                Int32.TryParse(json["bestScore"].Value, out bestScore)
+            ) {
+                LocalPlayer.Instance.SetLocalPlayerProfile(new PlayerProfile(
+                    json["username"].Value,
+                    json["password"].Value,
+                    bestScore,
+                    victories
+                ));
+                Debug.Log("Login successful!");
+            }
+            else {
+                Debug.Log("Failed to parse user profile int data!");
+            }
         }
         else {
             Debug.Log("Error logging in!");
@@ -65,7 +77,7 @@ public class ServerConnection : MonoBehaviour {
         yield return req.SendWebRequest();
         WasRequestSuccesful(req);
     }
-    public IEnumerator UpdateUserBestScore(string username, int score) {
+    public IEnumerator UpdateBestScore(string username, int score) {
         string url = "";
         JSONObject json = new JSONObject();
         json.Add("bestScore", score);
@@ -79,7 +91,21 @@ public class ServerConnection : MonoBehaviour {
         yield return req.SendWebRequest();
         WasRequestSuccesful(req);
     }
-    public IEnumerator ChangeUserPassword(string username, string password, string newPassword) {
+    public IEnumerator UpdateVictories(string username, int victories) {
+        string url = "";
+        JSONObject json = new JSONObject();
+        json.Add("victories", victories);
+
+        UnityWebRequest req = new UnityWebRequest($"{url}?username={username}", "PATCH");
+        byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json.ToString());
+        req.uploadHandler = new UploadHandlerRaw(jsonToSend);
+        req.downloadHandler = new DownloadHandlerBuffer();
+        req.SetRequestHeader("Content-Type", "application/json");
+
+        yield return req.SendWebRequest();
+        WasRequestSuccesful(req);
+    }
+    public IEnumerator ChangePassword(string username, string password, string newPassword) {
         string url = "";
         JSONObject json = new JSONObject();
         json.Add("newPassword", newPassword);
