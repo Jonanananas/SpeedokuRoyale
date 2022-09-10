@@ -1,6 +1,4 @@
-﻿#define ENABLE_LOGS
-
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 using UnityEngine;
 public static class Trace {
