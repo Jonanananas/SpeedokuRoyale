@@ -34,7 +34,6 @@ public class ServerUser : MonoBehaviour {
             ) {
                 LocalPlayer.Instance.SetLocalPlayerProfile(new PlayerProfile(
                     json["username"].Value,
-                    json["password"].Value,
                     bestScore,
                     victories
                 ));
