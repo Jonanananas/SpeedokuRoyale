@@ -37,5 +37,8 @@ public class LocalPlayer : MonoBehaviour {
     }
     public void ResetPoints() {
         points = 0;
+        if (GameStates.isOnlineMode) {
+            ServerUser.Instance.UpdateCurrentScore(profile.username, points);
+        }
     }
 }
