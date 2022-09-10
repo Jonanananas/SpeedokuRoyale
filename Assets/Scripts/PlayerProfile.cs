@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class PlayerProfile {
     public string username, password;
-    public int bestScore, victories;
+    public ulong bestScore, victories;
 
-    public PlayerProfile(string username, string password, int bestScore, int victories) {
+    public PlayerProfile(string username, string password, ulong bestScore, ulong victories) {
         this.username = username;
         this.password = password;
         this.bestScore = bestScore;

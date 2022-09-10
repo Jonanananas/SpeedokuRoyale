@@ -8,15 +8,15 @@ public class Timer : MonoBehaviour {
     public long timeLimit = 30000L;
     public string text { get; private set; }
     public long timeLong { get; private set; }
-    public bool timerRunning { get; private set; }
+    public bool isRunning { get; private set; }
     public void StartTimer() {
-        if (timerRunning == false) {
+        if (isRunning == false) {
             timeLong = timeLimit;
-            timerRunning = true;
+            isRunning = true;
         }
     }
     public void StopTimer() {
-        timerRunning = false;
+        isRunning = false;
     }
     void Awake() {
         #region Singleton
@@ -31,7 +31,7 @@ public class Timer : MonoBehaviour {
         text = "5:00:00";
     }
     void FixedUpdate() {
-        if (timerRunning) {
+        if (isRunning) {
             timeLong--;
             UpdateTimerText();
         }

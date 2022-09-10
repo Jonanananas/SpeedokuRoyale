@@ -26,11 +26,11 @@ public class ServerUser : MonoBehaviour {
         if (WasRequestSuccesful(req)) {
             JSONNode json = JSONNode.Parse(req.downloadHandler.text);
 
-            int bestScore;
-            int victories;
+            ulong bestScore;
+            ulong victories;
 
-            if (Int32.TryParse(json["victories"].Value, out victories) &&
-                Int32.TryParse(json["bestScore"].Value, out bestScore)
+            if (UInt64.TryParse(json["victories"].Value, out victories) &&
+                UInt64.TryParse(json["bestScore"].Value, out bestScore)
             ) {
                 LocalPlayer.Instance.SetLocalPlayerProfile(new PlayerProfile(
                     json["username"].Value,
@@ -41,7 +41,7 @@ public class ServerUser : MonoBehaviour {
                 Debug.Log("Login successful!");
             }
             else {
-                Debug.Log("Failed to parse user profile int data!");
+                Debug.Log("Failed to parse numerical user profile data!");
             }
         }
         else {
@@ -77,7 +77,7 @@ public class ServerUser : MonoBehaviour {
         yield return req.SendWebRequest();
         WasRequestSuccesful(req);
     }
-    public IEnumerator UpdateBestScore(string username, int score) {
+    public IEnumerator UpdateBestScore(string username, ulong score) {
         string url = "";
         JSONObject json = new JSONObject();
         json.Add("bestScore", score);
@@ -91,10 +91,24 @@ public class ServerUser : MonoBehaviour {
         yield return req.SendWebRequest();
         WasRequestSuccesful(req);
     }
-    public IEnumerator UpdateVictories(string username, int victories) {
+    public IEnumerator UpdateVictories(string username, ulong victories) {
         string url = "";
         JSONObject json = new JSONObject();
         json.Add("victories", victories);
+
+        UnityWebRequest req = new UnityWebRequest($"{url}?username={username}", "PATCH");
+        byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json.ToString());
+        req.uploadHandler = new UploadHandlerRaw(jsonToSend);
+        req.downloadHandler = new DownloadHandlerBuffer();
+        req.SetRequestHeader("Content-Type", "application/json");
+
+        yield return req.SendWebRequest();
+        WasRequestSuccesful(req);
+    }
+    public IEnumerator UpdateCurrentScore(string username, ulong score) {
+        string url = "";
+        JSONObject json = new JSONObject();
+        json.Add("currentScore", score);
 
         UnityWebRequest req = new UnityWebRequest($"{url}?username={username}", "PATCH");
         byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json.ToString());
