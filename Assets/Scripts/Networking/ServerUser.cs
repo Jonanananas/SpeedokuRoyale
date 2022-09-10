@@ -10,7 +10,7 @@ public class ServerUser : MonoBehaviour {
     void Awake() {
         #region Singleton
         if (Instance != null) {
-            Debug.LogWarning("More than one instance of " + this.GetType().Name + " found!");
+            Trace.LogError("More than one instance of " + this.GetType().Name + " found!");
             return;
         }
         Instance = this;
@@ -38,14 +38,14 @@ public class ServerUser : MonoBehaviour {
                     bestScore,
                     victories
                 ));
-                Debug.Log("Login successful!");
+                Trace.Log("Login successful!");
             }
             else {
-                Debug.Log("Failed to parse numerical user profile data!");
+                Trace.LogError("Failed to parse numerical user profile data!");
             }
         }
         else {
-            Debug.Log("Error logging in!");
+            Trace.LogError("Error logging in!");
         }
     }
     public IEnumerator LogOut(string username) {
@@ -55,11 +55,11 @@ public class ServerUser : MonoBehaviour {
 
         yield return req.SendWebRequest();
         if (WasRequestSuccesful(req)) {
-            Debug.Log("Logout successful!");
+            Trace.Log("Logout successful!");
             // TODO: Log the user out
         }
         else {
-            Debug.Log("Error logging out!");
+            Trace.LogError("Error logging out!");
         }
     }
     public IEnumerator CreateUser(string username, string password) {
@@ -135,12 +135,12 @@ public class ServerUser : MonoBehaviour {
     }
     bool WasRequestSuccesful(UnityWebRequest req) {
         if (req.isNetworkError || req.isHttpError) {
-            Debug.Log(req.error);
-            Debug.Log(req.downloadHandler.text);
+            Trace.LogError(req.error);
+            Trace.LogError(req.downloadHandler.text);
             return false;
         }
         else {
-            Debug.Log("Request complete: " + req.downloadHandler.text);
+            Trace.Log("Request complete: " + req.downloadHandler.text);
             return true;
         }
     }

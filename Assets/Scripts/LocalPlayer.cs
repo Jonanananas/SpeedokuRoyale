@@ -11,7 +11,7 @@ public class LocalPlayer : MonoBehaviour {
     void Awake() {
         #region Singleton
         if (Instance != null) {
-            Debug.LogWarning("More than one instance of " + this.GetType().Name + " found!");
+            Trace.LogWarning("More than one instance of " + this.GetType().Name + " found!");
             return;
         }
         Instance = this;
