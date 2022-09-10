@@ -12,6 +12,6 @@ public class TestScriptJonathan : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         Timer.Instance.StartTimer();
-        print(Timer.Instance.text);
+        Trace.Log(Timer.Instance.text);
     }
 }
