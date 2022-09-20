@@ -18,8 +18,18 @@ public class ServerUser : MonoBehaviour {
     }
     public IEnumerator LogIn(string username, string password) {
         string url = "";
-        UnityWebRequest req = new UnityWebRequest($"{url}?username={username}&password={password}", "PATCH");
-        req.downloadHandler = new DownloadHandlerBuffer();
+
+        byte[] passwordBytes = HashPassword.Hash(password);
+
+        WWWForm form = new WWWForm();
+        form.AddField("username", username);
+        form.AddBinaryData("password", passwordBytes);
+
+        UnityWebRequest req = UnityWebRequest.Put($"{url}", form.data);
+
+        foreach (var header in form.headers) {
+            req.SetRequestHeader(header.Key, header.Value);
+        }
 
         yield return req.SendWebRequest();
 
@@ -46,10 +56,12 @@ public class ServerUser : MonoBehaviour {
         else {
             Trace.LogError("Error logging in!");
         }
+
+        req.Dispose();
     }
     public IEnumerator LogOut(string username) {
         string url = "";
-        UnityWebRequest req = new UnityWebRequest($"{url}?username={username}", "PATCH");
+        UnityWebRequest req = new UnityWebRequest($"{url}?username={username}", "PUT");
         req.downloadHandler = new DownloadHandlerBuffer();
 
         yield return req.SendWebRequest();
@@ -60,77 +72,86 @@ public class ServerUser : MonoBehaviour {
         else {
             Trace.LogError("Error logging out!");
         }
+
+        req.Dispose();
     }
     public IEnumerator CreateUser(string username, string password) {
         string url = "";
-        JSONObject json = new JSONObject();
-        json.Add("username", username);
-        json.Add("password", password);
 
-        UnityWebRequest req = new UnityWebRequest($"{url}", "POST");
-        byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json.ToString());
-        req.uploadHandler = new UploadHandlerRaw(jsonToSend);
-        req.downloadHandler = new DownloadHandlerBuffer();
-        req.SetRequestHeader("Content-Type", "application/json");
+        byte[] passwordBytes = HashPassword.Hash(password);
+
+        WWWForm form = new WWWForm();
+        form.AddField("username", username);
+        form.AddBinaryData("password", passwordBytes);
+
+        UnityWebRequest req = UnityWebRequest.Post($"{url}", form);
 
         yield return req.SendWebRequest();
         WasRequestSuccesful(req);
+
+        req.Dispose();
     }
     public IEnumerator UpdateBestScore(string username, ulong score) {
         string url = "";
         JSONObject json = new JSONObject();
         json.Add("bestScore", score);
 
-        UnityWebRequest req = new UnityWebRequest($"{url}?username={username}", "PATCH");
-        byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json.ToString());
-        req.uploadHandler = new UploadHandlerRaw(jsonToSend);
-        req.downloadHandler = new DownloadHandlerBuffer();
+        UnityWebRequest req = UnityWebRequest.Put($"{url}?username={username}", json);
         req.SetRequestHeader("Content-Type", "application/json");
 
         yield return req.SendWebRequest();
         WasRequestSuccesful(req);
+
+        req.Dispose();
     }
     public IEnumerator UpdateVictories(string username, ulong victories) {
         string url = "";
         JSONObject json = new JSONObject();
         json.Add("victories", victories);
 
-        UnityWebRequest req = new UnityWebRequest($"{url}?username={username}", "PATCH");
-        byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json.ToString());
-        req.uploadHandler = new UploadHandlerRaw(jsonToSend);
-        req.downloadHandler = new DownloadHandlerBuffer();
+        UnityWebRequest req = UnityWebRequest.Put($"{url}?username={username}", json);
         req.SetRequestHeader("Content-Type", "application/json");
+        // req.method = "PATCH";
 
         yield return req.SendWebRequest();
         WasRequestSuccesful(req);
+
+        req.Dispose();
     }
     public IEnumerator UpdateCurrentScore(string username, ulong score) {
         string url = "";
         JSONObject json = new JSONObject();
         json.Add("currentScore", score);
 
-        UnityWebRequest req = new UnityWebRequest($"{url}?username={username}", "PATCH");
-        byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json.ToString());
-        req.uploadHandler = new UploadHandlerRaw(jsonToSend);
-        req.downloadHandler = new DownloadHandlerBuffer();
+        UnityWebRequest req = UnityWebRequest.Put($"{url}?username={username}", json);
         req.SetRequestHeader("Content-Type", "application/json");
 
         yield return req.SendWebRequest();
         WasRequestSuccesful(req);
+
+        req.Dispose();
     }
     public IEnumerator ChangePassword(string username, string password, string newPassword) {
         string url = "";
-        JSONObject json = new JSONObject();
-        json.Add("newPassword", newPassword);
 
-        UnityWebRequest req = new UnityWebRequest($"{url}?username={username}&password={password}", "PATCH");
-        byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json.ToString());
-        req.uploadHandler = new UploadHandlerRaw(jsonToSend);
-        req.downloadHandler = new DownloadHandlerBuffer();
-        req.SetRequestHeader("Content-Type", "application/json");
+        byte[] passwordBytes = HashPassword.Hash(password);
+        byte[] newPasswordBytes = HashPassword.Hash(newPassword);
+
+        WWWForm form = new WWWForm();
+        form.AddField("username", username);
+        form.AddBinaryData("password", passwordBytes);
+        form.AddBinaryData("newPassword", newPasswordBytes);
+
+        UnityWebRequest req = UnityWebRequest.Put($"{url}", form.data);
+
+        foreach (var header in form.headers) {
+            req.SetRequestHeader(header.Key, header.Value);
+        }
 
         yield return req.SendWebRequest();
         WasRequestSuccesful(req);
+
+        req.Dispose();
     }
     bool WasRequestSuccesful(UnityWebRequest req) {
         if (req.isNetworkError || req.isHttpError) {
