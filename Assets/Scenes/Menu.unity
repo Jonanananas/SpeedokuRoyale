@@ -420,7 +420,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &322970259
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4176,8 +4176,9 @@ GameObject:
   - component: {fileID: 1200905490}
   - component: {fileID: 1200905489}
   - component: {fileID: 1200905488}
+  - component: {fileID: 1200905491}
   m_Layer: 5
-  m_Name: Login Button
+  m_Name: Register Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4286,6 +4287,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1200905486}
   m_CullTransparentMesh: 0
+--- !u!114 &1200905491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1200905486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b14f4f03ab90744c9d7e4a8fba8ec16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  usernameInField: {fileID: 1812052077}
+  passwordInField: {fileID: 1425241257}
+  passwordRepeatInField: {fileID: 1797545198}
 --- !u!1 &1229773126
 GameObject:
   m_ObjectHideFlags: 0
@@ -4421,8 +4437,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8bf93c4d7a62874d9d68257eb35eddb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  usernameInputField: {fileID: 2056476244}
-  passwordInputField: {fileID: 1552403646}
+  usernameInField: {fileID: 2056476244}
+  passwordInField: {fileID: 1552403646}
 --- !u!1 &1237109192
 GameObject:
   m_ObjectHideFlags: 0
@@ -7039,7 +7055,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1662898794
 RectTransform:
   m_ObjectHideFlags: 0

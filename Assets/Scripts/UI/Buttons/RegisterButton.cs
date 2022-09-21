@@ -5,8 +5,8 @@ using UnityEngine.UI;
 using TMPro;
 
 [RequireComponent(typeof(Button))]
-public class LoginButton : MonoBehaviour, IPointerUpHandler {
-    [SerializeField] TMP_InputField usernameInField, passwordInField;
+public class RegisterButton : MonoBehaviour, IPointerUpHandler {
+    [SerializeField] TMP_InputField usernameInField, passwordInField, passwordRepeatInField;
     int minimumInputLength = GlobalVariables.minimumInputLength;
     Button btn;
     void Start() {
@@ -18,11 +18,15 @@ public class LoginButton : MonoBehaviour, IPointerUpHandler {
     void TryToPress() {
         if (!btn.interactable) return;
         if (usernameInField.text.Length < minimumInputLength ||
-            passwordInField.text.Length < minimumInputLength) {
+            passwordInField.text.Length < minimumInputLength ||
+            passwordRepeatInField.text.Length < minimumInputLength) {
             Trace.Log($"Your username and password must be atleast {minimumInputLength} characters long.");
             return;
         }
-
-        StartCoroutine(ServerUser.Instance.LogIn(usernameInField.text, passwordInField.text));
+        if (!passwordInField.text.Equals(passwordRepeatInField.text)) {
+            Trace.Log("Input passwords don't match.");
+            return;
+        }
+        StartCoroutine(ServerUser.Instance.CreateUser(usernameInField.text, passwordInField.text));
     }
 }
