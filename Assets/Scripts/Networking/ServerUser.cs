@@ -17,6 +17,9 @@ public class ServerUser : MonoBehaviour {
         #endregion
     }
     public IEnumerator LogIn(string username, string password) {
+
+        Trace.Log("username: " + username + "password: " + password);
+
         string url = "";
 
         byte[] passwordBytes = HashPassword.Hash(password);
