@@ -11,10 +11,13 @@ public class LocalPlayer : MonoBehaviour {
     void Awake() {
         #region Singleton
         if (Instance != null) {
-            Trace.LogWarning("More than one instance of " + this.GetType().Name + " found!");
+            Destroy(gameObject);
+            // Trace.LogWarning("More than one instance of " + this.GetType().Name + " found!");
             return;
         }
         Instance = this;
+        // Don't destroy this gameobject on load
+        DontDestroyOnLoad(gameObject);
         #endregion
     }
     public void SetLocalPlayerProfile(PlayerProfile profile) {
@@ -23,12 +26,14 @@ public class LocalPlayer : MonoBehaviour {
     public void IncrementVictories() {
         profile.victories++;
         if (GameStates.isOnlineMode) {
+            if (profile == null) { Trace.LogError("Not logged in!"); return; }
             ServerUser.Instance.UpdateVictories(profile.username, profile.victories);
         }
     }
     public void AddPoints(ulong pointsToAdd) {
         points += pointsToAdd;
         if (GameStates.isOnlineMode) {
+            if (profile == null) { Trace.LogError("Not logged in!"); return; }
             ServerUser.Instance.UpdateCurrentScore(profile.username, points);
         }
     }
@@ -38,6 +43,7 @@ public class LocalPlayer : MonoBehaviour {
     public void ResetPoints() {
         points = 0;
         if (GameStates.isOnlineMode) {
+            if (profile == null) { Trace.LogError("Not logged in!"); return; }
             ServerUser.Instance.UpdateCurrentScore(profile.username, points);
         }
     }
