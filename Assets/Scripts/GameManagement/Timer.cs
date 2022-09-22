@@ -33,7 +33,7 @@ public class Timer : MonoBehaviour {
     void FixedUpdate() {
         if (isRunning) {
             if (timeLong == 0) {
-                ManageGame.Instance.WinGame();
+                ManageGameSession.Instance.WinGame();
             }
             timeLong--;
             UpdateTimerText();

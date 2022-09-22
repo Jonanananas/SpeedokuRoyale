@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class ManageGame : MonoBehaviour {
-    public static ManageGame Instance;
+public class ManageGameSession : MonoBehaviour {
+    public static ManageGameSession Instance;
     void Awake() {
         #region Singleton
         if (Instance != null) {
