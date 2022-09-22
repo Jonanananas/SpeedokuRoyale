@@ -18,7 +18,7 @@ public class RemoveMissingScriptsFromScenes : ScriptableWizard {
 
             Scene openScene = EditorSceneManager.OpenScene(path);
 
-            Object[] sceneObjects = Object.FindObjectsOfType(typeof(GameObject));
+            Object[] sceneObjects = Resources.FindObjectsOfTypeAll(typeof(GameObject));
             foreach (object obj in sceneObjects) {
                 GameObject go = (GameObject)obj;
                 Debug.Log(go);
