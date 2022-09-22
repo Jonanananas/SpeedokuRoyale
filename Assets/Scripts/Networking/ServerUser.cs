@@ -193,7 +193,7 @@ public class ServerUser : MonoBehaviour {
         req.Dispose();
     }
     bool WasRequestSuccesful(UnityWebRequest req) {
-        if (req.isNetworkError || req.isHttpError) {
+        if (req.result != UnityWebRequest.Result.Success) {
             Trace.LogError(req.error);
             Trace.LogError(req.downloadHandler.text);
             return false;

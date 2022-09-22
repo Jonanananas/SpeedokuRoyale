@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
-using System.Collections.Generic;
 
 public class RemoveMissingScriptsFromScenes : ScriptableWizard {
     public Object[] scenes;
