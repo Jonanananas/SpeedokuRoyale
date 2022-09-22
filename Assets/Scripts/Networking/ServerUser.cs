@@ -178,15 +178,16 @@ public class ServerUser : MonoBehaviour {
 
         JSONNode json = JSONNode.Parse(req.downloadHandler.text);
 
-        Dictionary<string, ulong> bestScores = new Dictionary<string, ulong>();
+        // Dictionary<string, ulong> bestScores = new Dictionary<string, ulong>();
         foreach (var profile in json) {
             ulong highscore;
             if (!UInt64.TryParse(profile.Value["score"], out highscore))
                 Trace.LogError("Error parsing score data!");
-            bestScores.Add(profile.Value["name"], highscore);
+            // bestScores.Add(profile.Value["name"], highscore);
+            ScoreManager.Instance.AddScore(new Score(profile.Value["name"], highscore));
         }
 
-        GameData.SetBestScores(bestScores);
+        // GameData.SetBestScores(bestScores);
 
         WasRequestSuccesful(req);
 

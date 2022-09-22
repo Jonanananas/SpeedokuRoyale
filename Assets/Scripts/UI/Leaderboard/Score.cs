@@ -6,9 +6,9 @@ using System;
 [Serializable]
 public class Score {
     public string name;
-    public float score;
+    public ulong score;
 
-    public Score(string name, float score) {
+    public Score(string name, ulong score) {
         this.name = name;
         this.score = score;
     }

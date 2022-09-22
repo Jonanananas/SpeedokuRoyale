@@ -6,8 +6,16 @@ using System.Linq;
 using UnityEngine;
 
 public class ScoreManager : MonoBehaviour {
+    public static ScoreManager Instance;
     private ScoreData sd;
     void Awake() {
+        #region Singleton
+        if (Instance != null) {
+            Trace.LogError("More than one instance of " + this.GetType().Name + " found!");
+            return;
+        }
+        Instance = this;
+        #endregion
         sd = new ScoreData();
     }
 
