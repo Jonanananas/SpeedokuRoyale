@@ -21,7 +21,6 @@ public class RemoveMissingScriptsFromScenes : ScriptableWizard {
             Object[] sceneObjects = Resources.FindObjectsOfTypeAll(typeof(GameObject));
             foreach (object obj in sceneObjects) {
                 GameObject go = (GameObject)obj;
-                Debug.Log(go);
                 GameObjectUtility.RemoveMonoBehavioursWithMissingScript(go);
             }
             EditorSceneManager.SaveScene(openScene);
