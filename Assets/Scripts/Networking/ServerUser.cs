@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 
 using UnityEngine;
 using UnityEngine.Networking;
@@ -21,6 +22,7 @@ public class ServerUser : MonoBehaviour {
         Trace.Log("username: " + username + "password: " + password);
 
         string url = "";
+        if (url.Equals("")) { Trace.LogWarning("URL not set!"); yield break; }
 
         byte[] passwordBytes = HashPassword.Hash(password);
 
@@ -64,6 +66,8 @@ public class ServerUser : MonoBehaviour {
     }
     public IEnumerator LogOut(string username) {
         string url = "";
+        if (url.Equals("")) { Trace.LogWarning("URL not set!"); yield break; }
+
         UnityWebRequest req = new UnityWebRequest($"{url}?username={username}", "PUT");
         req.downloadHandler = new DownloadHandlerBuffer();
 
@@ -80,6 +84,7 @@ public class ServerUser : MonoBehaviour {
     }
     public IEnumerator CreateUser(string username, string password) {
         string url = "";
+        if (url.Equals("")) { Trace.LogWarning("URL not set!"); yield break; }
 
         byte[] passwordBytes = HashPassword.Hash(password);
 
@@ -96,6 +101,8 @@ public class ServerUser : MonoBehaviour {
     }
     public IEnumerator UpdateBestScore(string username, ulong score) {
         string url = "";
+        if (url.Equals("")) { Trace.LogWarning("URL not set!"); yield break; }
+
         JSONObject json = new JSONObject();
         json.Add("bestScore", score);
 
@@ -109,6 +116,8 @@ public class ServerUser : MonoBehaviour {
     }
     public IEnumerator UpdateVictories(string username, ulong victories) {
         string url = "";
+        if (url.Equals("")) { Trace.LogWarning("URL not set!"); yield break; }
+
         JSONObject json = new JSONObject();
         json.Add("victories", victories);
 
@@ -123,6 +132,8 @@ public class ServerUser : MonoBehaviour {
     }
     public IEnumerator UpdateCurrentScore(string username, ulong score) {
         string url = "";
+        if (url.Equals("")) { Trace.LogWarning("URL not set!"); yield break; }
+
         JSONObject json = new JSONObject();
         json.Add("currentScore", score);
 
@@ -136,6 +147,7 @@ public class ServerUser : MonoBehaviour {
     }
     public IEnumerator ChangePassword(string username, string password, string newPassword) {
         string url = "";
+        if (url.Equals("")) { Trace.LogWarning("URL not set!"); yield break; }
 
         byte[] passwordBytes = HashPassword.Hash(password);
         byte[] newPasswordBytes = HashPassword.Hash(newPassword);
@@ -152,6 +164,30 @@ public class ServerUser : MonoBehaviour {
         }
 
         yield return req.SendWebRequest();
+        WasRequestSuccesful(req);
+
+        req.Dispose();
+    }
+    public IEnumerator GetLeaderboardProfiles() {
+        string url = "";
+        if (url.Equals("")) { Trace.LogWarning("URL not set!"); yield break; }
+
+        UnityWebRequest req = UnityWebRequest.Get($"{url}");
+
+        yield return req.SendWebRequest();
+
+        JSONNode json = JSONNode.Parse(req.downloadHandler.text);
+
+        Dictionary<string, ulong> bestScores = new Dictionary<string, ulong>();
+        foreach (var profile in json) {
+            ulong highscore;
+            if (!UInt64.TryParse(profile.Value["score"], out highscore))
+                Trace.LogError("Error parsing score data!");
+            bestScores.Add(profile.Value["name"], highscore);
+        }
+
+        GameData.SetBestScores(bestScores);
+
         WasRequestSuccesful(req);
 
         req.Dispose();
