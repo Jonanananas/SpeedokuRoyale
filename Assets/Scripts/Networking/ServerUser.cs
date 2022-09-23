@@ -102,7 +102,7 @@ public class ServerUser : MonoBehaviour {
 
         req.Dispose();
     }
-    public IEnumerator DeleteUser(string username, string password) {
+    public IEnumerator DeleteUserProfile(string username, string password) {
         string url = "";
         if (url.Equals("")) { Trace.LogWarning("URL not set!"); yield break; }
 
