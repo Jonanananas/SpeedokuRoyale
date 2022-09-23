@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class ManageGameSession : MonoBehaviour {
     public static ManageGameSession Instance;
+    public GameObject victoryMenu, defeatMenu;
     void Awake() {
         #region Singleton
         if (Instance != null) {
@@ -20,10 +21,12 @@ public class ManageGameSession : MonoBehaviour {
     }
     public void LoseGame() {
         Timer.Instance.StopTimer();
+        defeatMenu.SetActive(true);
         // TODO: Show placing screen etc.
     }
     public void WinGame() {
         LocalPlayer.Instance.IncrementVictories();
+        victoryMenu.SetActive(true);
         // TODO: Show victory screen etc.
     }
 }

@@ -31,12 +31,15 @@ public class Timer : MonoBehaviour {
         #endregion
     }
     void Start() {
-        textTMP.text = "5:00:00";
+        timeLong = timeLimit;
+        UpdateTimerText();
     }
     void FixedUpdate() {
         if (isRunning) {
             if (timeLong == 0) {
                 ManageGameSession.Instance.WinGame();
+                StopTimer();
+                return;
             }
             timeLong--;
             UpdateTimerText();
