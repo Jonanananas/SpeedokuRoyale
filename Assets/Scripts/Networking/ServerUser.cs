@@ -76,8 +76,8 @@ public class ServerUser : MonoBehaviour {
 
         yield return req.SendWebRequest();
         if (WasRequestSuccesful(req)) {
+            LocalPlayer.Instance.LogOut();
             Trace.Log("Logout successful!");
-            // TODO: Log the user out
         }
         else {
             Trace.LogError("Error logging out!");
@@ -99,6 +99,29 @@ public class ServerUser : MonoBehaviour {
 
         yield return req.SendWebRequest();
         WasRequestSuccesful(req);
+
+        req.Dispose();
+    }
+    public IEnumerator DeleteUser(string username, string password) {
+        string url = "";
+        if (url.Equals("")) { Trace.LogWarning("URL not set!"); yield break; }
+
+        byte[] passwordBytes = HashPassword.Hash(password);
+
+        WWWForm form = new WWWForm();
+        form.AddField("username", username);
+        form.AddBinaryData("password", passwordBytes);
+
+        UnityWebRequest req = UnityWebRequest.Post($"{url}", form);
+        req.method = "DELETE";
+        yield return req.SendWebRequest();
+        if (WasRequestSuccesful(req)) {
+            Trace.Log("Profile deletion successful!");
+            LocalPlayer.Instance.LogOut();
+        }
+        else {
+            Trace.LogError("Error deleting profile!");
+        }
 
         req.Dispose();
     }

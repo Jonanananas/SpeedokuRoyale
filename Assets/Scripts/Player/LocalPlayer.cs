@@ -47,4 +47,7 @@ public class LocalPlayer : MonoBehaviour {
             ServerUser.Instance.UpdateCurrentScore(profile.username, score);
         }
     }
+    public void LogOut() {
+        profile = null;
+    }
 }
