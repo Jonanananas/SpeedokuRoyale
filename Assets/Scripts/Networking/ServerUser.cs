@@ -87,7 +87,12 @@ public class ServerUser : MonoBehaviour {
     }
     public IEnumerator CreateUser(string username, string password) {
         string url = "";
-        if (url.Equals("")) { Trace.LogWarning("URL not set!"); yield break; }
+        if (url.Equals("")) {
+            Trace.LogWarning("URL not set!");
+            Trace.LogWarning("Creating test user.");
+            LocalPlayer.Instance.SetLocalPlayerProfile(new PlayerProfile(username, 0, 0));
+            yield break;
+        }
 
         byte[] passwordBytes = HashPassword.Hash(password);
 
