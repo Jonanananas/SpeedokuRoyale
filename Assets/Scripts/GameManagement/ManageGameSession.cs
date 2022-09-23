@@ -3,9 +3,13 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+using TMPro;
+
 public class ManageGameSession : MonoBehaviour {
     public static ManageGameSession Instance;
-    public GameObject victoryMenu, defeatMenu;
+    public GameObject gameEndMenu;
+    public TextMeshProUGUI victoryOrDefeatTMP, placementTMP, scoreTMP, user;
+    int playersLeft = 2;
     void Awake() {
         #region Singleton
         if (Instance != null) {
@@ -14,19 +18,50 @@ public class ManageGameSession : MonoBehaviour {
         }
         Instance = this;
         #endregion
+        playersLeft = 2;
     }
     public void StartGame() {
-        LocalPlayer.Instance.ResetPoints();
+        LocalPlayer.Instance.ResetScore();
         Timer.Instance.StartTimer();
     }
     public void LoseGame() {
+        EndGame();
         Timer.Instance.StopTimer();
-        defeatMenu.SetActive(true);
-        // TODO: Show placing screen etc.
+        victoryOrDefeatTMP.text = "Defeat Royale";
+        victoryOrDefeatTMP.color = Color.red;
+        SetPlacingText();
     }
     public void WinGame() {
+        EndGame();
         LocalPlayer.Instance.IncrementVictories();
-        victoryMenu.SetActive(true);
-        // TODO: Show victory screen etc.
+        victoryOrDefeatTMP.text = "Victory Royale!";
+        victoryOrDefeatTMP.color = new Color32(132, 250, 255, 255);
+        placementTMP.text = $"You placed 1st";
+    }
+    void EndGame() {
+        gameEndMenu.SetActive(true);
+        scoreTMP.text = $"Score: {LocalPlayer.Instance.GetScore()}";
+    }
+    public void EliminateOnePlayer() {
+        playersLeft--;
+    }
+    void SetPlacingText() {
+        string placementSuffix = "th";
+        int modulo = playersLeft % 10;
+        switch (modulo) {
+            case 1:
+                placementSuffix = "st";
+                break;
+            case 2:
+                placementSuffix = "nd";
+                break;
+            case 3:
+                placementSuffix = "rd";
+                break;
+        }
+        if (playersLeft % 100 >= 11 && playersLeft % 100 <= 20) {
+            placementSuffix = "th";
+        }
+        placementTMP.text = $"You placed {playersLeft}{placementSuffix}";
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 public class LocalPlayer : MonoBehaviour {
     public static LocalPlayer Instance;
     public PlayerProfile profile { get; private set; }
-    ulong points;
+    ulong score;
 
     void Awake() {
         #region Singleton
@@ -31,20 +31,20 @@ public class LocalPlayer : MonoBehaviour {
         }
     }
     public void AddPoints(ulong pointsToAdd) {
-        points += pointsToAdd;
+        score += pointsToAdd;
         if (GameStates.isOnlineMode) {
             if (profile == null) { Trace.LogWarning("Not logged in!"); return; }
-            ServerUser.Instance.UpdateCurrentScore(profile.username, points);
+            ServerUser.Instance.UpdateCurrentScore(profile.username, score);
         }
     }
-    public ulong GetPoints() {
-        return points;
+    public ulong GetScore() {
+        return score;
     }
-    public void ResetPoints() {
-        points = 0;
+    public void ResetScore() {
+        score = 0;
         if (GameStates.isOnlineMode) {
             if (profile == null) { Trace.LogWarning("Not logged in!"); return; }
-            ServerUser.Instance.UpdateCurrentScore(profile.username, points);
+            ServerUser.Instance.UpdateCurrentScore(profile.username, score);
         }
     }
 }
