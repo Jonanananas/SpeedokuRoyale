@@ -49,5 +49,6 @@ public class LocalPlayer : MonoBehaviour {
     }
     public void LogOut() {
         profile = null;
+        GameStates.SetLoggedStatus(false);
     }
 }

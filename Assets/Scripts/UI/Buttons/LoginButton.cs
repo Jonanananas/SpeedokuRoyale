@@ -6,6 +6,23 @@ using TMPro;
 
 [RequireComponent(typeof(Button))]
 public class LoginButton : MonoBehaviour, IPointerUpHandler {
+    public static LoginButton Instance;
+    void Awake() {
+        #region Singleton
+        if (Instance != null) {
+            Destroy(gameObject);
+            Trace.LogWarning("More than one instance of " + this.GetType().Name + " found!");
+            return;
+        }
+        Instance = this;
+        #endregion
+    }
+    [SerializeField] GameObject mainMenu, loginMenu;
+    public void CloseLoginMenu() {
+        // Go to main menu
+        loginMenu.SetActive(false);
+        mainMenu.SetActive(true);
+    }
     [SerializeField] TMP_InputField usernameInField, passwordInField;
     int minimumInputLength = GlobalVariables.minimumInputLength;
     Button btn;

@@ -1836,6 +1836,7 @@ GameObject:
   - component: {fileID: 451577399}
   - component: {fileID: 451577398}
   - component: {fileID: 451577397}
+  - component: {fileID: 451577400}
   m_Layer: 5
   m_Name: Login Button
   m_TagString: Untagged
@@ -1907,31 +1908,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 451577398}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 936721440}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1662898793}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &451577398
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1970,6 +1947,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 451577395}
   m_CullTransparentMesh: 0
+--- !u!114 &451577400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 451577395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1383d9fceb34b87488a7c0d3e1daac44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonTMP: {fileID: 1320164954}
+  loginMenu: {fileID: 1662898793}
+  mainMenu: {fileID: 936721440}
 --- !u!1 &469255813
 GameObject:
   m_ObjectHideFlags: 0

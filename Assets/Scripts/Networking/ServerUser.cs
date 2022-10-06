@@ -24,6 +24,11 @@ public class ServerUser : MonoBehaviour {
 
         Trace.Log("username: " + username + "password: " + password);
 
+        #region Test code without server connection
+        GameStates.SetLoggedStatus(true);
+        LoginButton.Instance.CloseLoginMenu();
+        #endregion
+
         string url = "";
         if (url.Equals("")) { Trace.LogWarning("URL not set!"); yield break; }
 
@@ -55,6 +60,8 @@ public class ServerUser : MonoBehaviour {
                     bestScore,
                     victories
                 ));
+                GameStates.SetLoggedStatus(true);
+                LoginButton.Instance.CloseLoginMenu();
                 Trace.Log("Login successful!");
             }
             else {
@@ -69,6 +76,13 @@ public class ServerUser : MonoBehaviour {
     }
     public IEnumerator LogOut(string username) {
         string url = "";
+
+        LogoutOrLoginButton.Instance.UpdateButtonText("Logging in...");
+        #region Test code without server connection
+        LocalPlayer.Instance.LogOut();
+        LogoutOrLoginButton.Instance.UpdateButtonText();
+        #endregion
+
         if (url.Equals("")) { Trace.LogWarning("URL not set!"); yield break; }
 
         UnityWebRequest req = new UnityWebRequest($"{url}?username={username}", "PUT");
@@ -77,9 +91,11 @@ public class ServerUser : MonoBehaviour {
         yield return req.SendWebRequest();
         if (WasRequestSuccesful(req)) {
             LocalPlayer.Instance.LogOut();
+            LogoutOrLoginButton.Instance.UpdateButtonText();
             Trace.Log("Logout successful!");
         }
         else {
+            LogoutOrLoginButton.Instance.UpdateButtonText("Error logging out!");
             Trace.LogError("Error logging out!");
         }
 
