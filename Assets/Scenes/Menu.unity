@@ -7661,6 +7661,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8bf93c4d7a62874d9d68257eb35eddb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainMenu: {fileID: 936721440}
+  loginMenu: {fileID: 1662898793}
   usernameInField: {fileID: 2056476244}
   passwordInField: {fileID: 1552403646}
 --- !u!1 &1237109192
