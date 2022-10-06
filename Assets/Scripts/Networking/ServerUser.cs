@@ -123,6 +123,24 @@ public class ServerUser : MonoBehaviour {
 
         req.Dispose();
     }
+    public IEnumerator JoinGameRoom() {
+        string url = "";
+        if (url.Equals("")) {
+            Trace.LogWarning("URL not set!");
+            yield break;
+        }
+
+        WWWForm form = new WWWForm();
+        form.AddField("userId", PlayerPrefs.GetString("playerId"));
+        form.AddField("userId", "testRoom");
+
+        UnityWebRequest req = UnityWebRequest.Post($"{url}", form);
+
+        yield return req.SendWebRequest();
+        WasRequestSuccesful(req);
+
+        req.Dispose();
+    }
     public IEnumerator DeleteUserProfile(string username, string password) {
         string url = "";
         if (url.Equals("")) { Trace.LogWarning("URL not set!"); yield break; }
@@ -235,6 +253,20 @@ public class ServerUser : MonoBehaviour {
         }
 
         // GameData.SetBestScores(bestScores);
+
+        WasRequestSuccesful(req);
+
+        req.Dispose();
+    }
+    public IEnumerator GetGameRoomStatus() {
+        string url = "";
+        if (url.Equals("")) { Trace.LogWarning("URL not set!"); yield break; }
+
+        UnityWebRequest req = UnityWebRequest.Get($"{url}");
+
+        yield return req.SendWebRequest();
+
+        JSONNode json = JSONNode.Parse(req.downloadHandler.text);
 
         WasRequestSuccesful(req);
 
