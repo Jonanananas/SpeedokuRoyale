@@ -8,6 +8,7 @@ using System;
 
 public class ServerUser : MonoBehaviour {
     public static ServerUser Instance;
+    bool gameStarted;
     void Awake() {
         #region Singleton
         if (Instance != null) {
@@ -20,6 +21,7 @@ public class ServerUser : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
         #endregion
     }
+    #region Profile methods
     public IEnumerator LogIn(string username, string password) {
 
         Trace.Log("username: " + username + "password: " + password);
@@ -115,24 +117,6 @@ public class ServerUser : MonoBehaviour {
         WWWForm form = new WWWForm();
         form.AddField("username", username);
         form.AddBinaryData("password", passwordBytes);
-
-        UnityWebRequest req = UnityWebRequest.Post($"{url}", form);
-
-        yield return req.SendWebRequest();
-        WasRequestSuccesful(req);
-
-        req.Dispose();
-    }
-    public IEnumerator JoinGameRoom() {
-        string url = "";
-        if (url.Equals("")) {
-            Trace.LogWarning("URL not set!");
-            yield break;
-        }
-
-        WWWForm form = new WWWForm();
-        form.AddField("userId", PlayerPrefs.GetString("playerId"));
-        form.AddField("userId", "testRoom");
 
         UnityWebRequest req = UnityWebRequest.Post($"{url}", form);
 
@@ -258,20 +242,55 @@ public class ServerUser : MonoBehaviour {
 
         req.Dispose();
     }
-    public IEnumerator GetGameRoomStatus() {
-        string url = "";
-        if (url.Equals("")) { Trace.LogWarning("URL not set!"); yield break; }
+    #endregion
 
-        UnityWebRequest req = UnityWebRequest.Get($"{url}");
+    #region Game room
+    public IEnumerator JoinGameRoom() {
+        string url = "testRoom/Join";
+        if (url.Equals("testRoom/Join")) {
+            Trace.LogWarning("URL not set!");
+            yield break;
+        }
+
+        WWWForm form = new WWWForm();
+        form.AddField("userId", PlayerPrefs.GetString("playerId"));
+        form.AddField("userId", "testRoom");
+
+        UnityWebRequest req = UnityWebRequest.Post($"{url}", form);
 
         yield return req.SendWebRequest();
-
-        JSONNode json = JSONNode.Parse(req.downloadHandler.text);
-
         WasRequestSuccesful(req);
 
         req.Dispose();
     }
+    public IEnumerator GetGameRoomStatus() {
+        string url = "testRoom/Status";
+        if (url.Equals("testRoom/Status")) { Trace.LogWarning("URL not set!"); yield break; }
+
+        UnityWebRequest req = new UnityWebRequest();
+
+        while (!gameStarted) {
+            req = UnityWebRequest.Get($"{url}");
+
+            yield return req.SendWebRequest();
+
+            if (WasRequestSuccesful(req)) {
+
+                JSONNode json = JSONNode.Parse(req.downloadHandler.text);
+
+                if (json["gameRoomStatus"] == "startGame") gameStarted = true;
+            }
+            else {
+                Trace.LogError("Error starting game!");
+                break;
+            }
+        }
+
+        StartCoroutine(JoinGameRoom());
+
+        req.Dispose();
+    }
+    #endregion
     bool WasRequestSuccesful(UnityWebRequest req) {
         if (req.result != UnityWebRequest.Result.Success) {
             Trace.LogError(req.error);
