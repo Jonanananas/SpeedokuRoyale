@@ -40,51 +40,63 @@ public class ServerUser : MonoBehaviour {
 
         Trace.Log("username: " + username + "password: " + password);
 
-        #region Test code without server connection
-        GameStates.SetLoggedStatus(true);
-        LoginButton.Instance.CloseLoginMenu();
-        #endregion
+        // #region Test code without server connection
+        // GameStates.SetLoggedStatus(true);
+        // LoginButton.Instance.CloseLoginMenu();
+        // #endregion
 
-        string url = serverJSON["baseUrl"];
+        string url = serverJSON["baseUrl"] + "Player/Login";
         if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
 
-        byte[] passwordBytes = HashPassword.Hash(password);
+        // Use these to send a hashed password to server later in development
+        // byte[] passwordBytes = HashPassword.Hash(password);
+        // WWWForm form = new WWWForm();
+        // form.AddField("username", username);
+        // form.AddBinaryData("password", passwordBytes);
+        // UnityWebRequest req = UnityWebRequest.Put($"{url}", form.data);
 
-        WWWForm form = new WWWForm();
-        form.AddField("username", username);
-        form.AddBinaryData("password", passwordBytes);
+        // foreach (var header in form.headers) {
+        //     req.SetRequestHeader(header.Key, header.Value);
+        // }
 
-        UnityWebRequest req = UnityWebRequest.Put($"{url}", form.data);
+        JSONNode jsonNode = new JSONObject();
+        jsonNode.Add("userName", username);
+        jsonNode.Add("password", password);
+        UnityWebRequest req = UnityWebRequest.Put($"{url}", jsonNode.ToString());
+        req.SetRequestHeader("Content-Type", "application/json");
+        req.method = "POST";
 
-        foreach (var header in form.headers) {
-            req.SetRequestHeader(header.Key, header.Value);
-        }
+        GameStates.SetLoginStatus("Logging in...");
 
         yield return req.SendWebRequest();
 
         if (WasRequestSuccesful(req)) {
-            JSONNode json = JSONNode.Parse(req.downloadHandler.text);
+            GameStates.SetLoginStatus("Log in successful!");
 
-            ulong bestScore;
-            ulong victories;
+            // JSONNode json = JSONNode.Parse(req.downloadHandler.text);
 
-            if (UInt64.TryParse(json["victories"].Value, out victories) &&
-                UInt64.TryParse(json["bestScore"].Value, out bestScore)
-            ) {
-                LocalPlayer.Instance.SetLocalPlayerProfile(new PlayerProfile(
-                    json["username"].Value,
-                    bestScore,
-                    victories
-                ));
-                GameStates.SetLoggedStatus(true);
-                LoginButton.Instance.CloseLoginMenu();
-                Trace.Log("Login successful!");
-            }
-            else {
-                Trace.LogError("Failed to parse numerical user profile data!");
-            }
+            // ulong bestScore;
+            // ulong victories;
+
+            // if (UInt64.TryParse(json["victories"].Value, out victories) &&
+            //     UInt64.TryParse(json["bestScore"].Value, out bestScore)
+            // ) {
+            //     LocalPlayer.Instance.SetLocalPlayerProfile(new PlayerProfile(
+            //         json["username"].Value,
+            //         bestScore,
+            //         victories
+            //     ));
+            GameStates.SetLoggedStatus(true);
+            // if (LoginButton.Instance != null)
+            //     LoginButton.Instance.CloseLoginMenu();
+            Trace.Log("Login successful!");
+            // }
+            // else {
+            //     Trace.LogError("Failed to parse numerical user profile data!");
+            // }
         }
         else {
+            GameStates.SetLoginStatus("Log in failed.");
             Trace.LogError("Error logging in!");
         }
 
@@ -117,7 +129,8 @@ public class ServerUser : MonoBehaviour {
 
         req.Dispose();
     }
-    public IEnumerator CreateUser(string username, string password) {
+    public IEnumerator RegisterUser(string username, string password) {
+        GameStates.SetRegisterStatus("Registering...");
 
         string url = serverJSON["baseUrl"] + "Player";
         if (url.Equals(serverJSON["baseUrl"])) {
@@ -137,7 +150,7 @@ public class ServerUser : MonoBehaviour {
         // form.AddBinaryData("password", passwordBytes);
 
         jsonNode.Add("email", "testEmail");
-        jsonNode.Add("name", username);
+        jsonNode.Add("userName", username);
         jsonNode.Add("password", password);
 
         print(jsonNode);
@@ -147,14 +160,31 @@ public class ServerUser : MonoBehaviour {
         req.method = "POST";
 
         // Accept any SSL certificate for now while in local development
-        var cert = new ForceAcceptAll();
-        req.certificateHandler = cert;
-        cert?.Dispose();
+        // var cert = new ForceAcceptAll();
+        // req.certificateHandler = cert;
+        // cert?.Dispose();
 
         print(req.url);
 
         yield return req.SendWebRequest();
-        WasRequestSuccesful(req);
+        if (WasRequestSuccesful(req)) {
+            // JSONNode json = JSONNode.Parse(req.downloadHandler.text);
+            int playerId;
+            if (Int32.TryParse(req.downloadHandler.text, out playerId)) {
+                PlayerPrefs.SetInt("playerId", playerId);
+                print(PlayerPrefs.GetInt("playerId"));
+                GameStates.SetRegisterStatus("Register successful!");
+                StartCoroutine(LogIn(username, password));
+            }
+            else {
+                Trace.LogWarning("Error parsing user id!");
+                GameStates.SetRegisterStatus("Register failed!");
+            }
+        }
+        else {
+            GameStates.SetRegisterStatus("Register failed!");
+            Trace.LogWarning("Register failed!");
+        }
 
         req.Dispose();
     }

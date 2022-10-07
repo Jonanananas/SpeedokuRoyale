@@ -7,6 +7,7 @@ using TMPro;
 [RequireComponent(typeof(Button))]
 public class RegisterButton : MonoBehaviour, IPointerUpHandler {
     [SerializeField] TMP_InputField usernameInField, passwordInField, passwordRepeatInField;
+    [SerializeField] GameObject registerMenuGO, registerInfoMenuGO;
     int minimumInputLength = GlobalVariables.minimumInputLength;
     Button btn;
     void Start() {
@@ -27,6 +28,8 @@ public class RegisterButton : MonoBehaviour, IPointerUpHandler {
             Trace.Log("Input passwords don't match.");
             return;
         }
-        StartCoroutine(ServerUser.Instance.CreateUser(usernameInField.text, passwordInField.text));
+        registerInfoMenuGO.SetActive(true);
+        ServerOperations.Instance.RegisterUser(usernameInField.text, passwordInField.text);
+        registerMenuGO.SetActive(false);
     }
 }
