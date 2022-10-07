@@ -5,11 +5,26 @@ using UnityEngine;
 using UnityEngine.Networking;
 using SimpleJSON;
 using System;
+using System.IO;
 
 public class ServerUser : MonoBehaviour {
     public static ServerUser Instance;
     bool gameStarted;
+    JSONNode serverJSON = new JSONObject();
     void Awake() {
+        string serverSettingsPath = Application.dataPath + "/server-settings.json";
+
+        if (File.Exists(serverSettingsPath)) {
+            string fileContent = File.ReadAllText(serverSettingsPath);
+            serverJSON = JSONNode.Parse(fileContent);
+        }
+        else {
+            File.Create(serverSettingsPath).Dispose();
+            serverJSON.Add("baseUrl", "https://127.0.0.1:8000/");
+            string fileContent = serverJSON.ToString();
+            File.WriteAllText(serverSettingsPath, fileContent);
+        }
+
         #region Singleton
         if (Instance != null) {
             Destroy(gameObject);
