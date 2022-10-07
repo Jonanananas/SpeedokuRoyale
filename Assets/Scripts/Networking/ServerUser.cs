@@ -6,7 +6,6 @@ using UnityEngine.Networking;
 using SimpleJSON;
 using System;
 using System.IO;
-
 public class ServerUser : MonoBehaviour {
     public static ServerUser Instance;
     bool gameStarted;
@@ -46,8 +45,8 @@ public class ServerUser : MonoBehaviour {
         LoginButton.Instance.CloseLoginMenu();
         #endregion
 
-        string url = "";
-        if (url.Equals("")) { Trace.LogWarning("URL not set!"); yield break; }
+        string url = serverJSON["baseUrl"];
+        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
 
         byte[] passwordBytes = HashPassword.Hash(password);
 
@@ -92,7 +91,7 @@ public class ServerUser : MonoBehaviour {
         req.Dispose();
     }
     public IEnumerator LogOut(string username) {
-        string url = "";
+        string url = serverJSON["baseUrl"];
 
         LogoutOrLoginButton.Instance.UpdateButtonText("Logging in...");
         #region Test code without server connection
@@ -100,7 +99,7 @@ public class ServerUser : MonoBehaviour {
         LogoutOrLoginButton.Instance.UpdateButtonText();
         #endregion
 
-        if (url.Equals("")) { Trace.LogWarning("URL not set!"); yield break; }
+        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
 
         UnityWebRequest req = new UnityWebRequest($"{url}?username={username}", "PUT");
         req.downloadHandler = new DownloadHandlerBuffer();
@@ -119,8 +118,9 @@ public class ServerUser : MonoBehaviour {
         req.Dispose();
     }
     public IEnumerator CreateUser(string username, string password) {
-        string url = "";
-        if (url.Equals("")) {
+
+        string url = serverJSON["baseUrl"] + "Player";
+        if (url.Equals(serverJSON["baseUrl"])) {
             Trace.LogWarning("URL not set!");
             Trace.LogWarning("Creating test user.");
             LocalPlayer.Instance.SetLocalPlayerProfile(new PlayerProfile(username, 0, 0));
@@ -129,11 +129,29 @@ public class ServerUser : MonoBehaviour {
 
         byte[] passwordBytes = HashPassword.Hash(password);
 
-        WWWForm form = new WWWForm();
-        form.AddField("username", username);
-        form.AddBinaryData("password", passwordBytes);
+        JSONNode jsonNode = new JSONObject();
 
-        UnityWebRequest req = UnityWebRequest.Post($"{url}", form);
+        WWWForm form = new WWWForm();
+        // Use these to send a hashed password to server later in development
+        // form.AddField("username", username);
+        // form.AddBinaryData("password", passwordBytes);
+
+        jsonNode.Add("email", "testEmail");
+        jsonNode.Add("name", username);
+        jsonNode.Add("password", password);
+
+        print(jsonNode);
+
+        UnityWebRequest req = UnityWebRequest.Put($"{url}", jsonNode.ToString());
+        req.SetRequestHeader("Content-Type", "application/json");
+        req.method = "POST";
+
+        // Accept any SSL certificate for now while in local development
+        var cert = new ForceAcceptAll();
+        req.certificateHandler = cert;
+        cert?.Dispose();
+
+        print(req.url);
 
         yield return req.SendWebRequest();
         WasRequestSuccesful(req);
@@ -141,8 +159,8 @@ public class ServerUser : MonoBehaviour {
         req.Dispose();
     }
     public IEnumerator DeleteUserProfile(string username, string password) {
-        string url = "";
-        if (url.Equals("")) { Trace.LogWarning("URL not set!"); yield break; }
+        string url = serverJSON["baseUrl"];
+        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
 
         byte[] passwordBytes = HashPassword.Hash(password);
 
@@ -164,8 +182,8 @@ public class ServerUser : MonoBehaviour {
         req.Dispose();
     }
     public IEnumerator UpdateBestScore(string username, ulong score) {
-        string url = "";
-        if (url.Equals("")) { Trace.LogWarning("URL not set!"); yield break; }
+        string url = serverJSON["baseUrl"];
+        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
 
         JSONObject json = new JSONObject();
         json.Add("bestScore", score);
@@ -179,8 +197,8 @@ public class ServerUser : MonoBehaviour {
         req.Dispose();
     }
     public IEnumerator UpdateVictories(string username, ulong victories) {
-        string url = "";
-        if (url.Equals("")) { Trace.LogWarning("URL not set!"); yield break; }
+        string url = serverJSON["baseUrl"];
+        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
 
         JSONObject json = new JSONObject();
         json.Add("victories", victories);
@@ -195,8 +213,8 @@ public class ServerUser : MonoBehaviour {
         req.Dispose();
     }
     public IEnumerator UpdateCurrentScore(string username, ulong score) {
-        string url = "";
-        if (url.Equals("")) { Trace.LogWarning("URL not set!"); yield break; }
+        string url = serverJSON["baseUrl"];
+        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
 
         JSONObject json = new JSONObject();
         json.Add("currentScore", score);
@@ -210,8 +228,8 @@ public class ServerUser : MonoBehaviour {
         req.Dispose();
     }
     public IEnumerator ChangePassword(string username, string password, string newPassword) {
-        string url = "";
-        if (url.Equals("")) { Trace.LogWarning("URL not set!"); yield break; }
+        string url = serverJSON["baseUrl"];
+        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
 
         byte[] passwordBytes = HashPassword.Hash(password);
         byte[] newPasswordBytes = HashPassword.Hash(newPassword);
@@ -233,8 +251,8 @@ public class ServerUser : MonoBehaviour {
         req.Dispose();
     }
     public IEnumerator GetLeaderboardProfiles() {
-        string url = "";
-        if (url.Equals("")) { Trace.LogWarning("URL not set!"); yield break; }
+        string url = serverJSON["baseUrl"];
+        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
 
         UnityWebRequest req = UnityWebRequest.Get($"{url}");
 
@@ -261,11 +279,8 @@ public class ServerUser : MonoBehaviour {
 
     #region Game room
     public IEnumerator JoinGameRoom() {
-        string url = "testRoom/Join";
-        if (url.Equals("testRoom/Join")) {
-            Trace.LogWarning("URL not set!");
-            yield break;
-        }
+        string url = serverJSON["baseUrl"] + "testRoom/Join";
+        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
 
         WWWForm form = new WWWForm();
         form.AddField("userId", PlayerPrefs.GetString("playerId"));
@@ -279,8 +294,8 @@ public class ServerUser : MonoBehaviour {
         req.Dispose();
     }
     public IEnumerator GetGameRoomStatus() {
-        string url = "testRoom/Status";
-        if (url.Equals("testRoom/Status")) { Trace.LogWarning("URL not set!"); yield break; }
+        string url = serverJSON["baseUrl"] + "testRoom/Status";
+        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
 
         UnityWebRequest req = new UnityWebRequest();
 
@@ -314,6 +329,12 @@ public class ServerUser : MonoBehaviour {
         }
         else {
             Trace.Log("Request complete: " + req.downloadHandler.text);
+            return true;
+        }
+    }
+
+    public class ForceAcceptAll : CertificateHandler {
+        protected override bool ValidateCertificate(byte[] certificateData) {
             return true;
         }
     }
