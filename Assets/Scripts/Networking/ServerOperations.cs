@@ -20,4 +20,7 @@ public class ServerOperations : MonoBehaviour {
     public void RegisterUser(string userName, string password) {
         StartCoroutine(ServerUser.Instance.RegisterUser(userName, password));
     }
+    public void LogIn(string userName, string password) {
+        StartCoroutine(ServerUser.Instance.LogIn(userName, password));
+    }
 }

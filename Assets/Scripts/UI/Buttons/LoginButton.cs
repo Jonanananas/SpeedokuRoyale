@@ -24,6 +24,7 @@ public class LoginButton : MonoBehaviour, IPointerUpHandler {
         mainMenu.SetActive(true);
     }
     [SerializeField] TMP_InputField usernameInField, passwordInField;
+    [SerializeField] GameObject loginInfoMenuGO, loginMenuGO;
     int minimumInputLength = GlobalVariables.minimumInputLength;
     Button btn;
     void Start() {
@@ -39,7 +40,8 @@ public class LoginButton : MonoBehaviour, IPointerUpHandler {
             Trace.Log($"Your username and password must be atleast {minimumInputLength} characters long.");
             return;
         }
-
-        StartCoroutine(ServerUser.Instance.LogIn(usernameInField.text, passwordInField.text));
+        loginInfoMenuGO.SetActive(true);
+        ServerOperations.Instance.LogIn(usernameInField.text, passwordInField.text);
+        loginMenuGO.SetActive(false);
     }
 }

@@ -69,7 +69,6 @@ public class ServerUser : MonoBehaviour {
         GameStates.SetLoginStatus("Logging in...");
 
         yield return req.SendWebRequest();
-
         if (WasRequestSuccesful(req)) {
             GameStates.SetLoginStatus("Log in successful!");
 
@@ -97,7 +96,7 @@ public class ServerUser : MonoBehaviour {
         }
         else {
             GameStates.SetLoginStatus("Log in failed.");
-            Trace.LogError("Error logging in!");
+            Trace.LogWarning("Error logging in!");
         }
 
         req.Dispose();
@@ -105,7 +104,7 @@ public class ServerUser : MonoBehaviour {
     public IEnumerator LogOut(string username) {
         string url = serverJSON["baseUrl"];
 
-        LogoutOrLoginButton.Instance.UpdateButtonText("Logging in...");
+        LogoutOrLoginButton.Instance.UpdateButtonText("Logging out...");
         #region Test code without server connection
         LocalPlayer.Instance.LogOut();
         LogoutOrLoginButton.Instance.UpdateButtonText();
@@ -353,8 +352,8 @@ public class ServerUser : MonoBehaviour {
     #endregion
     bool WasRequestSuccesful(UnityWebRequest req) {
         if (req.result != UnityWebRequest.Result.Success) {
-            Trace.LogError(req.error);
-            Trace.LogError(req.downloadHandler.text);
+            Trace.LogWarning(req.error);
+            Trace.LogWarning(req.downloadHandler.text);
             return false;
         }
         else {
