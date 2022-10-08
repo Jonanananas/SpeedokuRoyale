@@ -34,12 +34,12 @@ public class LoginButton : MonoBehaviour, IPointerUpHandler {
         TryToPress();
     }
     void TryToPress() {
-        if (!btn.interactable) return;
-        if (usernameInField.text.Length < minimumInputLength ||
-            passwordInField.text.Length < minimumInputLength) {
-            Trace.Log($"Your username and password must be atleast {minimumInputLength} characters long.");
-            return;
-        }
+        // if (!btn.interactable) return;
+        // if (usernameInField.text.Length < minimumInputLength ||
+        //     passwordInField.text.Length < minimumInputLength) {
+        //     Trace.Log($"Your username and password must be atleast {minimumInputLength} characters long.");
+        //     return;
+        // }
         loginInfoMenuGO.SetActive(true);
         ServerOperations.Instance.LogIn(usernameInField.text, passwordInField.text);
         loginMenuGO.SetActive(false);

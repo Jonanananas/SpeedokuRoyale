@@ -18,12 +18,13 @@ public class RegisterButton : MonoBehaviour, IPointerUpHandler {
     }
     void TryToPress() {
         if (!btn.interactable) return;
-        if (usernameInField.text.Length < minimumInputLength ||
-            passwordInField.text.Length < minimumInputLength ||
-            passwordRepeatInField.text.Length < minimumInputLength) {
-            Trace.Log($"Your username and password must be atleast {minimumInputLength} characters long.");
-            return;
-        }
+        // Check for proper login length
+        // if (usernameInField.text.Length < minimumInputLength ||
+        //     passwordInField.text.Length < minimumInputLength ||
+        //     passwordRepeatInField.text.Length < minimumInputLength) {
+        //     Trace.Log($"Your username and password must be atleast {minimumInputLength} characters long.");
+        //     return;
+        // }
         if (!passwordInField.text.Equals(passwordRepeatInField.text)) {
             Trace.Log("Input passwords don't match.");
             return;
