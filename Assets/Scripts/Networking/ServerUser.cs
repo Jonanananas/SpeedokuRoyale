@@ -363,9 +363,9 @@ public class ServerUser : MonoBehaviour {
         }
     }
 
-    public class ForceAcceptAll : CertificateHandler {
-        protected override bool ValidateCertificate(byte[] certificateData) {
-            return true;
-        }
-    }
+    // public class ForceAcceptAll : CertificateHandler {
+    //     protected override bool ValidateCertificate(byte[] certificateData) {
+    //         return true;
+    //     }
+    // }
 }
