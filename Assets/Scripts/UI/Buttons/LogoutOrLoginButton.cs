@@ -44,7 +44,10 @@ public class LogoutOrLoginButton : MonoBehaviour, IPointerUpHandler {
 
         // Try to log out if the user is logged in
         if (GameStates.isLoggedIn) {
-            StartCoroutine(ServerUser.Instance.LogOut(PlayerPrefs.GetString("playerId")));
+            // CURRENTLY UNUSED:
+            // StartCoroutine(ServerUser.Instance.LogOut(PlayerPrefs.GetString("playerId")));
+            LocalPlayer.Instance.LogOut();
+            UpdateButtonText();
             return;
         }
         // Go to login screen if the user is not logged in

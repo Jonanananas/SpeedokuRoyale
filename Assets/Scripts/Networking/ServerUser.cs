@@ -40,13 +40,14 @@ public class ServerUser : MonoBehaviour {
 
         Trace.Log("username: " + username + "password: " + password);
 
-        // #region Test code without server connection
-        // GameStates.SetLoggedStatus(true);
-        // LoginButton.Instance.CloseLoginMenu();
-        // #endregion
-
         string url = serverJSON["baseUrl"] + "/Player/Login";
-        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
+        if (url.Equals(serverJSON["baseUrl"])) {
+            // #region Test code without server connection
+            // GameStates.SetLoggedStatus(true);
+            // LoginButton.Instance.CloseLoginMenu();
+            // #endregion
+            Trace.LogWarning("Full URL not set!"); yield break;
+        }
 
         // Use these to send a hashed password to server later in development
         // byte[] passwordBytes = HashPassword.Hash(password);
@@ -93,7 +94,7 @@ public class ServerUser : MonoBehaviour {
             // else {
             //     Trace.LogError("Failed to parse numerical user profile data!");
             // }
-            StartCoroutine(GetUserData(UInt64.Parse(PlayerPrefs.GetString("playerId"))));
+            StartCoroutine(GetAndSetUserData(UInt64.Parse(PlayerPrefs.GetString("playerId")), username));
         }
         else {
             GameStates.SetLoginStatus("Log in failed.");
@@ -102,7 +103,7 @@ public class ServerUser : MonoBehaviour {
 
         req.Dispose();
     }
-    public IEnumerator GetUserData(ulong userId) {
+    public IEnumerator GetAndSetUserData(ulong userId, string username) {
         // string url = serverJSON["baseUrl"] + "/Player/" + userId;
         string url = serverJSON["baseUrl"] + "/MultiplayerSession";
         if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
@@ -150,6 +151,11 @@ public class ServerUser : MonoBehaviour {
                 loggedUserWins++;
             }
         }
+        LocalPlayer.Instance.SetLocalPlayerProfile(new PlayerProfile(
+            username,
+            bestScore,
+            loggedUserWins
+        ));
 
         print("loggedUserWins: " + loggedUserWins);
 
@@ -169,31 +175,33 @@ public class ServerUser : MonoBehaviour {
         req.Dispose();
     }
     public IEnumerator LogOut(string username) {
-        string url = serverJSON["baseUrl"];
+        // string url = serverJSON["baseUrl"];
 
-        LogoutOrLoginButton.Instance.UpdateButtonText("Logging out...");
-        #region Test code without server connection
-        LocalPlayer.Instance.LogOut();
-        LogoutOrLoginButton.Instance.UpdateButtonText();
-        #endregion
+        // LogoutOrLoginButton.Instance.UpdateButtonText("Logging out...");
+        // #region Test code without server connection
+        // LocalPlayer.Instance.LogOut();
+        // LogoutOrLoginButton.Instance.UpdateButtonText();
+        // #endregion
 
-        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
+        // if (url.Equals(serverJSON["baseUrl"])) { 
+        //     Trace.LogWarning("Full URL not set!"); yield break; }
 
-        UnityWebRequest req = new UnityWebRequest($"{url}?username={username}", "PUT");
-        req.downloadHandler = new DownloadHandlerBuffer();
+        // UnityWebRequest req = new UnityWebRequest($"{url}?username={username}", "PUT");
+        // req.downloadHandler = new DownloadHandlerBuffer();
 
-        yield return req.SendWebRequest();
-        if (WasRequestSuccesful(req)) {
-            LocalPlayer.Instance.LogOut();
-            LogoutOrLoginButton.Instance.UpdateButtonText();
-            Trace.Log("Logout successful!");
-        }
-        else {
-            LogoutOrLoginButton.Instance.UpdateButtonText("Error logging out!");
-            Trace.LogError("Error logging out!");
-        }
+        // yield return req.SendWebRequest();
+        // if (WasRequestSuccesful(req)) {
+        //     LocalPlayer.Instance.LogOut();
+        //     LogoutOrLoginButton.Instance.UpdateButtonText();
+        //     Trace.Log("Logout successful!");
+        // }
+        // else {
+        //     LogoutOrLoginButton.Instance.UpdateButtonText("Error logging out!");
+        //     Trace.LogError("Error logging out!");
+        // }
 
-        req.Dispose();
+        // req.Dispose();
+        yield return null;
     }
     public IEnumerator RegisterUser(string username, string password) {
         GameStates.SetRegisterStatus("Registering...");
@@ -395,8 +403,11 @@ public class ServerUser : MonoBehaviour {
         req.Dispose();
     }
     public IEnumerator GetGameRoomStatus() {
-        string url = serverJSON["baseUrl"] + "testRoom/Status";
-        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
+        string url = serverJSON["baseUrl"]/*  + "testRoom/Status" */;
+        if (url.Equals(serverJSON["baseUrl"])) {
+            StartGameButton.Instance.StartGame();
+            Trace.LogWarning("Full URL not set!"); yield break;
+        }
 
         UnityWebRequest req = new UnityWebRequest();
 

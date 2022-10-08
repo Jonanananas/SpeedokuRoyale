@@ -27,14 +27,14 @@ public class LocalPlayer : MonoBehaviour {
         if (profile == null) { Trace.LogWarning("Not logged in!"); return; }
         profile.victories++;
         if (GameStates.isOnlineMode) {
-            ServerUser.Instance.UpdateVictories(profile.username, profile.victories);
+            StartCoroutine(ServerUser.Instance.UpdateVictories(profile.username, profile.victories));
         }
     }
     public void AddPoints(ulong pointsToAdd) {
         score += pointsToAdd;
         if (GameStates.isOnlineMode) {
             if (profile == null) { Trace.LogWarning("Not logged in!"); return; }
-            ServerUser.Instance.UpdateCurrentScore(profile.username, score);
+            StartCoroutine(ServerUser.Instance.UpdateCurrentScore(profile.username, score));
         }
     }
     public ulong GetScore() {
@@ -44,7 +44,7 @@ public class LocalPlayer : MonoBehaviour {
         score = 0;
         if (GameStates.isOnlineMode) {
             if (profile == null) { Trace.LogWarning("Not logged in!"); return; }
-            ServerUser.Instance.UpdateCurrentScore(profile.username, score);
+            StartCoroutine(ServerUser.Instance.UpdateCurrentScore(profile.username, score));
         }
     }
     public void LogOut() {
