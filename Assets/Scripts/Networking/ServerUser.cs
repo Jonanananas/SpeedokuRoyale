@@ -19,7 +19,7 @@ public class ServerUser : MonoBehaviour {
         }
         else {
             File.Create(serverSettingsPath).Dispose();
-            serverJSON.Add("baseUrl", "https://127.0.0.1:8000/");
+            serverJSON.Add("baseUrl", "http://127.0.0.1:8000/");
             string fileContent = serverJSON.ToString();
             File.WriteAllText(serverSettingsPath, fileContent);
         }
