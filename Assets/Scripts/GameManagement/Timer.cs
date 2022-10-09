@@ -7,7 +7,7 @@ using TMPro;
 
 public class Timer : MonoBehaviour {
     public static Timer Instance;
-    public long timeLimit = 30000L;
+    public long timeLimit = 100000L;
     public TextMeshProUGUI textTMP;
     // public string text { get; private set; }
     public long timeLong { get; private set; }

@@ -17,10 +17,13 @@ public class StartGameButton : MonoBehaviour, IPointerUpHandler {
         Instance = this;
         #endregion
     }
-    [SerializeField] GameObject startButtonGO, loseGameTestButtonGO;
+    [SerializeField] GameObject startButtonGO, loseGameTestButtonGO, addScoreTestButton;
     public void StartGame() {
         startButtonGO.SetActive(false);
-        loseGameTestButtonGO.SetActive(true);
+        if (loseGameTestButtonGO != null)
+            loseGameTestButtonGO.SetActive(true);
+        if (addScoreTestButton != null)
+            addScoreTestButton.SetActive(true);
         ManageGameSession.Instance.StartGame();
     }
     Button btn;

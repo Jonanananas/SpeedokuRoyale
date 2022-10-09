@@ -8,7 +8,7 @@ using TMPro;
 public class ManageGameSession : MonoBehaviour {
     public static ManageGameSession Instance;
     public GameObject gameEndMenu;
-    public TextMeshProUGUI victoryOrDefeatTMP, placementTMP, scoreTMP, user;
+    public TextMeshProUGUI victoryOrDefeatTMP, placementTMP, scoreTMP, userTMP, currentScoreTMP;
     int playersLeft = 2;
     void Awake() {
         #region Singleton
@@ -45,6 +45,15 @@ public class ManageGameSession : MonoBehaviour {
     }
     public void EliminateOnePlayer() {
         playersLeft--;
+    }
+    public void AddPoints(ulong pointsToAdd) {
+        LocalPlayer.Instance.AddPoints(pointsToAdd);
+    }
+    public void AddPoint() {
+        LocalPlayer.Instance.AddPoints(1);
+    }
+    public void UpdateScore(ulong score) {
+        currentScoreTMP.text = score.ToString();
     }
     void SetPlacingText() {
         string placementSuffix = "th";

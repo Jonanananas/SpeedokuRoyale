@@ -42,6 +42,7 @@ public class LocalPlayer : MonoBehaviour {
             if (profile == null) { Trace.LogWarning("Not logged in!"); return; }
             StartCoroutine(ServerGameroomReqs.Instance.UpdateCurrentScore(profile.username, score));
         }
+        ManageGameSession.Instance.UpdateScore(score);
     }
     public ulong GetScore() {
         return score;
