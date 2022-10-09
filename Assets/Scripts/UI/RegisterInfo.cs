@@ -41,15 +41,18 @@ public class RegisterInfo : MonoBehaviour {
         SetInfoText(GameStates.registerStatus);
 
         if (GameStates.registerStatus.Equals("Register failed!")) {
+            ToggleMainMenuButton(false);
             ToggleBackButton(true);
         }
         if (GameStates.loginStatus.Equals("Log in successful!")) {
             ToggleMainMenuButton(true);
+            ToggleBackButton(false);
             SetInfoText(GameStates.loginStatus);
         }
         else if (GameStates.loginStatus.Equals("Log in failed.")) {
             SetInfoText(GameStates.loginStatus);
             ToggleBackButton(true);
+            ToggleMainMenuButton(false);
         }
     }
 }

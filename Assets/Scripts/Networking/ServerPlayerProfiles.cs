@@ -211,7 +211,9 @@ public class ServerPlayerProfiles : MonoBehaviour {
         // form.AddField("username", username);
         // form.AddBinaryData("password", passwordBytes);
 
-        jsonNode.Add("email", "testEmail");
+        
+
+        jsonNode.Add("email", System.Guid.NewGuid().ToString());
         jsonNode.Add("userName", username);
         jsonNode.Add("password", password);
 

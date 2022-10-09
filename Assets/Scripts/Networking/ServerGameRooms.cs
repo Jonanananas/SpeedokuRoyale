@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Specialized;
 using System.IO;
 
 using UnityEngine;
@@ -9,6 +10,7 @@ using SimpleJSON;
 public class ServerGameRooms : MonoBehaviour {
     public static ServerGameRooms Instance;
     JSONNode serverJSON = new JSONObject();
+    string currentRoomName;
 
     void Start() {
         string serverSettingsPath = Application.dataPath + "/server-settings.json";
@@ -35,6 +37,9 @@ public class ServerGameRooms : MonoBehaviour {
     public void UpdateCurrentScore(string userName, ulong score) {
         StartCoroutine(UpdateCurrentScoreIEnum(userName, score));
     }
+    public void AddScore(ulong score) {
+        StartCoroutine(AddScoreIEnum(score));
+    }
     public void GetAvailableGameRooms() {
         StartCoroutine(GetAvailableGameRoomsIEnum());
     }
@@ -54,6 +59,22 @@ public class ServerGameRooms : MonoBehaviour {
 
         UnityWebRequest req = UnityWebRequest.Put($"{url}?username={username}", json);
         req.SetRequestHeader("Content-Type", "application/json");
+
+        yield return req.SendWebRequest();
+        WasRequestSuccesful(req);
+
+        req.Dispose();
+    }
+    IEnumerator AddScoreIEnum(ulong score) {
+        NameValueCollection queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
+
+        queryString.Add("playerId", PlayerPrefs.GetString("playerId"));
+        queryString.Add("scores", score.ToString());
+
+        string url = serverJSON["baseUrl"] + "/MultiplayerRuntime/" + currentRoomName + "/AddScore?" + queryString.ToString();
+        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
+
+        UnityWebRequest req = UnityWebRequest.Post($"{url}", "");
 
         yield return req.SendWebRequest();
         WasRequestSuccesful(req);
@@ -94,7 +115,11 @@ public class ServerGameRooms : MonoBehaviour {
         yield return req.SendWebRequest();
         if (WasRequestSuccesful(req)) {
             print(req.downloadHandler.text);
+            currentRoomName = roomName;
             StartCoroutine(GetGameRoomStatusIEnum(roomName));
+        }
+        else {
+            currentRoomName = "";
         }
 
         req.Dispose();

@@ -40,7 +40,7 @@ public class LocalPlayer : MonoBehaviour {
         score += pointsToAdd;
         if (GameStates.isOnlineMode) {
             if (profile == null) { Trace.LogWarning("Not logged in!"); return; }
-            ServerGameRooms.Instance.UpdateCurrentScore(profile.username, score);
+            ServerGameRooms.Instance.AddScore(pointsToAdd);
         }
         ManageGameSession.Instance.UpdateScore(score);
     }
