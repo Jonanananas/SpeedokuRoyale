@@ -8,7 +8,7 @@ using System;
 using System.IO;
 public class ServerGameroomReqs : MonoBehaviour {
     public static ServerGameroomReqs Instance;
-    bool gameStarted;
+    bool gameStarted, gameComplete;
     JSONNode serverJSON = new JSONObject();
     void Awake() {
         string serverSettingsPath = Application.dataPath + "/server-settings.json";
@@ -35,7 +35,7 @@ public class ServerGameroomReqs : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
         #endregion
     }
-    
+
     public IEnumerator UpdateCurrentScore(string username, ulong score) {
         string url = serverJSON["baseUrl"];
         if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
@@ -76,23 +76,47 @@ public class ServerGameroomReqs : MonoBehaviour {
 
         req.Dispose();
     }
-    public IEnumerator JoinGameRoom() {
-        string url = serverJSON["baseUrl"] + "testRoom/Join";
-        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
+    public IEnumerator GetAvailableGameRooms() {
+        string url = serverJSON["baseUrl"] + "/MultiplayerRuntime/AvaliableRooms";
+        if (url.Equals(serverJSON["baseUrl"])) {
+            StartGameButton.Instance.StartGame();
+            Trace.LogWarning("Full URL not set!"); yield break;
+        }
 
-        WWWForm form = new WWWForm();
-        form.AddField("userId", PlayerPrefs.GetString("playerId"));
-        form.AddField("userId", "testRoom");
-
-        UnityWebRequest req = UnityWebRequest.Post($"{url}", form);
+        UnityWebRequest req = UnityWebRequest.Get(url);
 
         yield return req.SendWebRequest();
-        WasRequestSuccesful(req);
+
+        JSONNode json = JSONNode.Parse(req.downloadHandler.text);
+
+        // print(json);
+        // print(json[0]["name"]);
+
+        // StartCoroutine(JoinGameRoom());
+
+        if (WasRequestSuccesful(req)) {
+            StartCoroutine(JoinGameRoom(json[0]["name"]));
+        }
 
         req.Dispose();
     }
-    public IEnumerator GetGameRoomStatus() {
-        string url = serverJSON["baseUrl"]/*  + "testRoom/Status" */;
+    public IEnumerator JoinGameRoom(string roomName) {
+        print("roomName:" + roomName);
+        string url = serverJSON["baseUrl"] + "/MultiplayerRuntime/" + roomName + "/Join?playerId=" + PlayerPrefs.GetString("playerId");
+        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
+
+        UnityWebRequest req = UnityWebRequest.Post($"{url}", "");
+
+        yield return req.SendWebRequest();
+        if (WasRequestSuccesful(req)) {
+            print(req.downloadHandler.text);
+            StartCoroutine(GetGameRoomStatus(roomName));
+        }
+
+        req.Dispose();
+    }
+    public IEnumerator GetGameRoomStatus(string roomName) {
+        string url = serverJSON["baseUrl"] + "/MultiplayerRuntime/" + roomName + "/Status";
         if (url.Equals(serverJSON["baseUrl"])) {
             StartGameButton.Instance.StartGame();
             Trace.LogWarning("Full URL not set!"); yield break;
@@ -100,24 +124,32 @@ public class ServerGameroomReqs : MonoBehaviour {
 
         UnityWebRequest req = new UnityWebRequest();
 
-        while (!gameStarted) {
+        while (!gameComplete) {
             req = UnityWebRequest.Get($"{url}");
 
             yield return req.SendWebRequest();
 
             if (WasRequestSuccesful(req)) {
 
-                JSONNode json = JSONNode.Parse(req.downloadHandler.text);
+                // JSONNode json = JSONNode.Parse(req.downloadHandler.text);
 
-                if (json["gameRoomStatus"] == "startGame") gameStarted = true;
+                // if (json["gameRoomStatus"] == "startGame") gameStarted = true;
+                print("game room status: " + req.downloadHandler.text);
+                string roomStatus = req.downloadHandler.text;
+                if (roomStatus == "1" && !gameStarted) {
+                    StartGameButton.Instance.StartGame();
+                    gameStarted = true;
+                }
+                else if (roomStatus == "3") {
+                    gameComplete = true;
+                }
             }
             else {
                 Trace.LogError("Error starting game!");
                 break;
             }
+            yield return new WaitForSeconds(1);
         }
-
-        StartCoroutine(JoinGameRoom());
 
         req.Dispose();
     }
