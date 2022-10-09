@@ -41,7 +41,7 @@ public class LoginButton : MonoBehaviour, IPointerUpHandler {
         //     return;
         // }
         loginInfoMenuGO.SetActive(true);
-        ServerLoginOperations.Instance.LogIn(usernameInField.text, passwordInField.text);
+        ServerPlayerProfiles.Instance.LogIn(usernameInField.text, passwordInField.text);
         loginMenuGO.SetActive(false);
     }
 }

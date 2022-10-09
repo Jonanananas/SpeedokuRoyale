@@ -40,7 +40,7 @@ public class LocalPlayer : MonoBehaviour {
         score += pointsToAdd;
         if (GameStates.isOnlineMode) {
             if (profile == null) { Trace.LogWarning("Not logged in!"); return; }
-            StartCoroutine(ServerGameroomReqs.Instance.UpdateCurrentScore(profile.username, score));
+            ServerGameRooms.Instance.UpdateCurrentScore(profile.username, score);
         }
         ManageGameSession.Instance.UpdateScore(score);
     }
@@ -51,7 +51,7 @@ public class LocalPlayer : MonoBehaviour {
         score = 0;
         if (GameStates.isOnlineMode) {
             if (profile == null) { Trace.LogWarning("Not logged in!"); return; }
-            StartCoroutine(ServerGameroomReqs.Instance.UpdateCurrentScore(profile.username, score));
+            ServerGameRooms.Instance.UpdateCurrentScore(profile.username, score);
         }
     }
     public void LogOut() {

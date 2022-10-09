@@ -1,16 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+using System.Collections;
+using System.IO;
 
 using UnityEngine;
 using UnityEngine.Networking;
+
 using SimpleJSON;
-using System;
-using System.IO;
-public class ServerGameroomReqs : MonoBehaviour {
-    public static ServerGameroomReqs Instance;
-    bool gameStarted, gameComplete;
+
+public class ServerGameRooms : MonoBehaviour {
+    public static ServerGameRooms Instance;
     JSONNode serverJSON = new JSONObject();
-    void Awake() {
+
+    void Start() {
         string serverSettingsPath = Application.dataPath + "/server-settings.json";
 
         if (File.Exists(serverSettingsPath)) {
@@ -18,10 +18,7 @@ public class ServerGameroomReqs : MonoBehaviour {
             serverJSON = JSONNode.Parse(fileContent);
         }
         else {
-            File.Create(serverSettingsPath).Dispose();
-            serverJSON.Add("baseUrl", "http://127.0.0.1:8000");
-            string fileContent = serverJSON.ToString();
-            File.WriteAllText(serverSettingsPath, fileContent);
+            Trace.LogError("File \"server-settings\" is missing!");
         }
 
         #region Singleton
@@ -35,8 +32,20 @@ public class ServerGameroomReqs : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
         #endregion
     }
-
-    public IEnumerator UpdateCurrentScore(string username, ulong score) {
+    public void UpdateCurrentScore(string userName, ulong score) {
+        StartCoroutine(UpdateCurrentScoreIEnum(userName, score));
+    }
+    public void GetAvailableGameRooms() {
+        StartCoroutine(GetAvailableGameRoomsIEnum());
+    }
+    public void JoinGameRoom(string roomName) {
+        StartCoroutine(JoinGameRoomIEnum(roomName));
+    }
+    public void GetGameRoomStatus(string roomName) {
+        StartCoroutine(GetGameRoomStatusIEnum(roomName));
+    }
+    bool gameStarted, gameComplete;
+    IEnumerator UpdateCurrentScoreIEnum(string username, ulong score) {
         string url = serverJSON["baseUrl"];
         if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
 
@@ -51,32 +60,7 @@ public class ServerGameroomReqs : MonoBehaviour {
 
         req.Dispose();
     }
-    public IEnumerator GetLeaderboardProfiles() {
-        string url = serverJSON["baseUrl"];
-        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
-
-        UnityWebRequest req = UnityWebRequest.Get($"{url}");
-
-        yield return req.SendWebRequest();
-
-        JSONNode json = JSONNode.Parse(req.downloadHandler.text);
-
-        // Dictionary<string, ulong> bestScores = new Dictionary<string, ulong>();
-        foreach (var profile in json) {
-            ulong highscore;
-            if (!UInt64.TryParse(profile.Value["score"], out highscore))
-                Trace.LogError("Error parsing score data!");
-            // bestScores.Add(profile.Value["name"], highscore);
-            ScoreManager.Instance.AddScore(new Score(profile.Value["name"], highscore));
-        }
-
-        // GameData.SetBestScores(bestScores);
-
-        WasRequestSuccesful(req);
-
-        req.Dispose();
-    }
-    public IEnumerator GetAvailableGameRooms() {
+    IEnumerator GetAvailableGameRoomsIEnum() {
         string url = serverJSON["baseUrl"] + "/MultiplayerRuntime/AvaliableRooms";
         if (url.Equals(serverJSON["baseUrl"])) {
             StartGameButton.Instance.StartGame();
@@ -95,12 +79,12 @@ public class ServerGameroomReqs : MonoBehaviour {
         // StartCoroutine(JoinGameRoom());
 
         if (WasRequestSuccesful(req)) {
-            StartCoroutine(JoinGameRoom(json[0]["name"]));
+            StartCoroutine(JoinGameRoomIEnum(json[0]["name"]));
         }
 
         req.Dispose();
     }
-    public IEnumerator JoinGameRoom(string roomName) {
+    IEnumerator JoinGameRoomIEnum(string roomName) {
         print("roomName:" + roomName);
         string url = serverJSON["baseUrl"] + "/MultiplayerRuntime/" + roomName + "/Join?playerId=" + PlayerPrefs.GetString("playerId");
         if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
@@ -110,12 +94,12 @@ public class ServerGameroomReqs : MonoBehaviour {
         yield return req.SendWebRequest();
         if (WasRequestSuccesful(req)) {
             print(req.downloadHandler.text);
-            StartCoroutine(GetGameRoomStatus(roomName));
+            StartCoroutine(GetGameRoomStatusIEnum(roomName));
         }
 
         req.Dispose();
     }
-    public IEnumerator GetGameRoomStatus(string roomName) {
+    IEnumerator GetGameRoomStatusIEnum(string roomName) {
         string url = serverJSON["baseUrl"] + "/MultiplayerRuntime/" + roomName + "/Status";
         if (url.Equals(serverJSON["baseUrl"])) {
             StartGameButton.Instance.StartGame();

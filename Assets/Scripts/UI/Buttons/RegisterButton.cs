@@ -30,7 +30,7 @@ public class RegisterButton : MonoBehaviour, IPointerUpHandler {
             return;
         }
         registerInfoMenuGO.SetActive(true);
-        ServerLoginOperations.Instance.RegisterUser(usernameInField.text, passwordInField.text);
+        ServerPlayerProfiles.Instance.RegisterUser(usernameInField.text, passwordInField.text);
         registerMenuGO.SetActive(false);
     }
 }

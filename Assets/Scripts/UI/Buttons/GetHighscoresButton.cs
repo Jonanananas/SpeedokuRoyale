@@ -17,6 +17,6 @@ public class GetHighscoresButton : MonoBehaviour, IPointerUpHandler {
         if (!btn.interactable) return;
         if (GameData.highscoreProfiles != null && GameData.highscoreProfiles.Count != 0) return;
 
-        StartCoroutine(ServerPlayerProfileReqs.Instance.GetLeaderboardProfiles());
+        ServerPlayerProfiles.Instance.GetLeaderboardProfiles();
     }
 }

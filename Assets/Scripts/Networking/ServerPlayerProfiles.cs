@@ -1,16 +1,18 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System;
 
 using UnityEngine;
 using UnityEngine.Networking;
+
 using SimpleJSON;
-using System;
-using System.IO;
-public class ServerPlayerProfileReqs : MonoBehaviour {
-    public static ServerPlayerProfileReqs Instance;
-    bool gameStarted;
+
+public class ServerPlayerProfiles : MonoBehaviour {
+    public static ServerPlayerProfiles Instance;
     JSONNode serverJSON = new JSONObject();
-    void Awake() {
+
+    void Start() {
         string serverSettingsPath = Application.dataPath + "/server-settings.json";
 
         if (File.Exists(serverSettingsPath)) {
@@ -18,10 +20,7 @@ public class ServerPlayerProfileReqs : MonoBehaviour {
             serverJSON = JSONNode.Parse(fileContent);
         }
         else {
-            File.Create(serverSettingsPath).Dispose();
-            serverJSON.Add("baseUrl", "http://127.0.0.1:8000");
-            string fileContent = serverJSON.ToString();
-            File.WriteAllText(serverSettingsPath, fileContent);
+            Trace.LogError("File \"server-settings\" is missing!");
         }
 
         #region Singleton
@@ -35,7 +34,26 @@ public class ServerPlayerProfileReqs : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
         #endregion
     }
-    public IEnumerator LogIn(string username, string password) {
+    public void LogIn(string userName, string password) {
+        StartCoroutine(LogInIEnum(userName, password));
+    }
+    public void RegisterUser(string userName, string password) {
+        StartCoroutine(RegisterUserIEnum(userName, password));
+    }
+    public void GetAndSetUserData(ulong userId, string username) {
+        StartCoroutine(GetAndSetUserDataIEnum(userId, username));
+    }
+    public void DeleteUserProfile(string username, string password) {
+        StartCoroutine(DeleteUserProfileIEnum(username, password));
+    }
+    public void ChangePassword(string username, string password, string newPassword) {
+        StartCoroutine(ChangePasswordIEnum(username, password, newPassword));
+    }
+    public void GetLeaderboardProfiles() {
+        StartCoroutine(GetLeaderboardProfilesIEnum());
+    }
+
+    IEnumerator LogInIEnum(string username, string password) {
 
         Trace.Log("username: " + username + "password: " + password);
 
@@ -93,7 +111,7 @@ public class ServerPlayerProfileReqs : MonoBehaviour {
             // else {
             //     Trace.LogError("Failed to parse numerical user profile data!");
             // }
-            StartCoroutine(GetAndSetUserData(UInt64.Parse(PlayerPrefs.GetString("playerId")), username));
+            StartCoroutine(GetAndSetUserDataIEnum(UInt64.Parse(PlayerPrefs.GetString("playerId")), username));
         }
         else {
             GameStates.SetLoginStatus("Log in failed.");
@@ -102,7 +120,7 @@ public class ServerPlayerProfileReqs : MonoBehaviour {
 
         req.Dispose();
     }
-    public IEnumerator GetAndSetUserData(ulong userId, string username) {
+    IEnumerator GetAndSetUserDataIEnum(ulong userId, string username) {
         // string url = serverJSON["baseUrl"] + "/Player/" + userId;
         string url = serverJSON["baseUrl"] + "/MultiplayerSession";
         if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
@@ -173,7 +191,7 @@ public class ServerPlayerProfileReqs : MonoBehaviour {
 
         req.Dispose();
     }
-    public IEnumerator RegisterUser(string username, string password) {
+    IEnumerator RegisterUserIEnum(string username, string password) {
         GameStates.SetRegisterStatus("Registering...");
 
         string url = serverJSON["baseUrl"] + "/Player";
@@ -214,7 +232,7 @@ public class ServerPlayerProfileReqs : MonoBehaviour {
         if (WasRequestSuccesful(req)) {
             // if (SetPlayerId(req.downloadHandler.text)) {
             GameStates.SetRegisterStatus("Register successful!");
-            StartCoroutine(LogIn(username, password));
+            StartCoroutine(LogInIEnum(username, password));
             // }
             // else {
             //     Trace.LogWarning("Error parsing user id!");
@@ -228,7 +246,7 @@ public class ServerPlayerProfileReqs : MonoBehaviour {
 
         req.Dispose();
     }
-    public IEnumerator DeleteUserProfile(string username, string password) {
+    IEnumerator DeleteUserProfileIEnum(string username, string password) {
         string url = serverJSON["baseUrl"];
         if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
 
@@ -251,7 +269,7 @@ public class ServerPlayerProfileReqs : MonoBehaviour {
 
         req.Dispose();
     }
-    public IEnumerator ChangePassword(string username, string password, string newPassword) {
+    IEnumerator ChangePasswordIEnum(string username, string password, string newPassword) {
         string url = serverJSON["baseUrl"];
         if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
 
@@ -274,7 +292,7 @@ public class ServerPlayerProfileReqs : MonoBehaviour {
 
         req.Dispose();
     }
-    public IEnumerator GetLeaderboardProfiles() {
+    IEnumerator GetLeaderboardProfilesIEnum() {
         string url = serverJSON["baseUrl"];
         if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
 
