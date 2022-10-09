@@ -41,6 +41,7 @@ public class ManageGameSession : MonoBehaviour {
     void EndGame() {
         gameEndMenu.SetActive(true);
         scoreTMP.text = $"Score: {LocalPlayer.Instance.GetScore()}";
+        LocalPlayer.Instance.UpdateLocalHighScore();
     }
     public void EliminateOnePlayer() {
         playersLeft--;

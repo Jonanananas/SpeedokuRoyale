@@ -34,7 +34,7 @@ public class StartGameButton : MonoBehaviour, IPointerUpHandler {
         if (!btn.interactable) return;
 
         if (GameStates.isOnlineMode) {
-            StartCoroutine(ServerUser.Instance.GetGameRoomStatus());
+            StartCoroutine(ServerGameroomReqs.Instance.GetGameRoomStatus());
         }
         else {
            StartGame(); 

@@ -6,8 +6,8 @@ using UnityEngine.Networking;
 using SimpleJSON;
 using System;
 using System.IO;
-public class ServerUser : MonoBehaviour {
-    public static ServerUser Instance;
+public class ServerPlayerProfileReqs : MonoBehaviour {
+    public static ServerPlayerProfileReqs Instance;
     bool gameStarted;
     JSONNode serverJSON = new JSONObject();
     void Awake() {
@@ -35,7 +35,6 @@ public class ServerUser : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
         #endregion
     }
-    #region Profile methods
     public IEnumerator LogIn(string username, string password) {
 
         Trace.Log("username: " + username + "password: " + password);
@@ -174,35 +173,6 @@ public class ServerUser : MonoBehaviour {
 
         req.Dispose();
     }
-    public IEnumerator LogOut(string username) {
-        // string url = serverJSON["baseUrl"];
-
-        // LogoutOrLoginButton.Instance.UpdateButtonText("Logging out...");
-        // #region Test code without server connection
-        // LocalPlayer.Instance.LogOut();
-        // LogoutOrLoginButton.Instance.UpdateButtonText();
-        // #endregion
-
-        // if (url.Equals(serverJSON["baseUrl"])) { 
-        //     Trace.LogWarning("Full URL not set!"); yield break; }
-
-        // UnityWebRequest req = new UnityWebRequest($"{url}?username={username}", "PUT");
-        // req.downloadHandler = new DownloadHandlerBuffer();
-
-        // yield return req.SendWebRequest();
-        // if (WasRequestSuccesful(req)) {
-        //     LocalPlayer.Instance.LogOut();
-        //     LogoutOrLoginButton.Instance.UpdateButtonText();
-        //     Trace.Log("Logout successful!");
-        // }
-        // else {
-        //     LogoutOrLoginButton.Instance.UpdateButtonText("Error logging out!");
-        //     Trace.LogError("Error logging out!");
-        // }
-
-        // req.Dispose();
-        yield return null;
-    }
     public IEnumerator RegisterUser(string username, string password) {
         GameStates.SetRegisterStatus("Registering...");
 
@@ -258,15 +228,6 @@ public class ServerUser : MonoBehaviour {
 
         req.Dispose();
     }
-    bool SetPlayerId(string responseText) {
-        ulong playerId;
-        if (UInt64.TryParse(responseText, out playerId)) {
-            PlayerPrefs.SetString("playerId", playerId.ToString());
-            // print(PlayerPrefs.GetInt("playerId"));
-            return true;
-        }
-        return false;
-    }
     public IEnumerator DeleteUserProfile(string username, string password) {
         string url = serverJSON["baseUrl"];
         if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
@@ -287,52 +248,6 @@ public class ServerUser : MonoBehaviour {
         else {
             Trace.LogError("Error deleting profile!");
         }
-
-        req.Dispose();
-    }
-    public IEnumerator UpdateBestScore(string username, ulong score) {
-        string url = serverJSON["baseUrl"];
-        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
-
-        JSONObject json = new JSONObject();
-        json.Add("bestScore", score);
-
-        UnityWebRequest req = UnityWebRequest.Put($"{url}?username={username}", json);
-        req.SetRequestHeader("Content-Type", "application/json");
-
-        yield return req.SendWebRequest();
-        WasRequestSuccesful(req);
-
-        req.Dispose();
-    }
-    public IEnumerator UpdateVictories(string username, ulong victories) {
-        string url = serverJSON["baseUrl"];
-        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
-
-        JSONObject json = new JSONObject();
-        json.Add("victories", victories);
-
-        UnityWebRequest req = UnityWebRequest.Put($"{url}?username={username}", json);
-        req.SetRequestHeader("Content-Type", "application/json");
-        // req.method = "PATCH";
-
-        yield return req.SendWebRequest();
-        WasRequestSuccesful(req);
-
-        req.Dispose();
-    }
-    public IEnumerator UpdateCurrentScore(string username, ulong score) {
-        string url = serverJSON["baseUrl"];
-        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
-
-        JSONObject json = new JSONObject();
-        json.Add("currentScore", score);
-
-        UnityWebRequest req = UnityWebRequest.Put($"{url}?username={username}", json);
-        req.SetRequestHeader("Content-Type", "application/json");
-
-        yield return req.SendWebRequest();
-        WasRequestSuccesful(req);
 
         req.Dispose();
     }
@@ -384,55 +299,15 @@ public class ServerUser : MonoBehaviour {
 
         req.Dispose();
     }
-    #endregion
-
-    #region Game room
-    public IEnumerator JoinGameRoom() {
-        string url = serverJSON["baseUrl"] + "testRoom/Join";
-        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
-
-        WWWForm form = new WWWForm();
-        form.AddField("userId", PlayerPrefs.GetString("playerId"));
-        form.AddField("userId", "testRoom");
-
-        UnityWebRequest req = UnityWebRequest.Post($"{url}", form);
-
-        yield return req.SendWebRequest();
-        WasRequestSuccesful(req);
-
-        req.Dispose();
-    }
-    public IEnumerator GetGameRoomStatus() {
-        string url = serverJSON["baseUrl"]/*  + "testRoom/Status" */;
-        if (url.Equals(serverJSON["baseUrl"])) {
-            StartGameButton.Instance.StartGame();
-            Trace.LogWarning("Full URL not set!"); yield break;
+    bool SetPlayerId(string responseText) {
+        ulong playerId;
+        if (UInt64.TryParse(responseText, out playerId)) {
+            PlayerPrefs.SetString("playerId", playerId.ToString());
+            // print(PlayerPrefs.GetInt("playerId"));
+            return true;
         }
-
-        UnityWebRequest req = new UnityWebRequest();
-
-        while (!gameStarted) {
-            req = UnityWebRequest.Get($"{url}");
-
-            yield return req.SendWebRequest();
-
-            if (WasRequestSuccesful(req)) {
-
-                JSONNode json = JSONNode.Parse(req.downloadHandler.text);
-
-                if (json["gameRoomStatus"] == "startGame") gameStarted = true;
-            }
-            else {
-                Trace.LogError("Error starting game!");
-                break;
-            }
-        }
-
-        StartCoroutine(JoinGameRoom());
-
-        req.Dispose();
+        return false;
     }
-    #endregion
     bool WasRequestSuccesful(UnityWebRequest req) {
         if (req.result != UnityWebRequest.Result.Success) {
             Trace.LogWarning(req.error);
@@ -444,7 +319,37 @@ public class ServerUser : MonoBehaviour {
             return true;
         }
     }
+    // public IEnumerator UpdateBestScore(string username, ulong score) {
+    //     string url = serverJSON["baseUrl"];
+    //     if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
 
+    //     JSONObject json = new JSONObject();
+    //     json.Add("bestScore", score);
+
+    //     UnityWebRequest req = UnityWebRequest.Put($"{url}?username={username}", json);
+    //     req.SetRequestHeader("Content-Type", "application/json");
+
+    //     yield return req.SendWebRequest();
+    //     WasRequestSuccesful(req);
+
+    //     req.Dispose();
+    // }
+    // public IEnumerator UpdateVictories(string username, ulong victories) {
+    //     string url = serverJSON["baseUrl"];
+    //     if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
+
+    //     JSONObject json = new JSONObject();
+    //     json.Add("victories", victories);
+
+    //     UnityWebRequest req = UnityWebRequest.Put($"{url}?username={username}", json);
+    //     req.SetRequestHeader("Content-Type", "application/json");
+    //     // req.method = "PATCH";
+
+    //     yield return req.SendWebRequest();
+    //     WasRequestSuccesful(req);
+
+    //     req.Dispose();
+    // }
     // public class ForceAcceptAll : CertificateHandler {
     //     protected override bool ValidateCertificate(byte[] certificateData) {
     //         return true;

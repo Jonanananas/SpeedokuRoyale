@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class ServerOperations : MonoBehaviour {
-    public static ServerOperations Instance;
+public class ServerLoginOperations : MonoBehaviour {
+    public static ServerLoginOperations Instance;
     void Awake() {
         #region Singleton
         if (Instance != null) {
@@ -18,9 +18,9 @@ public class ServerOperations : MonoBehaviour {
         #endregion
     }
     public void RegisterUser(string userName, string password) {
-        StartCoroutine(ServerUser.Instance.RegisterUser(userName, password));
+        StartCoroutine(ServerPlayerProfileReqs.Instance.RegisterUser(userName, password));
     }
     public void LogIn(string userName, string password) {
-        StartCoroutine(ServerUser.Instance.LogIn(userName, password));
+        StartCoroutine(ServerPlayerProfileReqs.Instance.LogIn(userName, password));
     }
 }
