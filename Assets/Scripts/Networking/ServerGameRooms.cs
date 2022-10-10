@@ -10,7 +10,7 @@ using SimpleJSON;
 public class ServerGameRooms : MonoBehaviour {
     public static ServerGameRooms Instance;
     JSONNode serverJSON = new JSONObject();
-    string currentRoomName;
+    string currentRoomName, inGameStatus;
 
     void Start() {
         string serverSettingsPath = Application.dataPath + "/server-settings.json";
@@ -125,31 +125,42 @@ public class ServerGameRooms : MonoBehaviour {
         req.Dispose();
     }
     IEnumerator GetGameRoomStatusIEnum(string roomName) {
-        string url = serverJSON["baseUrl"] + "/MultiplayerRuntime/" + roomName + "/Status";
-        if (url.Equals(serverJSON["baseUrl"])) {
+        string statusCodeURL = serverJSON["baseUrl"] + "/MultiplayerRuntime/" + roomName + "/Status";
+        string statusURL = serverJSON["baseUrl"] + "/MultiplayerRuntime/" + roomName + "/InGameStatus";
+        if (statusCodeURL.Equals(serverJSON["baseUrl"])) {
             StartGameButton.Instance.StartGame();
             Trace.LogWarning("Full URL not set!"); yield break;
         }
         gameComplete = false;
         gameStarted = false;
 
-        UnityWebRequest req = new UnityWebRequest();
+        UnityWebRequest statusCodeReq = new UnityWebRequest();
+        UnityWebRequest statusReq = new UnityWebRequest();
 
         while (!gameComplete) {
-            req = UnityWebRequest.Get($"{url}");
+            statusCodeReq = UnityWebRequest.Get($"{statusCodeURL}");
+            statusReq = UnityWebRequest.Get($"{statusURL}");
 
-            yield return req.SendWebRequest();
+            yield return statusCodeReq.SendWebRequest();
 
-            if (WasRequestSuccesful(req)) {
+            if (WasRequestSuccesful(statusCodeReq)) {
 
                 // JSONNode json = JSONNode.Parse(req.downloadHandler.text);
 
                 // if (json["gameRoomStatus"] == "startGame") gameStarted = true;
-                print("game room status: " + req.downloadHandler.text);
-                string roomStatus = req.downloadHandler.text;
+                print("game room status code: " + statusCodeReq.downloadHandler.text);
+                string roomStatus = statusCodeReq.downloadHandler.text;
                 if (roomStatus == "1" && !gameStarted) {
                     StartGameButton.Instance.StartGame();
+                    Timer.Instance.StartCheckingToDropPlayers();
                     gameStarted = true;
+                }
+                if (roomStatus == "1" && gameStarted) {
+                    yield return statusReq.SendWebRequest();
+                    if (WasRequestSuccesful(statusReq)) {
+                        print("game room status: " + statusReq.downloadHandler.text);
+                        inGameStatus = statusReq.downloadHandler.text;
+                    }
                 }
                 else if (roomStatus == "3") {
                     gameComplete = true;
@@ -162,7 +173,8 @@ public class ServerGameRooms : MonoBehaviour {
             yield return new WaitForSeconds(1);
         }
 
-        req.Dispose();
+        statusCodeReq.Dispose();
+        statusReq.Dispose();
     }
     bool WasRequestSuccesful(UnityWebRequest req) {
         if (req.result != UnityWebRequest.Result.Success) {
@@ -173,6 +185,28 @@ public class ServerGameRooms : MonoBehaviour {
         else {
             Trace.Log("Request complete: " + req.downloadHandler.text);
             return true;
+        }
+    }
+    public void DropLastPlayer() {
+        JSONNode json = JSONNode.Parse(inGameStatus);
+
+        int numberOfPlayers = json["players"].Count;
+        // if (numberOfPlayers <= 1) return;
+
+        ulong lowestScore;
+        System.UInt64.TryParse(json["players"][0].Value, out lowestScore);
+
+        foreach (var player in json["players"]) {
+            print("player.Value[\"score\"]" + player.Value["score"]);
+            ulong playerScore;
+            System.UInt64.TryParse(json["players"][0].Value, out playerScore);
+            if (playerScore < lowestScore) {
+                lowestScore = playerScore;
+            }
+        }
+        if (lowestScore == LocalPlayer.Instance.GetScore()) {
+            Timer.Instance.StopTimer();
+            ManageGameSession.Instance.LoseGame();
         }
     }
 
