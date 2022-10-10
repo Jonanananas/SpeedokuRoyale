@@ -74,3 +74,7 @@ crashlytics-build.properties
 # Server settings
 /Assets/server-settings.json
 /Assets/server-settings.json.meta
+
+# Streaming Assets
+/Assets/StreamingAssets/*
+/Assets/StreamingAssets.meta
