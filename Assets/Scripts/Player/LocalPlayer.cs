@@ -6,6 +6,7 @@ using UnityEngine;
 public class LocalPlayer : MonoBehaviour {
     public static LocalPlayer Instance;
     public PlayerProfile profile { get; private set; }
+    public string playerId;
     ulong score;
 
     void Awake() {

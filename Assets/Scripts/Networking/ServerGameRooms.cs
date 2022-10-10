@@ -68,7 +68,7 @@ public class ServerGameRooms : MonoBehaviour {
     IEnumerator AddScoreIEnum(ulong score) {
         NameValueCollection queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
 
-        queryString.Add("playerId", PlayerPrefs.GetString("playerId"));
+        queryString.Add("playerId", LocalPlayer.Instance.playerId);
         queryString.Add("scores", score.ToString());
 
         string url = serverJSON["baseUrl"] + "/MultiplayerRuntime/" + currentRoomName + "/AddScore?" + queryString.ToString();
@@ -94,7 +94,7 @@ public class ServerGameRooms : MonoBehaviour {
 
         JSONNode json = JSONNode.Parse(req.downloadHandler.text);
 
-        // print(json);
+        print(json);
         // print(json[0]["name"]);
 
         // StartCoroutine(JoinGameRoom());
@@ -107,7 +107,7 @@ public class ServerGameRooms : MonoBehaviour {
     }
     IEnumerator JoinGameRoomIEnum(string roomName) {
         print("roomName:" + roomName);
-        string url = serverJSON["baseUrl"] + "/MultiplayerRuntime/" + roomName + "/Join?playerId=" + PlayerPrefs.GetString("playerId");
+        string url = serverJSON["baseUrl"] + "/MultiplayerRuntime/" + roomName + "/Join?playerId=" + LocalPlayer.Instance.playerId;
         if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
 
         UnityWebRequest req = UnityWebRequest.Post($"{url}", "");

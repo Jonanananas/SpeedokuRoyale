@@ -111,7 +111,7 @@ public class ServerPlayerProfiles : MonoBehaviour {
             // else {
             //     Trace.LogError("Failed to parse numerical user profile data!");
             // }
-            StartCoroutine(GetAndSetUserDataIEnum(UInt64.Parse(PlayerPrefs.GetString("playerId")), username));
+            StartCoroutine(GetAndSetUserDataIEnum(UInt64.Parse(LocalPlayer.Instance.playerId), username));
         }
         else {
             GameStates.SetLoginStatus("Log in failed.");
@@ -156,7 +156,7 @@ public class ServerPlayerProfiles : MonoBehaviour {
             ulong gameWinnerId = 0;
             print(gameId);
             foreach (var item in json) {
-                if (item.Value["id"] == gameId) {
+                if (item.Value["multiplayerGameId"] == gameId) {
                     ulong gameScore = UInt64.Parse(item.Value["score"]);
                     if (gameScore > gameBestScore) {
                         gameBestScore = gameScore;
@@ -322,7 +322,8 @@ public class ServerPlayerProfiles : MonoBehaviour {
     bool SetPlayerId(string responseText) {
         ulong playerId;
         if (UInt64.TryParse(responseText, out playerId)) {
-            PlayerPrefs.SetString("playerId", playerId.ToString());
+            // PlayerPrefs.SetString("playerId", playerId.ToString());
+            LocalPlayer.Instance.playerId = playerId.ToString();
             // print(PlayerPrefs.GetInt("playerId"));
             return true;
         }
