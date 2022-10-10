@@ -15,7 +15,7 @@ public class Menu : MonoBehaviour
     public void PlayOnline()
     {
         GameStates.SetOnlineMode(true);
-        SceneManager.LoadScene("Online");
+        SceneManager.LoadScene("Multiplayer");
     }
     public void PlayOnlineTest()
     {

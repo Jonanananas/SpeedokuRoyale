@@ -20,6 +20,7 @@ public class Royale : Sudoku {
                 checkerTMP.color = Color.magenta;
                 checkerTMP.text = "Incorrect!";
             } else {
+                ManageGameSession.Instance.AddPoints((ulong)K);
                 checkerTMP.color = Color.cyan;
                 checkerTMP.text = "Correct!\t+" + K + " points";
                 allGamePoints += K;

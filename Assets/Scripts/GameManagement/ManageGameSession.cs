@@ -9,6 +9,7 @@ public class ManageGameSession : MonoBehaviour {
     public static ManageGameSession Instance;
     public GameObject gameEndMenu;
     public TextMeshProUGUI victoryOrDefeatTMP, placementTMP, scoreTMP, userTMP, currentScoreTMP;
+    [SerializeField] Sudoku sudoku;
     int playersLeft = 2;
     void Awake() {
         #region Singleton
@@ -23,6 +24,7 @@ public class ManageGameSession : MonoBehaviour {
     public void StartGame() {
         LocalPlayer.Instance.ResetScore();
         Timer.Instance.StartTimer();
+        sudoku.initializeGame();
     }
     public void LoseGame() {
         EndGame();

@@ -190,8 +190,8 @@ public class ServerGameRooms : MonoBehaviour {
     public void DropLastPlayer() {
         JSONNode json = JSONNode.Parse(inGameStatus);
 
-        // int numberOfPlayers = json["players"].Count;
-        // if (numberOfPlayers <= 1) return;
+        int numberOfPlayers = json["players"].Count;
+        if (numberOfPlayers <= 1) return;
 
         // Drop a player with lowest score
         // ulong lowestScore;
