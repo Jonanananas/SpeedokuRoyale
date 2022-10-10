@@ -190,21 +190,40 @@ public class ServerGameRooms : MonoBehaviour {
     public void DropLastPlayer() {
         JSONNode json = JSONNode.Parse(inGameStatus);
 
-        int numberOfPlayers = json["players"].Count;
+        // int numberOfPlayers = json["players"].Count;
         // if (numberOfPlayers <= 1) return;
 
-        ulong lowestScore;
-        System.UInt64.TryParse(json["players"][0].Value, out lowestScore);
+        // Drop a player with lowest score
+        // ulong lowestScore;
+        // System.UInt64.TryParse(json["players"][0].Value, out lowestScore);
+
+        // foreach (var player in json["players"]) {
+        //     print("player.Value[\"score\"]" + player.Value["score"]);
+        //     ulong playerScore;
+        //     System.UInt64.TryParse(json["players"][0].Value, out playerScore);
+        //     if (playerScore < lowestScore) {
+        //         lowestScore = playerScore;
+        //     }
+        // }
+        // if (lowestScore == LocalPlayer.Instance.GetScore()) {
+        //     Timer.Instance.StopTimer();
+        //     ManageGameSession.Instance.LoseGame();
+        // }
+
+        // Drop player if they don't have the highest score
+        ulong highestScore;
+        System.UInt64.TryParse(json["players"][0].Value, out highestScore);
 
         foreach (var player in json["players"]) {
             print("player.Value[\"score\"]" + player.Value["score"]);
             ulong playerScore;
-            System.UInt64.TryParse(json["players"][0].Value, out playerScore);
-            if (playerScore < lowestScore) {
-                lowestScore = playerScore;
+            System.UInt64.TryParse(player.Value["score"], out playerScore);
+            if (playerScore > highestScore) {
+                highestScore = playerScore;
             }
         }
-        if (lowestScore == LocalPlayer.Instance.GetScore()) {
+        print("highestScore: " + highestScore);
+        if (highestScore != LocalPlayer.Instance.GetScore()) {
             Timer.Instance.StopTimer();
             ManageGameSession.Instance.LoseGame();
         }
