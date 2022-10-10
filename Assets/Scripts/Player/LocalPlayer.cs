@@ -49,10 +49,10 @@ public class LocalPlayer : MonoBehaviour {
     }
     public void ResetScore() {
         score = 0;
-        if (GameStates.isOnlineMode) {
-            if (profile == null) { Trace.LogWarning("Not logged in!"); return; }
-            ServerGameRooms.Instance.UpdateCurrentScore(profile.username, score);
-        }
+        // if (GameStates.isOnlineMode) {
+        //     if (profile == null) { Trace.LogWarning("Not logged in!"); return; }
+        //     ServerGameRooms.Instance.UpdateCurrentScore(profile.username, score);
+        // }
     }
     public void LogOut() {
         profile = null;

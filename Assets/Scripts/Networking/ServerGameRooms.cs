@@ -130,6 +130,8 @@ public class ServerGameRooms : MonoBehaviour {
             StartGameButton.Instance.StartGame();
             Trace.LogWarning("Full URL not set!"); yield break;
         }
+        gameComplete = false;
+        gameStarted = false;
 
         UnityWebRequest req = new UnityWebRequest();
 
