@@ -48,12 +48,12 @@ public class Royale : Sudoku {
     }
 
     public override void sudokuEnd() {
-        if (playersLeft < 2) {
-            ManageGameSession.Instance.WinGame();
-        }
-        else {
-            ManageGameSession.Instance.LoseGame();
-        }
+        // if (playersLeft < 2) {
+        //     ManageGameSession.Instance.WinGame();
+        // }
+        // else {
+        //     ManageGameSession.Instance.LoseGame();
+        // }
         //points
         oneGamePoints += getPoints();
         allGamePoints += oneGamePoints;

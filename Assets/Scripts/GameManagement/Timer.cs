@@ -44,7 +44,7 @@ public class Timer : MonoBehaviour {
     void FixedUpdate() {
         if (isRunning) {
             if (timeLong == 0) {
-                ManageGameSession.Instance.EliminateOnePlayer();
+                // ManageGameSession.Instance.EliminateOnePlayer();
                 ManageGameSession.Instance.EndGame();
                 return;
             }

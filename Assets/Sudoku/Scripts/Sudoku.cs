@@ -283,11 +283,11 @@ public class Sudoku : MonoBehaviour {
         NumContPanel.SetActive(false);
 
         //check result
-        if (getWrong() != 0) {
-            ManageGameSession.Instance.LoseGame();
-        } else {
-            ManageGameSession.Instance.WinGame();
-        }
+        // if (getWrong() != 0) {
+        //     ManageGameSession.Instance.LoseGame();
+        // } else {
+        //     ManageGameSession.Instance.WinGame();
+        // }
         //points
         allGamePoints += getPoints();
         //set endscreen info & checker time

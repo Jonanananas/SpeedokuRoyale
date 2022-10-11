@@ -27,15 +27,14 @@ public class ManageGameSession : MonoBehaviour {
         sudoku.initializeGame();
     }
     public void LoseGame() {
-        //EndGame();
-        //Timer.Instance.StopTimer();
+        EndGame();
         checkerTMP.color = Color.red;
         victoryOrDefeatTMP.text = "Defeat Royale";
         victoryOrDefeatTMP.color = Color.red;
         //SetPlacingText();
     }
     public void WinGame() {
-        //EndGame();
+        EndGame();
         LocalPlayer.Instance.IncrementVictories();
         checkerTMP.color = Color.cyan;
         victoryOrDefeatTMP.text = "Victory Royale!";
