@@ -37,9 +37,9 @@ public class Timer2 : MonoBehaviour {
     
     void Update() {
         if (isRunning) {
-            if (timeFloat <= 0) {
-                SessionManager.Instance.EndGame();
-                StopTimer();
+            if (timeFloat == 0) {
+                ManageGameSession.Instance.EliminateOnePlayer();
+                ManageGameSession.Instance.EndGame();
                 return;
             }
             timeFloat-= Time.deltaTime;

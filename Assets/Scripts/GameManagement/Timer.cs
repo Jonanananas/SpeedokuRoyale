@@ -9,7 +9,6 @@ public class Timer : MonoBehaviour {
     public static Timer Instance;
     public long timeLimit = 100000L; // Set in game scene in editor
     public TextMeshProUGUI textTMP;
-    // public string text { get; private set; }
     public long timeLong { get; private set; }
     public long elapsedTime { get; private set; }
     public bool isRunning { get; private set; }
@@ -46,12 +45,14 @@ public class Timer : MonoBehaviour {
         if (isRunning) {
             if (timeLong == 0) {
                 ManageGameSession.Instance.EliminateOnePlayer();
-                ManageGameSession.Instance.WinGame();
-                StopTimer();
+                ManageGameSession.Instance.EndGame();
                 return;
             }
             elapsedTime++;
             timeLong--;
+            if (timeLong < 0) {
+                timeLong = 0;
+            }
             UpdateTimerText();
             if (checkForDrops && elapsedTime % eliminationInterval == 0) {
                 ServerGameRooms.Instance.DropLastPlayer();
@@ -59,9 +60,33 @@ public class Timer : MonoBehaviour {
         }
     }
     void UpdateTimerText() {
-        long minutes = (timeLong / 100L) / 60L;
-        long seconds = (timeLong / 100L) - (60L * minutes);
-        long fractions = timeLong % 100L;
-        textTMP.text = minutes + ":" + seconds + "." + fractions;
+        textTMP.text = GetStringTime(timeLong);
     }
+
+    public string GetElapsedTime() {
+        return GetStringTime(elapsedTime);
+    }
+
+    private string GetStringTime(long time) {
+        long minutes = (time / 100L) / 60L,
+            seconds = (time / 100L) - (60L * minutes),
+            fractions = time % 100L;
+
+        string tuloste = "" + minutes;
+
+        if (seconds < 10){
+            tuloste += ":0" + seconds;
+        } else {
+            tuloste += ":" + seconds;
+        }
+
+        if (fractions < 10){
+            tuloste += ".0" + fractions;
+        } else {
+            tuloste += "." + fractions;
+        }
+
+        return tuloste;
+    }
+    
 }

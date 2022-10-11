@@ -8,9 +8,10 @@ using TMPro;
 public class ManageGameSession : MonoBehaviour {
     public static ManageGameSession Instance;
     public GameObject gameEndMenu;
-    public TextMeshProUGUI victoryOrDefeatTMP, placementTMP, scoreTMP, userTMP, currentScoreTMP;
+    [SerializeField] private TextMeshProUGUI 
+    checkerTMP, victoryOrDefeatTMP, placementTMP, 
+    scoreTMP, userTMP, currentScoreTMP;
     [SerializeField] Sudoku sudoku;
-    int playersLeft = 2;
     void Awake() {
         #region Singleton
         if (Instance != null) {
@@ -19,7 +20,6 @@ public class ManageGameSession : MonoBehaviour {
         }
         Instance = this;
         #endregion
-        playersLeft = 2;
     }
     public void StartGame() {
         LocalPlayer.Instance.ResetScore();
@@ -27,26 +27,38 @@ public class ManageGameSession : MonoBehaviour {
         sudoku.initializeGame();
     }
     public void LoseGame() {
-        EndGame();
-        Timer.Instance.StopTimer();
+        //EndGame();
+        //Timer.Instance.StopTimer();
+        checkerTMP.color = Color.red;
         victoryOrDefeatTMP.text = "Defeat Royale";
         victoryOrDefeatTMP.color = Color.red;
-        SetPlacingText();
+        //SetPlacingText();
     }
     public void WinGame() {
-        EndGame();
+        //EndGame();
         LocalPlayer.Instance.IncrementVictories();
+        checkerTMP.color = Color.cyan;
         victoryOrDefeatTMP.text = "Victory Royale!";
         victoryOrDefeatTMP.color = new Color32(132, 250, 255, 255);
-        placementTMP.text = $"You placed 1st";
+        //placementTMP.text = $"You placed 1st";
     }
-    void EndGame() {
+    public void EndGame() {
+        /*
         gameEndMenu.SetActive(true);
         scoreTMP.text = $"Score: {LocalPlayer.Instance.GetScore()}";
         LocalPlayer.Instance.UpdateLocalHighScore();
+        */
+        Timer.Instance.StopTimer();
+        sudoku.sudokuEnd();
+        StartCoroutine(waiter(1f));
+        IEnumerator waiter(float s){
+            yield return new WaitForSeconds(s);
+            gameEndMenu.SetActive(true);
+        }
     }
     public void EliminateOnePlayer() {
-        playersLeft--;
+        Royale royale = (Royale) sudoku;
+        royale.eliminatePlayer();
     }
     public void AddPoints(ulong pointsToAdd) {
         LocalPlayer.Instance.AddPoints(pointsToAdd);
@@ -55,9 +67,11 @@ public class ManageGameSession : MonoBehaviour {
         LocalPlayer.Instance.AddPoints(1);
     }
     public void UpdateScore(ulong score) {
-        currentScoreTMP.text = score.ToString();
+        currentScoreTMP.text = "Score: " + score.ToString();
+        scoreTMP.text = "Score: " + score.ToString(); 
+        LocalPlayer.Instance.UpdateLocalHighScore();
     }
-    void SetPlacingText() {
+    public void SetPlacingText(int playersLeft) {
         string placementSuffix = "th";
         int modulo = playersLeft % 10;
         switch (modulo) {
@@ -75,5 +89,37 @@ public class ManageGameSession : MonoBehaviour {
             placementSuffix = "th";
         }
         placementTMP.text = $"You placed {playersLeft}{placementSuffix}";
+    }
+    public void ButtonValidateClassic() {
+        if (sudoku.getWrong() != 0) {
+            checkerTMP.color = Color.magenta;
+            checkerTMP.text = "Incorrect!";
+        } else {
+            checkerTMP.color = Color.cyan;
+            checkerTMP.text = "Correct!";
+            EndGame();
+        }           
+    }
+    public void ButtonValidateRoyale() {
+        Royale royale = (Royale)sudoku;
+        if (royale.getWrong() != 0) {
+            checkerTMP.color = Color.magenta;
+            checkerTMP.text = "Incorrect!";
+        } else {
+            checkerTMP.color = Color.cyan;
+            checkerTMP.text = "Correct!";
+            royale.afterCorrectButtonValidate();
+        }           
+    }
+    public void ClearCheckerText() {
+        checkerTMP.text = "";
+    }
+    public void SetTimeSpent(bool solo) {
+        if (solo) {
+            checkerTMP.text += "\tTime spent: " + Timer.Instance.GetElapsedTime();
+            placementTMP.text = "Time spent (m:s.f): " + Timer.Instance.GetElapsedTime();
+        } else {
+            checkerTMP.text += "\tTime spent: " + Timer.Instance.GetElapsedTime();
+        }
     }
 }
