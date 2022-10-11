@@ -13,7 +13,7 @@ public class Timer : MonoBehaviour {
     public long elapsedTime { get; private set; }
     public bool isRunning { get; private set; }
     bool checkForDrops;
-    long eliminationInterval = 500L;
+    [SerializeField ]long eliminationInterval = 2000L; // Set in game scene in editor
     public void StartTimer() {
         if (isRunning == false) {
             timeLong = timeLimit;

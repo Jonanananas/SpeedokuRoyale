@@ -2505,8 +2505,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc97118bf0b3ced4e885de7698e5a1b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeLimit: 2000
+  timeLimit: 4000
   textTMP: {fileID: 1943019046}
+  eliminationInterval: 2000
 --- !u!224 &733800657
 RectTransform:
   m_ObjectHideFlags: 0

@@ -49,6 +49,55 @@ public class ServerGameRooms : MonoBehaviour {
     public void GetGameRoomStatus(string roomName) {
         StartCoroutine(GetGameRoomStatusIEnum(roomName));
     }
+    public void DropLastPlayer() {
+        JSONNode json = JSONNode.Parse(inGameStatus);
+
+        int numberOfPlayers = json["players"].Count;
+        if (numberOfPlayers <= 1) return;
+
+        // Drop a player with lowest score
+        ulong lowestScore = 0;
+        if (System.UInt64.TryParse(json["players"][0]["score"].Value, out lowestScore)) {
+            Trace.Log("Score parse successful!");
+        }
+        else {
+            Trace.LogError("Score parse failed!");
+        }
+
+        print("lowestScore: " + lowestScore);
+
+        foreach (var player in json["players"]) {
+            print("player.Value[\"score\"]" + player.Value["score"]);
+            ulong playerScore;
+            System.UInt64.TryParse(player.Value["score"], out playerScore);
+            if (playerScore < lowestScore) {
+                lowestScore = playerScore;
+            }
+        }
+        if (lowestScore == LocalPlayer.Instance.GetScore()) {
+            Timer.Instance.StopTimer();
+            ManageGameSession.Instance.LoseGame();
+            StartCoroutine(DropLastPlayerIEnum());
+        }
+
+        // Drop player if they don't have the highest score
+        // ulong highestScore;
+        // System.UInt64.TryParse(json["players"][0].Value, out highestScore);
+
+        // foreach (var player in json["players"]) {
+        //     print("player.Value[\"score\"]" + player.Value["score"]);
+        //     ulong playerScore;
+        //     System.UInt64.TryParse(player.Value["score"], out playerScore);
+        //     if (playerScore > highestScore) {
+        //         highestScore = playerScore;
+        //     }
+        // }
+        // print("highestScore: " + highestScore);
+        // if (highestScore != LocalPlayer.Instance.GetScore()) {
+        //     Timer.Instance.StopTimer();
+        //     ManageGameSession.Instance.LoseGame();
+        // }
+    }
     bool gameStarted, gameComplete;
     IEnumerator UpdateCurrentScoreIEnum(string username, ulong score) {
         string url = serverJSON["baseUrl"];
@@ -176,6 +225,33 @@ public class ServerGameRooms : MonoBehaviour {
         statusCodeReq.Dispose();
         statusReq.Dispose();
     }
+    IEnumerator DropLastPlayerIEnum() {
+        NameValueCollection queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
+        queryString.Add("playerId", LocalPlayer.Instance.playerId);
+        string url = serverJSON["baseUrl"] + "/MultiplayerRuntime/" + currentRoomName + "/Kill?" + queryString.ToString();
+
+        if (url.Equals(serverJSON["baseUrl"])) {
+            Trace.LogWarning("Full URL not set!"); yield break;
+        }
+
+        UnityWebRequest req = UnityWebRequest.Post(url, "");
+
+        yield return req.SendWebRequest();
+
+        WasRequestSuccesful(req);
+
+        print(req.downloadHandler.text);
+
+        if (req.downloadHandler.text == "true") {
+            Trace.Log("Local player eliminated from game room " + currentRoomName);
+        }
+        else {
+            Trace.LogError("Player elimination failed");
+        }
+
+        req.Dispose();
+    }
+
     bool WasRequestSuccesful(UnityWebRequest req) {
         if (req.result != UnityWebRequest.Result.Success) {
             Trace.LogWarning(req.error);
@@ -185,47 +261,6 @@ public class ServerGameRooms : MonoBehaviour {
         else {
             Trace.Log("Request complete: " + req.downloadHandler.text);
             return true;
-        }
-    }
-    public void DropLastPlayer() {
-        JSONNode json = JSONNode.Parse(inGameStatus);
-
-        int numberOfPlayers = json["players"].Count;
-        if (numberOfPlayers <= 1) return;
-
-        // Drop a player with lowest score
-        // ulong lowestScore;
-        // System.UInt64.TryParse(json["players"][0].Value, out lowestScore);
-
-        // foreach (var player in json["players"]) {
-        //     print("player.Value[\"score\"]" + player.Value["score"]);
-        //     ulong playerScore;
-        //     System.UInt64.TryParse(json["players"][0].Value, out playerScore);
-        //     if (playerScore < lowestScore) {
-        //         lowestScore = playerScore;
-        //     }
-        // }
-        // if (lowestScore == LocalPlayer.Instance.GetScore()) {
-        //     Timer.Instance.StopTimer();
-        //     ManageGameSession.Instance.LoseGame();
-        // }
-
-        // Drop player if they don't have the highest score
-        ulong highestScore;
-        System.UInt64.TryParse(json["players"][0].Value, out highestScore);
-
-        foreach (var player in json["players"]) {
-            print("player.Value[\"score\"]" + player.Value["score"]);
-            ulong playerScore;
-            System.UInt64.TryParse(player.Value["score"], out playerScore);
-            if (playerScore > highestScore) {
-                highestScore = playerScore;
-            }
-        }
-        print("highestScore: " + highestScore);
-        if (highestScore != LocalPlayer.Instance.GetScore()) {
-            Timer.Instance.StopTimer();
-            ManageGameSession.Instance.LoseGame();
         }
     }
 
