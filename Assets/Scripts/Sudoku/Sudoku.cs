@@ -9,11 +9,11 @@ using UnityEngine.UI;
 
 public class Sudoku : MonoBehaviour {
 
-    // sudokun koko & puuttuvat numerot & N neliöjuuri
-    [SerializeField] protected int N = 9, K = 9, SRN;
-    // sudoku correct answers
+    // N sudokun koko, K puuttuvat numerot, SRN neliöjuuri N:stä
+    public int N = 9, K = 9, SRN;
+    // sudoku oikeat vastaukset
     protected static int[,] answers; 
-    // sudoku incomplete answers
+    // sudoku annetut vastaukset
     protected static int[,] values;
 
     protected static int allGamePoints;
@@ -30,7 +30,8 @@ public class Sudoku : MonoBehaviour {
 
     [SerializeField] protected GameObject SudokuGridPanel, FieldPrefab, 
                                     NumContPanel, NumContPrefab, ButPanel;
-
+    
+    // Update() -metodissa vaihdetaan sudoku numeroiden arvoja näppäimistöllä
     void Update() {
         if (currentSudokuNumber != null) {
             for (int i = 0; i < keyCodes.Length; i++) {
@@ -45,6 +46,7 @@ public class Sudoku : MonoBehaviour {
         }
     }
 
+    // initializeGame() -metodilla alustetaan uusi sudoku taulu
     public void initializeGame() {
         allGamePoints = 0;
         ManageGameSession.Instance.ClearCheckerText();
@@ -57,13 +59,11 @@ public class Sudoku : MonoBehaviour {
         grids = ts.Skip(1).ToArray();
 
         generateSudoku();
-
-        //Make fields
         setControls();
         setNumbers();
     }
     
-    //Generaattori
+    // generateSudoku() -metodilla generoidaan sudoku numerot kutsumalla metodeja
     protected void generateSudoku() {
         // Fill the diagonal of SRN x SRN matrices : fillDiagonal
         for (int i = 0; i < N; i += SRN) { createMatrix(i, i); }
@@ -75,7 +75,7 @@ public class Sudoku : MonoBehaviour {
         removeDigits();
     }
 
-    // Fill a 3 x 3 matrix.
+    // createMatrix(int row, int col) -metodi luo koon neliöjuuren verran numeroita matrixiin
     protected void createMatrix(int row, int col) {
         int num;
         for (int i = 0; i < SRN; i++) {
@@ -87,7 +87,7 @@ public class Sudoku : MonoBehaviour {
         }
     }
 
-    // Täyttää
+    // generateRemaining(int i, int j) -metodi luo loput numerot
     protected bool generateRemaining(int i, int j) {
         if (j >= N && i < N - 1) { i++; j = 0; }
 
@@ -109,13 +109,13 @@ public class Sudoku : MonoBehaviour {
                 answers[i, j] = num;
                 if (generateRemaining(i, j + 1)) return true;
 
-                answers[i, j] = 0; //tä ei tapahdu lähes ikinä
+                answers[i, j] = 0;
             }
         }
         return false;
     }
 
-    // Remove K num of digits
+    // removeDigits() -metodi poistaa K:n verran numeroita
     public void removeDigits() {
         values = answers.Clone() as int[,];
         int count = K;
@@ -133,6 +133,7 @@ public class Sudoku : MonoBehaviour {
         }
     }
 
+    // setControls() -metodi asettaa kontrollit
     protected void setControls() {
         controls = new ControlObj[N];
         for (int i = 1; i <= N; ++i){
@@ -143,7 +144,8 @@ public class Sudoku : MonoBehaviour {
             controls[i-1] = cobj;
         }
     }
-    
+
+    // setNumbers() -metodi asettaa numerot tauluihin
     protected void setNumbers() {
         Transform curGrid = grids[0];
         int numberId = 0;
@@ -195,15 +197,16 @@ public class Sudoku : MonoBehaviour {
         }
     }
 
+    // onClick_Number(SudokuNumber sn) -metodi toimii klikki kuuntelijana sudoku numeroille
     protected void onClick_Number(SudokuNumber sn) {
         ManageGameSession.Instance.ClearCheckerText();
-        
-        Debug.Log($"clicked: " + sn.ToString());
+        Trace.Log($"clicked: " + sn.ToString());
         if (currentSudokuNumber != null) {currentSudokuNumber.unsetSelect();}
         currentSudokuNumber = sn;
         currentSudokuNumber.setSelect();
     }
 
+    // onClick_Control(ControlObj cobj) -metodi toimii klikki kuuntelijana kontrolli nappuloille
     protected void onClick_Control(ControlObj cobj) {
         ManageGameSession.Instance.ClearCheckerText();
         if (currentControl != null) { currentControl.unsetSelect();}
@@ -216,13 +219,12 @@ public class Sudoku : MonoBehaviour {
         }
     }
 
-    // Check if safe to put in cell
+    // SafeCheck(int i, int j, int num) -boolean tarkistaa että numeron voi asettaa taulukkoon
     protected bool SafeCheck(int i, int j, int num) {
         return (notInRow(i, num) && notInCol(j, num) && notInBox(i - i % SRN, j - j % SRN, num));
     }
 
-
-    // False if the 3*3 block contains number
+    // notInBox(int rowStart, int colStart, int num) -boolean tarkistaa että numero ei ole SRN*SRN taulukossa joka luotiin createMatrix()
     protected bool notInBox(int rowStart, int colStart, int num) {
         for (int i = 0; i < SRN; i++)
             for (int j = 0; j < SRN; j++)
@@ -230,25 +232,27 @@ public class Sudoku : MonoBehaviour {
         return true;
     }
 
-    // False if the column contains number
+    // notInCol(int j, int num) -boolean tarkistaa että numero ei ole kolumnissa
     protected bool notInCol(int j, int num) {
         for (int i = 0; i < N; i++) if (answers[i, j] == num) return false;
         return true;
     }
 
-    // False if the row contains number
+    // notInRow(int j, int num) -boolean tarkistaa että numero ei ole rivissä
     protected bool notInRow(int i, int num) {
         for (int j = 0; j < N; j++) if (answers[i, j] == num) return false;
         return true;
     }
 
-    // Random gen
+    // randGen(int num) -integer luo satunnaisen numeron
     protected int randGen(int num) { return Random.Range(1, (num + 1)); }
 
+    // getOne(int i, int j, int[,] arr) -integer palauttaa yhden arvon taulukosta
     protected int getOne(int i, int j, int[,] arr) {
         return arr[i, j];
     }
 
+    // getSudokuNumber(int i, int j) -SudokuNumber palauttaa yhden olion taulukosta
     protected SudokuNumber getSudokuNumber(int i, int j) {
         foreach (SudokuNumber sn in numbers) {
             if (sn.Row == i && sn.Col == j) {
@@ -258,8 +262,10 @@ public class Sudoku : MonoBehaviour {
         return null;
     }
 
+    // setOne(int i, int j, int value) -metodi asettaa yhden arvon taulukosta
     protected void setOne(int i, int j, int value) { values[i, j] = value; }
 
+    // setOne(int i, int j, int value) -metodi asettaa yhden arvon taulukosta
     public int getWrong() {
         int x = 0;
         foreach (SudokuNumber number in numbers) {
@@ -270,31 +276,23 @@ public class Sudoku : MonoBehaviour {
         return x;
     }
 
+    //getPoints() -integer palauttaa
     public int getPoints() {
         return K - getWrong();
     }
 
+    //sudokuEnd() -metodi kutsutaan pelin lopuksi ManageGameSession -luokasta
     public virtual void sudokuEnd() {
-        //stop
         foreach (SudokuNumber number in numbers) {
             number.disableOnly();
         }
         if (currentSudokuNumber != null) currentSudokuNumber.unsetSelect();
-        NumContPanel.SetActive(false);
 
-        //check result
-        // if (getWrong() != 0) {
-        //     ManageGameSession.Instance.LoseGame();
-        // } else {
-        //     ManageGameSession.Instance.WinGame();
-        // }
-        //points
+        NumContPanel.SetActive(false);
         allGamePoints += getPoints();
-        //set endscreen info & checker time
+        // Aseta checker aika & päivitä score
         ManageGameSession.Instance.SetTimeSpent(true);
         ManageGameSession.Instance.UpdateScore((ulong)allGamePoints);
-        //give points
-        // ManageGameSession.Instance.AddPoints((ulong)allGamePoints);
     }
 }
 

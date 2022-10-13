@@ -30,22 +30,39 @@ public class ManageGameSession : MonoBehaviour {
     }
     public void LoseGame() {
         EndGame();
-        checkerTMP.color = Color.red;
-        victoryOrDefeatTMP.text = "Defeat Royale";
-        victoryOrDefeatTMP.color = Color.red;
+        setWinText(false);
     }
     public void WinGame() {
         EndGame();
         LocalPlayer.Instance.IncrementVictories();
-        checkerTMP.color = Color.cyan;
-        victoryOrDefeatTMP.text = "Victory Royale!";
-        victoryOrDefeatTMP.color = new Color32(132, 250, 255, 255);
+        setWinText(true);
     }
     public void EndGame() {
         Timer.Instance.StopTimer();
         sudoku.sudokuEnd();
+        string scene = ManageScenes.Instance.GetSceneName();
+        if (scene == "Singleplayer") {
+            if (sudoku.getWrong() > 0){
+                setWinText(false);
+            } else {
+                setWinText(true);
+            }
+        }
         gameEndMenu.SetActive(true);
     }
+
+    private void setWinText(bool win){
+        if (win){
+            checkerTMP.color = Color.cyan;
+            victoryOrDefeatTMP.text = "Victory Royale!";
+            victoryOrDefeatTMP.color = new Color32(132, 250, 255, 255);
+        } else {
+            checkerTMP.color = Color.red;
+            victoryOrDefeatTMP.text = "Defeat Royale";
+            victoryOrDefeatTMP.color = Color.red;
+        }
+    }
+    
     public void AddPoints(ulong pointsToAdd) {
         LocalPlayer.Instance.AddPoints(pointsToAdd);
     }
