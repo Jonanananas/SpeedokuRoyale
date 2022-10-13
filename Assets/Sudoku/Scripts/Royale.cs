@@ -8,13 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Royale : Sudoku {
-    public int playersLeft = 1;
     private int oneGamePoints = 0;
-    public void eliminatePlayer() {
-        if (playersLeft > 1) {
-            playersLeft--;
-        }
-    }
 
     public void newPuzzle() {
         currentSudokuNumber.disable();
@@ -24,7 +18,6 @@ public class Royale : Sudoku {
         SRN = (int)Mathf.Sqrt(N);
 
         generateSudoku();
-
         //Set numbers again
         setNumbers();
     }
@@ -42,8 +35,10 @@ public class Royale : Sudoku {
         oneGamePoints += getPoints();
         ManageGameSession.Instance.AddPoints((ulong)oneGamePoints);
         allGamePoints += oneGamePoints;
+        Debug.Log(oneGamePoints);
         oneGamePoints = 0;
         ManageGameSession.Instance.UpdateScore((ulong)allGamePoints);
+        K += 2;
         newPuzzle();
     }
 
@@ -54,15 +49,17 @@ public class Royale : Sudoku {
         // else {
         //     ManageGameSession.Instance.LoseGame();
         // }
+
         //points
         oneGamePoints += getPoints();
         allGamePoints += oneGamePoints;
         oneGamePoints = 0;
         //set endscreen info & checker time
         ManageGameSession.Instance.SetTimeSpent(false);
-        ManageGameSession.Instance.SetPlacingText(playersLeft);
         ManageGameSession.Instance.UpdateScore((ulong)allGamePoints);
-        //give points
-        // ManageGameSession.Instance.AddPoints((ulong)allGamePoints);
+        //give points from last puzzle
+        ManageGameSession.Instance.AddPoints((ulong)oneGamePoints);
+        Debug.Log(oneGamePoints);
+        oneGamePoints = 0;
     }
 }

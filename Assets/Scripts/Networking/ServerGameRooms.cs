@@ -53,8 +53,9 @@ public class ServerGameRooms : MonoBehaviour {
         JSONNode json = JSONNode.Parse(inGameStatus);
 
         int numberOfPlayers = json["players"].Count;
+        ManageGameSession.Instance.SetPlacingText(numberOfPlayers);
         if (numberOfPlayers <= 1) return;
-
+        Debug.Log(numberOfPlayers);
         // Drop a player with lowest score
         ulong lowestScore = 0;
         if (System.UInt64.TryParse(json["players"][0]["score"].Value, out lowestScore)) {

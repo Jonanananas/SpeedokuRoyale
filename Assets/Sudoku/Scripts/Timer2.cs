@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 
 public class Timer2 : MonoBehaviour {
+    /*
     public static Timer2 Instance;
     public float timeFloat { get; private set; }
     public float endTime { get; private set; }
@@ -79,5 +80,5 @@ public class Timer2 : MonoBehaviour {
         }
 
         return tuloste;
-    }
+    }*/
 }

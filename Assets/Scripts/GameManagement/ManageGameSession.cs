@@ -12,6 +12,7 @@ public class ManageGameSession : MonoBehaviour {
     checkerTMP, victoryOrDefeatTMP, placementTMP, 
     scoreTMP, userTMP, currentScoreTMP;
     [SerializeField] Sudoku sudoku;
+
     void Awake() {
         #region Singleton
         if (Instance != null) {
@@ -22,6 +23,7 @@ public class ManageGameSession : MonoBehaviour {
         #endregion
     }
     public void StartGame() {
+        sudoku.gameObject.SetActive(true);
         LocalPlayer.Instance.ResetScore();
         Timer.Instance.StartTimer();
         sudoku.initializeGame();
@@ -31,7 +33,6 @@ public class ManageGameSession : MonoBehaviour {
         checkerTMP.color = Color.red;
         victoryOrDefeatTMP.text = "Defeat Royale";
         victoryOrDefeatTMP.color = Color.red;
-        //SetPlacingText();
     }
     public void WinGame() {
         EndGame();
@@ -39,25 +40,11 @@ public class ManageGameSession : MonoBehaviour {
         checkerTMP.color = Color.cyan;
         victoryOrDefeatTMP.text = "Victory Royale!";
         victoryOrDefeatTMP.color = new Color32(132, 250, 255, 255);
-        //placementTMP.text = $"You placed 1st";
     }
     public void EndGame() {
-        /*
-        gameEndMenu.SetActive(true);
-        scoreTMP.text = $"Score: {LocalPlayer.Instance.GetScore()}";
-        LocalPlayer.Instance.UpdateLocalHighScore();
-        */
         Timer.Instance.StopTimer();
         sudoku.sudokuEnd();
-        StartCoroutine(waiter(1f));
-        IEnumerator waiter(float s){
-            yield return new WaitForSeconds(s);
-            gameEndMenu.SetActive(true);
-        }
-    }
-    public void EliminateOnePlayer() {
-        Royale royale = (Royale) sudoku;
-        royale.eliminatePlayer();
+        gameEndMenu.SetActive(true);
     }
     public void AddPoints(ulong pointsToAdd) {
         LocalPlayer.Instance.AddPoints(pointsToAdd);
@@ -70,9 +57,9 @@ public class ManageGameSession : MonoBehaviour {
         scoreTMP.text = "Score: " + score.ToString(); 
         LocalPlayer.Instance.UpdateLocalHighScore();
     }
-    public void SetPlacingText(int playersLeft) {
+    public void SetPlacingText(int placing) {
         string placementSuffix = "th";
-        int modulo = playersLeft % 10;
+        int modulo = placing % 10;
         switch (modulo) {
             case 1:
                 placementSuffix = "st";
@@ -84,10 +71,10 @@ public class ManageGameSession : MonoBehaviour {
                 placementSuffix = "rd";
                 break;
         }
-        if (playersLeft % 100 >= 11 && playersLeft % 100 <= 20) {
+        if (placing % 100 >= 11 && placing % 100 <= 20) {
             placementSuffix = "th";
         }
-        placementTMP.text = $"You placed {playersLeft}{placementSuffix}";
+        placementTMP.text = $"You placed {placing}{placementSuffix}";
     }
     public void ButtonValidateClassic() {
         if (sudoku.getWrong() != 0) {

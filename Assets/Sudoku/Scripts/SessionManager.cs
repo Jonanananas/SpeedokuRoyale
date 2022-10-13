@@ -6,6 +6,7 @@ using UnityEngine;
 using TMPro;
 
 public class SessionManager : MonoBehaviour {
+    /*
     public static SessionManager Instance;
     public GameObject gameEndMenu;
     [SerializeField] private TextMeshProUGUI 
@@ -47,7 +48,7 @@ public class SessionManager : MonoBehaviour {
         gameEndMenu.SetActive(true);
         scoreTMP.text = $"Score: {LocalPlayer.Instance.GetScore()}";
         LocalPlayer.Instance.UpdateLocalHighScore();
-        */
+        *//*
         Timer2.Instance.StopTimer();
         sudoku.sudokuEnd();
         StartCoroutine(waiter(1f));
@@ -121,5 +122,5 @@ public class SessionManager : MonoBehaviour {
         } else {
             checkerTMP.text += "\tTime spent: " + Timer2.Instance.getEnd();
         }
-    }
+    }*/
 }
