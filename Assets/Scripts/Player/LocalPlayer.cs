@@ -27,9 +27,6 @@ public class LocalPlayer : MonoBehaviour {
     public void IncrementVictories() {
         if (profile == null) { Trace.LogWarning("Not logged in!"); return; }
         profile.victories++;
-        // if (GameStates.isOnlineMode) {
-        //     StartCoroutine(ServerPlayerProfileReqs.Instance.UpdateVictories(profile.username, profile.victories));
-        // }
     }
     public void UpdateLocalHighScore() {
         if (profile == null) { Trace.LogWarning("Not logged in!"); return; }

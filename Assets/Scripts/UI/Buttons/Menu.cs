@@ -1,32 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Menu : MonoBehaviour
-{
+public class Menu : MonoBehaviour {
 
-    public void PlaySolo()
-    {
+    public void PlaySolo() {
         GameStates.SetOnlineMode(false);
         SceneManager.LoadScene("Singleplayer");
     }
-
-    public void PlayOnline()
-    {
+    public void PlayOnline() {
         GameStates.SetOnlineMode(true);
         SceneManager.LoadScene("Multiplayer");
     }
-    public void PlayOnlineTest()
-    {
+    public void PlayOnlineTest() {
         GameStates.SetOnlineMode(true);
         SceneManager.LoadScene("MultiplayerTest");
     }
-
-    public void Quit()
-    {
-        Debug.Log("Quit");
+    public void Quit() {
         Application.Quit();
     }
-
 }
