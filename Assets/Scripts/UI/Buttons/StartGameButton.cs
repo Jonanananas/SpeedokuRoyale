@@ -17,7 +17,7 @@ public class StartGameButton : MonoBehaviour, IPointerUpHandler {
         Instance = this;
         #endregion
     }
-    [SerializeField] GameObject startButtonGO, loseGameTestButtonGO, addScoreTestButton;
+    [SerializeField] GameObject startButtonGO, loseGameTestButtonGO, addScoreTestButton, thisGameObject;
     public void StartGame() {
         startButtonGO.SetActive(false);
         if (loseGameTestButtonGO != null)
@@ -38,6 +38,7 @@ public class StartGameButton : MonoBehaviour, IPointerUpHandler {
 
         if (GameStates.isOnlineMode) {
             ServerGameRooms.Instance.GetAvailableGameRooms();
+            thisGameObject.SetActive(false);
         }
         else {
             StartGame();

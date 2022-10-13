@@ -507,7 +507,6 @@ MonoBehaviour:
   NumContPrefab: {fileID: 8867291113546083137, guid: e08c54f0a847ec444927bd202d45c71a,
     type: 3}
   ButPanel: {fileID: 484244827}
-  playersLeft: 2
 --- !u!114 &245866885
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2038,7 +2037,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeLimit: 6000
   textTMP: {fileID: 1943019046}
-  eliminationInterval: 2000
+  eliminationInterval: 3000
 --- !u!224 &733800657
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3197,6 +3196,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1346866947}
   - component: {fileID: 1346866948}
+  - component: {fileID: 1346866949}
   m_Layer: 0
   m_Name: Start&quit panel
   m_TagString: Untagged
@@ -3252,6 +3252,19 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &1346866949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1346866946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 189efa277598573449f34f981c217a18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startButton: {fileID: 1214532716876154868}
 --- !u!1 &1480385968
 GameObject:
   m_ObjectHideFlags: 0
@@ -5098,6 +5111,7 @@ MonoBehaviour:
   startButtonGO: {fileID: 1346866946}
   loseGameTestButtonGO: {fileID: 0}
   addScoreTestButton: {fileID: 0}
+  thisGameObject: {fileID: 1214532716876154868}
 --- !u!222 &1538503854183611103
 CanvasRenderer:
   m_ObjectHideFlags: 0
