@@ -19,8 +19,8 @@ public static class HashPassword {
         Array.Copy(salt, 0, hashBytes, 0, saltSize);
         Array.Copy(hash, 0, hashBytes, saltSize, hashSize);
 
+        // Verify test:
         // string passwordHash = Convert.ToBase64String(hashBytes);
-
         // Trace.Log((Verify(password, passwordHash)).ToString());
         // Trace.Log("passwordHash: " + passwordHash);
 

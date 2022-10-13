@@ -55,7 +55,7 @@ public class ServerGameRooms : MonoBehaviour {
         int numberOfPlayers = json["players"].Count;
         ManageGameSession.Instance.SetPlacingText(numberOfPlayers);
         if (numberOfPlayers <= 1) return;
-        Debug.Log(numberOfPlayers);
+
         // Drop a player with lowest score
         ulong lowestScore = 0;
         if (System.UInt64.TryParse(json["players"][0]["score"].Value, out lowestScore)) {
@@ -65,10 +65,7 @@ public class ServerGameRooms : MonoBehaviour {
             Trace.LogError("Score parse failed!");
         }
 
-        print("lowestScore: " + lowestScore);
-
         foreach (var player in json["players"]) {
-            print("player.Value[\"score\"]" + player.Value["score"]);
             ulong playerScore;
             System.UInt64.TryParse(player.Value["score"], out playerScore);
             if (playerScore < lowestScore) {
@@ -80,24 +77,6 @@ public class ServerGameRooms : MonoBehaviour {
             ManageGameSession.Instance.LoseGame();
             StartCoroutine(DropLastPlayerIEnum());
         }
-
-        // Drop player if they don't have the highest score
-        // ulong highestScore;
-        // System.UInt64.TryParse(json["players"][0].Value, out highestScore);
-
-        // foreach (var player in json["players"]) {
-        //     print("player.Value[\"score\"]" + player.Value["score"]);
-        //     ulong playerScore;
-        //     System.UInt64.TryParse(player.Value["score"], out playerScore);
-        //     if (playerScore > highestScore) {
-        //         highestScore = playerScore;
-        //     }
-        // }
-        // print("highestScore: " + highestScore);
-        // if (highestScore != LocalPlayer.Instance.GetScore()) {
-        //     Timer.Instance.StopTimer();
-        //     ManageGameSession.Instance.LoseGame();
-        // }
     }
     bool gameStarted, gameComplete;
     IEnumerator UpdateCurrentScoreIEnum(string username, ulong score) {
@@ -144,11 +123,6 @@ public class ServerGameRooms : MonoBehaviour {
 
         JSONNode json = JSONNode.Parse(req.downloadHandler.text);
 
-        print(json);
-        // print(json[0]["name"]);
-
-        // StartCoroutine(JoinGameRoom());
-
         if (WasRequestSuccesful(req)) {
             StartCoroutine(JoinGameRoomIEnum(json[0]["name"]));
         }
@@ -156,7 +130,7 @@ public class ServerGameRooms : MonoBehaviour {
         req.Dispose();
     }
     IEnumerator JoinGameRoomIEnum(string roomName) {
-        print("roomName:" + roomName);
+        Trace.Log("roomName:" + roomName);
         string url = serverJSON["baseUrl"] + "/MultiplayerRuntime/" + roomName + "/Join?playerId=" + LocalPlayer.Instance.playerId;
         if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
 
@@ -164,14 +138,13 @@ public class ServerGameRooms : MonoBehaviour {
 
         yield return req.SendWebRequest();
         if (WasRequestSuccesful(req)) {
-            print(req.downloadHandler.text);
+            Trace.Log(req.downloadHandler.text);
             currentRoomName = roomName;
             StartCoroutine(GetGameRoomStatusIEnum(roomName));
         }
         else {
             currentRoomName = "";
         }
-
         req.Dispose();
     }
     IEnumerator GetGameRoomStatusIEnum(string roomName) {
@@ -194,11 +167,7 @@ public class ServerGameRooms : MonoBehaviour {
             yield return statusCodeReq.SendWebRequest();
 
             if (WasRequestSuccesful(statusCodeReq)) {
-
-                // JSONNode json = JSONNode.Parse(req.downloadHandler.text);
-
-                // if (json["gameRoomStatus"] == "startGame") gameStarted = true;
-                print("game room status code: " + statusCodeReq.downloadHandler.text);
+                Trace.Log("game room status code: " + statusCodeReq.downloadHandler.text);
                 string roomStatus = statusCodeReq.downloadHandler.text;
                 if (roomStatus == "1" && !gameStarted) {
                     StartGameButton.Instance.StartGame();
@@ -208,7 +177,7 @@ public class ServerGameRooms : MonoBehaviour {
                 if (roomStatus == "1" && gameStarted) {
                     yield return statusReq.SendWebRequest();
                     if (WasRequestSuccesful(statusReq)) {
-                        print("game room status: " + statusReq.downloadHandler.text);
+                        Trace.Log("game room status: " + statusReq.downloadHandler.text);
                         inGameStatus = statusReq.downloadHandler.text;
                     }
                 }
@@ -241,8 +210,6 @@ public class ServerGameRooms : MonoBehaviour {
 
         WasRequestSuccesful(req);
 
-        print(req.downloadHandler.text);
-
         if (req.downloadHandler.text == "true") {
             Trace.Log("Local player eliminated from game room " + currentRoomName);
         }
@@ -264,10 +231,4 @@ public class ServerGameRooms : MonoBehaviour {
             return true;
         }
     }
-
-    // public class ForceAcceptAll : CertificateHandler {
-    //     protected override bool ValidateCertificate(byte[] certificateData) {
-    //         return true;
-    //     }
-    // }
 }

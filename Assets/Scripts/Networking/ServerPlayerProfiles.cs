@@ -72,7 +72,6 @@ public class ServerPlayerProfiles : MonoBehaviour {
         // form.AddField("username", username);
         // form.AddBinaryData("password", passwordBytes);
         // UnityWebRequest req = UnityWebRequest.Put($"{url}", form.data);
-
         // foreach (var header in form.headers) {
         //     req.SetRequestHeader(header.Key, header.Value);
         // }
@@ -89,28 +88,8 @@ public class ServerPlayerProfiles : MonoBehaviour {
         yield return req.SendWebRequest();
         if (WasRequestSuccesful(req) && SetPlayerId(req.downloadHandler.text)) {
             GameStates.SetLoginStatus("Log in successful!");
-
-            // JSONNode json = JSONNode.Parse(req.downloadHandler.text);
-
-            // ulong bestScore;
-            // ulong victories;
-
-            // if (UInt64.TryParse(json["victories"].Value, out victories) &&
-            //     UInt64.TryParse(json["bestScore"].Value, out bestScore)
-            // ) {
-            //     LocalPlayer.Instance.SetLocalPlayerProfile(new PlayerProfile(
-            //         json["username"].Value,
-            //         bestScore,
-            //         victories
-            //     ));
             GameStates.SetLoggedStatus(true);
-            // if (LoginButton.Instance != null)
-            //     LoginButton.Instance.CloseLoginMenu();
             Trace.Log("Login successful!");
-            // }
-            // else {
-            //     Trace.LogError("Failed to parse numerical user profile data!");
-            // }
             StartCoroutine(GetAndSetUserDataIEnum(UInt64.Parse(LocalPlayer.Instance.playerId), username));
         }
         else {
@@ -121,7 +100,6 @@ public class ServerPlayerProfiles : MonoBehaviour {
         req.Dispose();
     }
     IEnumerator GetAndSetUserDataIEnum(ulong userId, string username) {
-        // string url = serverJSON["baseUrl"] + "/Player/" + userId;
         string url = serverJSON["baseUrl"] + "/MultiplayerSession";
         if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
 
@@ -130,9 +108,7 @@ public class ServerPlayerProfiles : MonoBehaviour {
         yield return req.SendWebRequest();
 
         JSONNode json = JSONNode.Parse(req.downloadHandler.text);
-
-        print(json);
-        // print(json[0]["playerId"].Value);
+        Trace.Log(json);
 
         List<ulong> playedGamesIds = new List<ulong>();
         ulong bestScore = 0;
@@ -146,7 +122,7 @@ public class ServerPlayerProfiles : MonoBehaviour {
                 playedGamesIds.Add(UInt64.Parse(item.Value["multiplayerGameId"]));
             }
         }
-        print("bestScore: " + bestScore);
+        Trace.Log("bestScore: " + bestScore);
 
         List<ulong> gameWinnerIds = new List<ulong>();
         ulong loggedUserWins = 0;
@@ -154,7 +130,7 @@ public class ServerPlayerProfiles : MonoBehaviour {
         foreach (ulong gameId in playedGamesIds) {
             ulong gameBestScore = 0;
             ulong gameWinnerId = 0;
-            print(gameId);
+            Trace.Log(gameId.ToString());
             foreach (var item in json) {
                 if (item.Value["multiplayerGameId"] == gameId) {
                     ulong gameScore = UInt64.Parse(item.Value["score"]);
@@ -174,18 +150,7 @@ public class ServerPlayerProfiles : MonoBehaviour {
             loggedUserWins
         ));
 
-        print("loggedUserWins: " + loggedUserWins);
-
-        // Dictionary<string, ulong> bestScores = new Dictionary<string, ulong>();
-        // foreach (var profile in json) {
-        //     ulong highscore;
-        //     if (!UInt64.TryParse(profile.Value["score"], out highscore))
-        //         Trace.LogError("Error parsing score data!");
-        //     // bestScores.Add(profile.Value["name"], highscore);
-        //     ScoreManager.Instance.AddScore(new Score(profile.Value["name"], highscore));
-        // }
-
-        // GameData.SetBestScores(bestScores);
+        Trace.Log("loggedUserWins: " + loggedUserWins);
 
         WasRequestSuccesful(req);
 
@@ -207,39 +172,23 @@ public class ServerPlayerProfiles : MonoBehaviour {
         JSONNode jsonNode = new JSONObject();
 
         WWWForm form = new WWWForm();
-        // Use these to send a hashed password to server later in development
+
+        // Use these to send a hashed password to server later in development:
         // form.AddField("username", username);
         // form.AddBinaryData("password", passwordBytes);
-
-        
 
         jsonNode.Add("email", System.Guid.NewGuid().ToString());
         jsonNode.Add("userName", username);
         jsonNode.Add("password", password);
 
-        print(jsonNode);
-
         UnityWebRequest req = UnityWebRequest.Put($"{url}", jsonNode.ToString());
         req.SetRequestHeader("Content-Type", "application/json");
         req.method = "POST";
 
-        // Accept any SSL certificate for now while in local development
-        // var cert = new ForceAcceptAll();
-        // req.certificateHandler = cert;
-        // cert?.Dispose();
-
-        print(req.url);
-
         yield return req.SendWebRequest();
         if (WasRequestSuccesful(req)) {
-            // if (SetPlayerId(req.downloadHandler.text)) {
             GameStates.SetRegisterStatus("Register successful!");
             StartCoroutine(LogInIEnum(username, password));
-            // }
-            // else {
-            //     Trace.LogWarning("Error parsing user id!");
-            //     GameStates.SetRegisterStatus("Register failed!");
-            // }
         }
         else {
             GameStates.SetRegisterStatus("Register failed!");
@@ -268,7 +217,6 @@ public class ServerPlayerProfiles : MonoBehaviour {
         else {
             Trace.LogError("Error deleting profile!");
         }
-
         req.Dispose();
     }
     IEnumerator ChangePasswordIEnum(string username, string password, string newPassword) {
@@ -304,16 +252,12 @@ public class ServerPlayerProfiles : MonoBehaviour {
 
         JSONNode json = JSONNode.Parse(req.downloadHandler.text);
 
-        // Dictionary<string, ulong> bestScores = new Dictionary<string, ulong>();
         foreach (var profile in json) {
             ulong highscore;
             if (!UInt64.TryParse(profile.Value["score"], out highscore))
                 Trace.LogError("Error parsing score data!");
-            // bestScores.Add(profile.Value["name"], highscore);
             ScoreManager.Instance.AddScore(new Score(profile.Value["name"], highscore));
         }
-
-        // GameData.SetBestScores(bestScores);
 
         WasRequestSuccesful(req);
 
@@ -322,9 +266,7 @@ public class ServerPlayerProfiles : MonoBehaviour {
     bool SetPlayerId(string responseText) {
         ulong playerId;
         if (UInt64.TryParse(responseText, out playerId)) {
-            // PlayerPrefs.SetString("playerId", playerId.ToString());
             LocalPlayer.Instance.playerId = playerId.ToString();
-            // print(PlayerPrefs.GetInt("playerId"));
             return true;
         }
         return false;
@@ -340,40 +282,4 @@ public class ServerPlayerProfiles : MonoBehaviour {
             return true;
         }
     }
-    // public IEnumerator UpdateBestScore(string username, ulong score) {
-    //     string url = serverJSON["baseUrl"];
-    //     if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
-
-    //     JSONObject json = new JSONObject();
-    //     json.Add("bestScore", score);
-
-    //     UnityWebRequest req = UnityWebRequest.Put($"{url}?username={username}", json);
-    //     req.SetRequestHeader("Content-Type", "application/json");
-
-    //     yield return req.SendWebRequest();
-    //     WasRequestSuccesful(req);
-
-    //     req.Dispose();
-    // }
-    // public IEnumerator UpdateVictories(string username, ulong victories) {
-    //     string url = serverJSON["baseUrl"];
-    //     if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
-
-    //     JSONObject json = new JSONObject();
-    //     json.Add("victories", victories);
-
-    //     UnityWebRequest req = UnityWebRequest.Put($"{url}?username={username}", json);
-    //     req.SetRequestHeader("Content-Type", "application/json");
-    //     // req.method = "PATCH";
-
-    //     yield return req.SendWebRequest();
-    //     WasRequestSuccesful(req);
-
-    //     req.Dispose();
-    // }
-    // public class ForceAcceptAll : CertificateHandler {
-    //     protected override bool ValidateCertificate(byte[] certificateData) {
-    //         return true;
-    //     }
-    // }
 }

@@ -7,7 +7,6 @@ using System;
 public class Score {
     public string name;
     public ulong score;
-
     public Score(string name, ulong score) {
         this.name = name;
         this.score = score;
