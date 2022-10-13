@@ -214,7 +214,7 @@ public class ServerGameRooms : MonoBehaviour {
             Trace.Log("Local player eliminated from game room " + currentRoomName);
         }
         else {
-            Trace.LogError("Player elimination failed");
+            Trace.LogWarning("Player elimination failed");
         }
 
         req.Dispose();
