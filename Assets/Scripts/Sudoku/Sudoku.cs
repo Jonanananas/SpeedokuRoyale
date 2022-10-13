@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class Sudoku : MonoBehaviour {
 
     // N sudokun koko, K puuttuvat numerot, SRN neliöjuuri N:stä
-    [SerializeField] protected int N = 9, K = 9, SRN;
+    public int N = 9, K = 9, SRN;
     // sudoku oikeat vastaukset
     protected static int[,] answers; 
     // sudoku annetut vastaukset
@@ -287,11 +287,8 @@ public class Sudoku : MonoBehaviour {
             number.disableOnly();
         }
         if (currentSudokuNumber != null) currentSudokuNumber.unsetSelect();
-        NumContPanel.SetActive(false);
 
-        if (getPoints() < K){
-            ManageGameSession.Instance.LoseGame();
-        }
+        NumContPanel.SetActive(false);
         allGamePoints += getPoints();
         // Aseta checker aika & päivitä score
         ManageGameSession.Instance.SetTimeSpent(true);

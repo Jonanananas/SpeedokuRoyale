@@ -254,9 +254,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc97118bf0b3ced4e885de7698e5a1b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeLimit: 2000
+  timeLimit: 6000
   textTMP: {fileID: 6207789230745576141}
-  eliminationInterval: 2000
+  eliminationInterval: 7000
 --- !u!224 &733800657
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2318,7 +2318,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -30}
+  m_AnchoredPosition: {x: 0, y: -29.99997}
   m_SizeDelta: {x: -920, y: -460}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &5893788654476639821
