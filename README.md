@@ -1,12 +1,12 @@
-# SpeedokuRoyale | Unity Project
+# Speedoku Royale | Unity Project
 
-The project's goal is to create a robust, refined and stylish PC game which would be easy to use. The game Speedoku Royale is a Battle Royale style game where you compete against other players in solving sudokus. In the game, whenever a set time interval elapses, the person who has solved the least sudokus is eliminated. As the game progresses the sudokus get increasingly more difficult and the last person stading wins the game. The game also features a single player mode where you solve sudokus within a time limit.
+The project's goal is to create a robust, refined, and stylish PC game which would be easy to use. The game Speedoku Royale is a Battle Royale style game where you compete against other players in solving sudokus. In the game, whenever a set time interval elapses, the person who has solved the least sudokus is eliminated. As the game progresses the sudokus get increasingly more difficult and the last person standing wins the game. The game also features a single player mode where you solve sudokus within a time limit.
 
 Project team: Julia Köykkä, Jonathan Methuen, Vilhelm Niemi & Sylvester Salo
 
-In the game's frontend development we have used Unity and Visual Studio Code.
+In the game's frontend development, we have used Unity and Visual Studio Code.
 
-## Sigleplayer
+## Singleplayer
 
 ### Installation
 
