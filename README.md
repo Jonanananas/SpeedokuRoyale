@@ -1,5 +1,11 @@
 # SpeedokuRoyale | Unity Project
- 
+
+The project's goal is to create a robust, refined and stylish PC game which would be easy to use. The game Speedoku Royale is a Battle Royale style game where you compete against other players in solving sudokus. In the game, whenever a set time interval elapses, the person who has solved the least sudokus is eliminated. As the game progresses the sudokus get increasingly more difficult and the last person stading wins the game. The game also features a single player mode where you solve sudokus within a time limit.
+
+Project team: Julia Köykkä, Jonathan Methuen, Vilhelm Niemi & Sylvester Salo
+
+In the game's frontend development we have used Unity and Visual Studio Code.
+
 ## Sigleplayer
 
 ### Installation
@@ -24,8 +30,8 @@ Requirements for installing the backend and for following the backend installati
 2. `Visual Studio Code` installation with `"Dev Containers"` and `"Docker"` extensions.
 
 To play locally hosted multiplayer, you have to do the following steps:
-1. Clone the project's development environment repository `"SpeedokuRoyaleServerDE"` from *insert linke here*
-2. Clone the project's server repository `"SpeedokuRoyaleServer"` from *insert linke here* into the `"server"` folder inside the `SpeedokuRoyaleServerDE` repository.
+1. Clone the project's development environment repository `"SpeedokuRoyaleServerDE"` from https://gitlab.metropolia.fi/vilhelmn/SpeedokuRoyaleServerDE
+2. Clone the project's server repository `"SpeedokuRoyaleServer"` from https://gitlab.metropolia.fi/vilhelmn/SpeedokuRoyaleServer into the `"server"` folder inside the `SpeedokuRoyaleServerDE` repository.
 3. Follow the installation guide in the `README.md` in the `SpeedokuRoyaleServerDE` repository to install the server and database.
 4. After you have the backend installed and the server running, if you have problems connecting to the server in game (registering/logging in fails etc.) make sure that the `"baseUrl"` field's value in the `Assets/server-settings.json` file in the `SpeedokuRoyale` repository is the same as the server's base URL.
 ### How to start a multiplayer game
@@ -40,7 +46,7 @@ To play locally hosted multiplayer, you have to do the following steps:
 8. [Click the start button.](GuideImages/ClickToStart.png)   
 [The server will add you to a game room.](GuideImages/WaitForGame.png) At this point, you have to join the game room with two more players to fill the room and start the multiplayer game session. To do this open two more instances of the built game and repeat the steps 2 to 8 with different user credentials. After doing so, the game should start.
 
-### How to check a user's multiplayer game data
+### How to check out a user's multiplayer game data
 
 1. Make sure you are logged in on a user.
 2. [Click the "Statistics" button.](GuideImages/Statistics.png)
