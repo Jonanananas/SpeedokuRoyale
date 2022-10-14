@@ -45,5 +45,4 @@ To play locally hosted multiplayer, you have to do the following steps:
 1. Make sure you are logged in on a user.
 2. [Click the "Statistics" button.](GuideImages/Statistics.png)
 3. [Click the "Profile" button.](GuideImages/Profile.png)   
-There you should see the user's name, victories and personal best score.
-<!-- [You should see the user's name,](GuideImages/UserData.png) -->
+[Now you should see the user's name, victories and personal best score.](GuideImages/UserData.png)
