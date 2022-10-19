@@ -6,17 +6,6 @@ using TMPro;
 
 [RequireComponent(typeof(Button))]
 public class LogoutOrLoginButton : MonoBehaviour, IPointerUpHandler {
-    public static LogoutOrLoginButton Instance;
-    void Awake() {
-        #region Singleton
-        if (Instance != null) {
-            Destroy(gameObject);
-            Trace.LogWarning("More than one instance of " + this.GetType().Name + " found!");
-            return;
-        }
-        Instance = this;
-        #endregion
-    }
     [SerializeField] TextMeshProUGUI buttonTMP;
     [SerializeField] GameObject loginMenu, mainMenu;
     Button btn;

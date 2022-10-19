@@ -8,8 +8,9 @@ using TMPro;
 public class ManageGameSession : MonoBehaviour {
     public static ManageGameSession Instance;
     public GameObject gameEndMenu;
-    [SerializeField] private TextMeshProUGUI 
-    checkerTMP, victoryOrDefeatTMP, placementTMP, 
+    [SerializeField]
+    private TextMeshProUGUI
+    checkerTMP, victoryOrDefeatTMP, placementTMP,
     scoreTMP, userTMP, currentScoreTMP;
     [SerializeField] Sudoku sudoku;
 
@@ -42,27 +43,16 @@ public class ManageGameSession : MonoBehaviour {
         sudoku.sudokuEnd();
         string scene = ManageScenes.Instance.GetSceneName();
         if (scene == "Singleplayer") {
-            if (sudoku.getWrong() > 0){
+            if (sudoku.getWrong() > 0) {
                 setWinText(false);
-            } else {
+            }
+            else {
                 setWinText(true);
             }
         }
         gameEndMenu.SetActive(true);
     }
 
-    private void setWinText(bool win){
-        if (win){
-            checkerTMP.color = Color.cyan;
-            victoryOrDefeatTMP.text = "Victory Royale!";
-            victoryOrDefeatTMP.color = new Color32(132, 250, 255, 255);
-        } else {
-            checkerTMP.color = Color.red;
-            victoryOrDefeatTMP.text = "Defeat Royale";
-            victoryOrDefeatTMP.color = Color.red;
-        }
-    }
-    
     public void AddPoints(ulong pointsToAdd) {
         LocalPlayer.Instance.AddPoints(pointsToAdd);
     }
@@ -71,7 +61,7 @@ public class ManageGameSession : MonoBehaviour {
     }
     public void UpdateScore(ulong score) {
         currentScoreTMP.text = "Score: " + score.ToString();
-        scoreTMP.text = "Score: " + score.ToString(); 
+        scoreTMP.text = "Score: " + score.ToString();
         LocalPlayer.Instance.UpdateLocalHighScore();
     }
     public void SetPlacingText(int placing) {
@@ -97,22 +87,24 @@ public class ManageGameSession : MonoBehaviour {
         if (sudoku.getWrong() != 0) {
             checkerTMP.color = Color.magenta;
             checkerTMP.text = "Incorrect!";
-        } else {
+        }
+        else {
             checkerTMP.color = Color.cyan;
             checkerTMP.text = "Correct!";
             EndGame();
-        }           
+        }
     }
     public void ButtonValidateRoyale() {
         Royale royale = (Royale)sudoku;
         if (royale.getWrong() != 0) {
             checkerTMP.color = Color.magenta;
             checkerTMP.text = "Incorrect!";
-        } else {
+        }
+        else {
             checkerTMP.color = Color.cyan;
             checkerTMP.text = "Correct!";
             royale.afterCorrectButtonValidate();
-        }           
+        }
     }
     public void ClearCheckerText() {
         checkerTMP.text = "";
@@ -121,8 +113,22 @@ public class ManageGameSession : MonoBehaviour {
         if (solo) {
             checkerTMP.text += "\tTime spent: " + Timer.Instance.GetElapsedTime();
             placementTMP.text = "Time spent (m:s.f): " + Timer.Instance.GetElapsedTime();
-        } else {
+        }
+        else {
             checkerTMP.text += "\tTime spent: " + Timer.Instance.GetElapsedTime();
+        }
+    }
+
+    private void setWinText(bool win) {
+        if (win) {
+            checkerTMP.color = Color.cyan;
+            victoryOrDefeatTMP.text = "Victory Royale!";
+            victoryOrDefeatTMP.color = new Color32(132, 250, 255, 255);
+        }
+        else {
+            checkerTMP.color = Color.red;
+            victoryOrDefeatTMP.text = "Defeat Royale";
+            victoryOrDefeatTMP.color = Color.red;
         }
     }
 }

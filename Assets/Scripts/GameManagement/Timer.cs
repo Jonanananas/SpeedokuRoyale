@@ -58,9 +58,6 @@ public class Timer : MonoBehaviour {
             }
         }
     }
-    void UpdateTimerText() {
-        textTMP.text = GetStringTime(timeLong);
-    }
 
     public string GetElapsedTime() {
         return GetStringTime(elapsedTime);
@@ -87,5 +84,7 @@ public class Timer : MonoBehaviour {
 
         return tuloste;
     }
-    
+    void UpdateTimerText() {
+        textTMP.text = GetStringTime(timeLong);
+    }
 }
