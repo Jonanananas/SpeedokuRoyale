@@ -75,7 +75,7 @@ public class SudokuNumber {
         this.instance.GetComponentInChildren<TextMeshProUGUI>().color = Color.cyan;
     }
 
-     public void DisableOnly() {
+    public void DisableOnly() {
         this.instance.GetComponent<Button>().enabled = false;
     }
 
