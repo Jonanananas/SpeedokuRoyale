@@ -20,7 +20,7 @@ public class ScoreManager : MonoBehaviour {
     }
 
     public IEnumerable<Score> GetHighScores() {
-        parse();
+        Parse();
         return sd.scores.OrderByDescending(x => x.score);
     }
 
@@ -28,7 +28,7 @@ public class ScoreManager : MonoBehaviour {
         sd.scores.Add(score);
     }
 
-    void parse() {
+    void Parse() {
         //Parse length to 10
         while (sd.scores.Count > 10) {
             sd.scores.RemoveAt(sd.scores.Count - 1);

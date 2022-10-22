@@ -23,7 +23,7 @@ public class TabInput : MonoBehaviour {
 
     }
 
-    public void selectMe(int num){
+    public void SelectMe(int num){
         selected = num;
     }
 

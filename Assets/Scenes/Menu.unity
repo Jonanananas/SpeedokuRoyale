@@ -10490,7 +10490,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 603616139}
         m_TargetAssemblyTypeName: TabInput, Assembly-CSharp
-        m_MethodName: selectMe
+        m_MethodName: SelectMe
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -12011,7 +12011,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1203357078}
         m_TargetAssemblyTypeName: TabInput, Assembly-CSharp
-        m_MethodName: selectMe
+        m_MethodName: SelectMe
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -14373,7 +14373,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 603616139}
         m_TargetAssemblyTypeName: TabInput, Assembly-CSharp
-        m_MethodName: selectMe
+        m_MethodName: SelectMe
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -14926,7 +14926,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 603616139}
         m_TargetAssemblyTypeName: TabInput, Assembly-CSharp
-        m_MethodName: selectMe
+        m_MethodName: SelectMe
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -17583,7 +17583,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1203357078}
         m_TargetAssemblyTypeName: TabInput, Assembly-CSharp
-        m_MethodName: selectMe
+        m_MethodName: SelectMe
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

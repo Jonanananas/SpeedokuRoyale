@@ -11,40 +11,40 @@ public class Royale : Sudoku {
     //Royale luokka on Sudokun perivä moninpeli sovellutus
     private int oneGamePoints = 0;
 
-    // newPuzzle() -metodilla nollataan ja asetetaan sudokuun uudet numerot
-    public void newPuzzle() {
-        currentSudokuNumber.disable();
+    // NewPuzzle() -metodilla nollataan ja asetetaan sudokuun uudet numerot
+    public void NewPuzzle() {
+        currentSudokuNumber.Disable();
         currentSudokuNumber = null;
         answers = new int[N, N];
         values = new int[N, N];
         SRN = (int)Mathf.Sqrt(N);
 
-        generateSudoku();
-        setNumbers();
+        GenerateSudoku();
+        SetNumbers();
     }
-    // stop() -metodilla kytketään sudoku numerot "pois päältä" ManageGameSession -luokasta
-    public void stop() {
+    // Stop() -metodilla kytketään sudoku numerot "pois päältä" ManageGameSession -luokasta
+    public void Stop() {
         foreach (SudokuNumber number in numbers) {
-            number.disableOnly();
+            number.DisableOnly();
         }
-        if (currentSudokuNumber != null) currentSudokuNumber.unsetSelect();
+        if (currentSudokuNumber != null) currentSudokuNumber.UnsetSelect();
         NumContPanel.SetActive(false);
     }
-    // afterCorrectButtonValidate() -metodia kutsutaan ManageGameSession -luokasta validoinnin jälkeen
-    public void afterCorrectButtonValidate() {
-        oneGamePoints += getPoints();
+    // AfterCorrectButtonValidate() -metodia kutsutaan ManageGameSession -luokasta validoinnin jälkeen
+    public void AfterCorrectButtonValidate() {
+        oneGamePoints += GetPoints();
         ManageGameSession.Instance.AddPoints((ulong)oneGamePoints);
         allGamePoints += oneGamePoints;
         Debug.Log(oneGamePoints);
         oneGamePoints = 0;
         ManageGameSession.Instance.UpdateScore((ulong)allGamePoints);
         K += 2;
-        newPuzzle();
+        NewPuzzle();
     }
-    //sudokuEnd() -metodi kutsutaan pelin lopussa ManageGameSession -luokasta
-    public override void sudokuEnd() {
+    //SudokuEnd() -metodi kutsutaan pelin lopussa ManageGameSession -luokasta
+    public override void SudokuEnd() {
         // Aseta numerot
-        oneGamePoints += getPoints();
+        oneGamePoints += GetPoints();
         allGamePoints += oneGamePoints;
         oneGamePoints = 0;
         // Aseta checker aika & päivitä score

@@ -16,16 +16,16 @@ public class ControlObj {
 
     public int Val { get => this.val; set => this.val = value; }
 
-    public void setNumber(int value) {
+    public void SetNumber(int value) {
         this.val = value;
         this.instance.GetComponentInChildren<TextMeshProUGUI>().text = value.ToString();
     }
 
-    public void setSelect() {
+    public void SetSelect() {
         this.instance.GetComponentInChildren<TextMeshProUGUI>().color = new Color32(255, 220, 98, 255);
     }
 
-    public void unsetSelect() {
+    public void UnsetSelect() {
         this.instance.GetComponentInChildren<TextMeshProUGUI>().color = Color.blue;
     }
 

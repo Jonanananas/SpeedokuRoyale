@@ -23,7 +23,7 @@ public class SudokuNumber {
         }
     }
 
-    public void setAll(int row, int col, int val, int answer) {
+    public void SetAll(int row, int col, int val, int answer) {
         this.row = row;
         this.col = col;
         this.val = val;
@@ -46,7 +46,7 @@ public class SudokuNumber {
 
     public int Answer { get => this.answer; set => this.answer = value; }
 
-    public void setNumber(int x) {
+    public void SetNumber(int x) {
         this.val = x;
         this.instance.GetComponentInChildren<TextMeshProUGUI>().text = x + "";
         if (this.val == this.answer) {
@@ -55,27 +55,27 @@ public class SudokuNumber {
             correct = false;
         }
     }
-    public void setSelect() {
+    public void SetSelect() {
         this.instance.GetComponentInChildren<TextMeshProUGUI>().color = Color.magenta;
     }
 
-    public void unsetSelect() {
+    public void UnsetSelect() {
         this.instance.GetComponentInChildren<TextMeshProUGUI>().color = Color.cyan;
     }
 
-    public void disable() {
+    public void Disable() {
         this.instance.GetComponent<Image>().color = Color.black;
         this.instance.GetComponentInChildren<TextMeshProUGUI>().color = Color.gray;
         this.instance.GetComponent<Button>().enabled = false;
     }
 
-    public void enable() {
+    public void Enable() {
         this.instance.GetComponent<Image>().color = Color.white;
         this.instance.GetComponent<Button>().enabled = true;
         this.instance.GetComponentInChildren<TextMeshProUGUI>().color = Color.cyan;
     }
 
-     public void disableOnly() {
+     public void DisableOnly() {
         this.instance.GetComponent<Button>().enabled = false;
     }
 

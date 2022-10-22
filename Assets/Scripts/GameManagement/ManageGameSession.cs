@@ -27,7 +27,7 @@ public class ManageGameSession : MonoBehaviour {
         sudoku.gameObject.SetActive(true);
         LocalPlayer.Instance.ResetScore();
         Timer.Instance.StartTimer();
-        sudoku.initializeGame();
+        sudoku.InitializeGame();
     }
     public void LoseGame() {
         EndGame();
@@ -40,10 +40,10 @@ public class ManageGameSession : MonoBehaviour {
     }
     public void EndGame() {
         Timer.Instance.StopTimer();
-        sudoku.sudokuEnd();
+        sudoku.SudokuEnd();
         string scene = ManageScenes.Instance.GetSceneName();
         if (scene == "Singleplayer") {
-            if (sudoku.getWrong() > 0) {
+            if (sudoku.GetWrong() > 0) {
                 setWinText(false);
             }
             else {
@@ -84,7 +84,7 @@ public class ManageGameSession : MonoBehaviour {
         placementTMP.text = $"You placed {placing}{placementSuffix}";
     }
     public void ButtonValidateClassic() {
-        if (sudoku.getWrong() != 0) {
+        if (sudoku.GetWrong() != 0) {
             checkerTMP.color = Color.magenta;
             checkerTMP.text = "Incorrect!";
         }
@@ -96,14 +96,14 @@ public class ManageGameSession : MonoBehaviour {
     }
     public void ButtonValidateRoyale() {
         Royale royale = (Royale)sudoku;
-        if (royale.getWrong() != 0) {
+        if (royale.GetWrong() != 0) {
             checkerTMP.color = Color.magenta;
             checkerTMP.text = "Incorrect!";
         }
         else {
             checkerTMP.color = Color.cyan;
             checkerTMP.text = "Correct!";
-            royale.afterCorrectButtonValidate();
+            royale.AfterCorrectButtonValidate();
         }
     }
     public void ClearCheckerText() {
