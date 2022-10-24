@@ -265,7 +265,6 @@ public class Sudoku : MonoBehaviour {
     // SetOne(int i, int j, int value) -metodi asettaa yhden arvon taulukosta
     protected void SetOne(int i, int j, int value) { values[i, j] = value; }
 
-    // SetOne(int i, int j, int value) -metodi asettaa yhden arvon taulukosta
     public int GetWrong() {
         int x = 0;
         foreach (SudokuNumber number in numbers) {
