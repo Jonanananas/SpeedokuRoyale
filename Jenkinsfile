@@ -19,7 +19,8 @@ def jobName="UnityProject"
 // Machine's user Name
 // def machine_user_name="root"
 // Your Github URL
-def build_repo="git@github.com:Jonanananas/SpeedokuRoyale.git"
+def build_repo="https://github.com/Jonanananas/SpeedokuRoyale.git"
+// def build_repo="git@github.com:Jonanananas/SpeedokuRoyale.git"
 // Your Unity Version
 // Ex: "2020.1.15f2"
 def unity_version="2021.3.8f1"
@@ -43,16 +44,9 @@ pipeline {
    }
 
     stages {
-        stage('Clean up working space') {
+        stage('Pull Branch') {
             steps {
-                sh  """sudo rm -rf ${workingDir}/${branch}\
-                """
-            }
-        }
-
-        stage('Clone Branch') {
-            steps {
-              sh """sudo git clone --branch ${branch} --depth 1 ${repo} ${workingDir}/${branch};\
+              sh """sudo git pull ${repo} ${branch};\
                 """
             }
         }
