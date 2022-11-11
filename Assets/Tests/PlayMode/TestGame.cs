@@ -12,6 +12,7 @@ namespace TestGame {
         public void SetUp() {
             UnityEngine.SceneManagement.SceneManager.LoadScene("Menu");
         }
+        //test
         [UnityTest]
         public IEnumerator TestMenu() {
             var gameObject = new GameObject();
