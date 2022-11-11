@@ -18,7 +18,7 @@ namespace TestGame {
             var gameObject = new GameObject();
 
             // Check if a play button exists
-            string name = "Play Buttonadw"; // Button Name
+            string name = "Play Button"; // Button Name
             GameObject startButton = GameObject.Find(name);
             Assert.NotNull(startButton);
 
