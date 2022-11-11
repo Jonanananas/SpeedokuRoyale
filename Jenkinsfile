@@ -40,7 +40,8 @@ pipeline {
        repo="${build_repo}"
        branch="${branch_name}"
     //    workingDir="/${machine_user_name}/.jenkins/workspace/${branch_name}"
-       workingDir="/var/lib/jenkins/workspace/UnityProject/${branch_name}"
+    //    workingDir="/var/lib/jenkins/workspace/UnityProject/${branch_name}"
+       workingDir="/var/lib/jenkins/workspace/UnityProject"
    }
 
     stages {
@@ -53,7 +54,7 @@ pipeline {
 
         stage('PlayMode Test') {
             steps {
-              sh """sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir}/${branch} -runTests -testResults ${workingDir}/${branch}/CI/results.xml -testPlatform PlayMode -nographics;\
+              sh """sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -runTests -testResults ${workingDir}/CI/results.xml -testPlatform PlayMode -nographics;\
                 """
             }
         }
