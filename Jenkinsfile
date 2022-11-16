@@ -57,7 +57,7 @@ pipeline {
             title: "${env.JOB_BASE_NAME} #${env.BUILD_NUMBER}",
             result: currentBuild.currentResult,
             description: "**Build:** ${env.BUILD_NUMBER}\n**Status:** ${result}\n\u2060", /* word joiner character forces a blank line */
-            enableArtifactsList: true,
+            // enableArtifactsList: true,
             showChangeset: true
           }
         }
