@@ -11,7 +11,7 @@ def getLocalTime() {
 def timeStamp=getLocalTime()
 println("timeStamp: "+ timeStamp)
 
-def branch_name = "dev"
+def branch_name = "jonathan-dev"
 println("branch_name: "+ timeStamp)
 
 // Pipeline name
@@ -44,9 +44,20 @@ pipeline {
 
         stage('PlayMode Test') {
             steps {
-              sh """sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -runTests -testResults ${workingDir}/CI/results.xml -testPlatform PlayMode -nographics;\
+              sh """git checkout ${branch};\
+                    sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -runTests -testResults ${workingDir}/CI/results.xml -testPlatform PlayMode -nographics;\
                 """
             }
+        }
+        stage('Send A Discord message') {
+          def result = currentBuild.currentResult.toLowerCase()
+
+          discordSend webhookURL: "https://discord.com/api/webhooks/1042527642915713094/Vm4aIEwDrTnH2j0fDozOdNdlrKaMXwjQMlNCBGrjf6gml01_2UsIaSr_iUNX-iYbUHZI",
+          title: "${env.JOB_BASE_NAME} #${env.BUILD_NUMBER}",
+          result: currentBuild.currentResult,
+          description: "**Build:** ${env.BUILD_NUMBER}\n**Status:** ${result}\n\u2060", /* word joiner character forces a blank line */
+          enableArtifactsList: true,
+          showChangeset: true
         }
     }
 }
