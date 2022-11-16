@@ -11,7 +11,7 @@ def getLocalTime() {
 def timeStamp=getLocalTime()
 println("timeStamp: "+ timeStamp)
 
-def branch_name = "jonathan-dev"
+def branch_name = "dev"
 println("branch_name: "+ timeStamp)
 
 // Pipeline name
