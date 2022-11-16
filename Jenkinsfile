@@ -22,6 +22,8 @@ def build_repo="https://github.com/Jonanananas/SpeedokuRoyale.git"
 // Ex: "2020.1.15f2"
 def unity_version="2021.3.8f1"
 
+def result = currentBuild.currentResult.toLowerCase()
+
 pipeline {
    // Master Jenkins
    agent any
@@ -51,8 +53,6 @@ pipeline {
         }
         stage('Send A Discord message') {
           steps {
-            def result = currentBuild.currentResult.toLowerCase()
-
             discordSend webhookURL: "https://discord.com/api/webhooks/1042527642915713094/Vm4aIEwDrTnH2j0fDozOdNdlrKaMXwjQMlNCBGrjf6gml01_2UsIaSr_iUNX-iYbUHZI",
             title: "${env.JOB_BASE_NAME} #${env.BUILD_NUMBER}",
             result: currentBuild.currentResult,
