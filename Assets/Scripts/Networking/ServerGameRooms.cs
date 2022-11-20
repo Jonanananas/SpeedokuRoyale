@@ -192,6 +192,10 @@ public class ServerGameRooms : MonoBehaviour {
             yield return new WaitForSeconds(1);
         }
 
+        // Update leaderboard
+        ScoreManager.Instance.ClearScores();
+        ServerPlayerProfiles.Instance.GetLeaderboardProfiles();
+
         statusCodeReq.Dispose();
         statusReq.Dispose();
     }

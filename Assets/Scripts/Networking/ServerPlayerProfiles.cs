@@ -33,6 +33,8 @@ public class ServerPlayerProfiles : MonoBehaviour {
         // Don't destroy this gameobject on load
         DontDestroyOnLoad(gameObject);
         #endregion
+
+        GetLeaderboardProfiles();
     }
     public void LogIn(string userName, string password) {
         StartCoroutine(LogInIEnum(userName, password));
@@ -243,25 +245,52 @@ public class ServerPlayerProfiles : MonoBehaviour {
         req.Dispose();
     }
     IEnumerator GetLeaderboardProfilesIEnum() {
-        string url = serverJSON["baseUrl"];
+        string url = serverJSON["baseUrl"] + "/MultiplayerSession";
         if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
+        UnityWebRequest reqMPSessions = UnityWebRequest.Get($"{url}");
+        yield return reqMPSessions.SendWebRequest();
 
-        UnityWebRequest req = UnityWebRequest.Get($"{url}");
+        string urlPlayers = serverJSON["baseUrl"] + "/Player";
+        if (urlPlayers.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
+        UnityWebRequest reqPlayers = UnityWebRequest.Get($"{urlPlayers}");
+        yield return reqPlayers.SendWebRequest();
 
-        yield return req.SendWebRequest();
+        JSONNode jsonMPSessions = JSONNode.Parse(reqMPSessions.downloadHandler.text);
+        JSONNode jsonPlayers = JSONNode.Parse(reqPlayers.downloadHandler.text);
+        Trace.Log(reqMPSessions.downloadHandler.text);
+        Trace.Log(reqPlayers.downloadHandler.text);
 
-        JSONNode json = JSONNode.Parse(req.downloadHandler.text);
+        Dictionary<ulong, string> playersNames = new Dictionary<ulong, string>();
+        Dictionary<ulong, ulong> playersRecords = new Dictionary<ulong, ulong>();
 
-        foreach (var profile in json) {
-            ulong highscore;
-            if (!UInt64.TryParse(profile.Value["score"], out highscore))
-                Trace.LogError("Error parsing score data!");
-            ScoreManager.Instance.AddScore(new Score(profile.Value["name"], highscore));
+        foreach (var item in jsonPlayers) {
+            playersNames.Add(UInt64.Parse(item.Value["id"]), item.Value["name"]);
         }
 
-        WasRequestSuccesful(req);
+        foreach (var item in jsonMPSessions) {
+            ulong playerId = UInt64.Parse(item.Value["playerId"]);
+            ulong gameScore = UInt64.Parse(item.Value["score"]);
 
-        req.Dispose();
+            if (playersRecords.ContainsKey(playerId)) {
+                if (gameScore > playersRecords[playerId])
+                    playersRecords[playerId] = gameScore;
+            }
+            else {
+                playersRecords.Add(playerId, gameScore);
+            }
+            // if (!UInt64.TryParse(item.Value["score"], out highscore))
+            //     Trace.LogError("Error parsing score data!");
+        }
+
+        foreach (var item in playersRecords) {
+            ScoreManager.Instance.AddScore(
+                new Score(playersNames[item.Key], item.Value));
+        }
+
+        WasRequestSuccesful(reqMPSessions);
+
+        reqMPSessions.Dispose();
+        reqPlayers.Dispose();
     }
     bool SetPlayerId(string responseText) {
         ulong playerId;
@@ -278,7 +307,7 @@ public class ServerPlayerProfiles : MonoBehaviour {
             return false;
         }
         else {
-            Trace.Log("Request complete: " + req.downloadHandler.text);
+            // Trace.Log("Request complete: " + req.downloadHandler.text);
             return true;
         }
     }

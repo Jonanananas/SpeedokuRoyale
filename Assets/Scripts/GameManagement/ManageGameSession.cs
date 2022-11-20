@@ -51,6 +51,8 @@ public class ManageGameSession : MonoBehaviour {
             }
         }
         gameEndMenu.SetActive(true);
+        ScoreManager.Instance.ClearScores();
+        // ServerPlayerProfiles.Instance.GetLeaderboardProfiles();
     }
 
     public void AddPoints(ulong pointsToAdd) {
