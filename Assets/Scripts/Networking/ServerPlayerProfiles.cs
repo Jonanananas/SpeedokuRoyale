@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System;
 
@@ -48,15 +49,14 @@ public class ServerPlayerProfiles : MonoBehaviour {
     public void DeleteUserProfile(string username, string password) {
         StartCoroutine(DeleteUserProfileIEnum(username, password));
     }
-    public void ChangePassword(string username, string password, string newPassword) {
-        StartCoroutine(ChangePasswordIEnum(username, password, newPassword));
+    public void ChangePassword(string password, string newPassword) {
+        StartCoroutine(ChangePasswordIEnum(password, newPassword));
     }
     public void GetLeaderboardProfiles() {
         StartCoroutine(GetLeaderboardProfilesIEnum());
     }
 
     IEnumerator LogInIEnum(string username, string password) {
-
         Trace.Log("username: " + username + "password: " + password);
 
         string url = serverJSON["baseUrl"] + "/Player/Login";
@@ -114,6 +114,7 @@ public class ServerPlayerProfiles : MonoBehaviour {
 
         List<ulong> playedGamesIds = new List<ulong>();
         ulong bestScore = 0;
+        string email = "";
 
         foreach (var item in json) {
             ulong playerId = UInt64.Parse(item.Value["playerId"]);
@@ -149,7 +150,8 @@ public class ServerPlayerProfiles : MonoBehaviour {
         LocalPlayer.Instance.SetLocalPlayerProfile(new PlayerProfile(
             username,
             bestScore,
-            loggedUserWins
+            loggedUserWins,
+            email
         ));
 
         Trace.Log("loggedUserWins: " + loggedUserWins);
@@ -165,7 +167,7 @@ public class ServerPlayerProfiles : MonoBehaviour {
         if (url.Equals(serverJSON["baseUrl"])) {
             Trace.LogWarning("URL not set!");
             Trace.LogWarning("Creating test user.");
-            LocalPlayer.Instance.SetLocalPlayerProfile(new PlayerProfile(username, 0, 0));
+            LocalPlayer.Instance.SetLocalPlayerProfile(new PlayerProfile(username, 0, 0, "test"));
             yield break;
         }
 
@@ -221,26 +223,80 @@ public class ServerPlayerProfiles : MonoBehaviour {
         }
         req.Dispose();
     }
-    IEnumerator ChangePasswordIEnum(string username, string password, string newPassword) {
-        string url = serverJSON["baseUrl"];
-        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
-
-        byte[] passwordBytes = HashPassword.Hash(password);
-        byte[] newPasswordBytes = HashPassword.Hash(newPassword);
-
-        WWWForm form = new WWWForm();
-        form.AddField("username", username);
-        form.AddBinaryData("password", passwordBytes);
-        form.AddBinaryData("newPassword", newPasswordBytes);
-
-        UnityWebRequest req = UnityWebRequest.Put($"{url}", form.data);
-
-        foreach (var header in form.headers) {
-            req.SetRequestHeader(header.Key, header.Value);
+    IEnumerator ChangePasswordIEnum(string password, string newPassword) {
+        // Test login
+        string url = serverJSON["baseUrl"] + "/Player/Login";
+        if (url.Equals(serverJSON["baseUrl"])) {
+            Trace.LogWarning("Full URL not set!"); yield break;
         }
 
+        // Use these to send a hashed password to server later in development
+        // byte[] passwordBytes = HashPassword.Hash(password);
+        // WWWForm form = new WWWForm();
+        // form.AddField("username", username);
+        // form.AddBinaryData("password", passwordBytes);
+        // UnityWebRequest req = UnityWebRequest.Put($"{url}", form.data);
+        // foreach (var header in form.headers) {
+        //     req.SetRequestHeader(header.Key, header.Value);
+        // }
+
+        string username = LocalPlayer.Instance.profile.username;
+
+        JSONNode jsonNode = new JSONObject();
+        jsonNode.Add("userName", username);
+        jsonNode.Add("password", password);
+        UnityWebRequest req = UnityWebRequest.Put($"{url}", jsonNode.ToString());
+        req.SetRequestHeader("Content-Type", "application/json");
+        req.method = "POST";
+
+        GameStates.SetLoginStatus("Logging in...");
+
         yield return req.SendWebRequest();
-        WasRequestSuccesful(req);
+        if (WasRequestSuccesful(req)) {
+            GameStates.SetLoginStatus("Log in successful!");
+            GameStates.SetLoggedStatus(true);
+            Trace.Log("Login successful!");
+
+            string urlGetEmail = serverJSON["baseUrl"] + "/Player/" + req.downloadHandler.text;
+            if (urlGetEmail.Equals(serverJSON["baseUrl"])) {
+                Trace.LogWarning("Full URL not set!"); yield break;
+            }
+            UnityWebRequest reqGetEmail = UnityWebRequest.Get($"{urlGetEmail}");
+            yield return reqGetEmail.SendWebRequest();
+            if (WasRequestSuccesful(reqGetEmail)) {
+                JSONNode json = JSONNode.Parse(reqGetEmail.downloadHandler.text);
+
+                string urlChangePass = serverJSON["baseUrl"] + "/Player"; ;
+                if (urlChangePass.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
+
+                // Use these to send a hashed password to server later in development
+                // byte[] passwordBytes = HashPassword.Hash(password);
+                // byte[] newPasswordBytes = HashPassword.Hash(newPassword);
+
+                jsonNode = new JSONObject();
+                jsonNode.Add("id", req.downloadHandler.text);
+                jsonNode.Add("email", json["email"]);
+                jsonNode.Add("name", username);
+                jsonNode.Add("password", newPassword);
+
+                UnityWebRequest reqChangePass = UnityWebRequest.Put($"{urlChangePass}", jsonNode.ToString());
+                reqChangePass.SetRequestHeader("Content-Type", "application/json");
+
+                yield return reqChangePass.SendWebRequest();
+                if (WasRequestSuccesful(reqChangePass)) {
+                    // Close change password menu
+                    ChangePasswordButton.Instance.changePasswordGO.SetActive(false);
+                    ChangePasswordButton.Instance.userSettingsGO.SetActive(true);
+                }
+
+                reqChangePass.Dispose();
+            }
+            reqGetEmail.Dispose();
+        }
+        else {
+            GameStates.SetLoginStatus("Log in failed.");
+            Trace.LogWarning("Error logging in!");
+        }
 
         req.Dispose();
     }
@@ -307,7 +363,7 @@ public class ServerPlayerProfiles : MonoBehaviour {
             return false;
         }
         else {
-            // Trace.Log("Request complete: " + req.downloadHandler.text);
+            Trace.Log("Request complete: " + req.downloadHandler.text);
             return true;
         }
     }

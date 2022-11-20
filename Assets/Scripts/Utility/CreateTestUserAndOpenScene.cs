@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class CreateTestUserAndOpenScene : MonoBehaviour {
     [SerializeField] string sceneToLoad;
     void Start() {
-        LocalPlayer.Instance.SetLocalPlayerProfile(new PlayerProfile("TestUser", 0, 0));
+        LocalPlayer.Instance.SetLocalPlayerProfile(new PlayerProfile("TestUser", 0, 0, ""));
         SceneManager.LoadScene(sceneToLoad);
     }
 }
