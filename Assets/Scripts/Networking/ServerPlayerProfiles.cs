@@ -46,8 +46,8 @@ public class ServerPlayerProfiles : MonoBehaviour {
     public void GetAndSetUserData(ulong userId, string username) {
         StartCoroutine(GetAndSetUserDataIEnum(userId, username));
     }
-    public void DeleteUserProfile(string username, string password) {
-        StartCoroutine(DeleteUserProfileIEnum(username, password));
+    public void DeleteUserProfile() {
+        StartCoroutine(DeleteUserProfileIEnum());
     }
     public void ChangePassword(string password, string newPassword) {
         StartCoroutine(ChangePasswordIEnum(password, newPassword));
@@ -201,26 +201,29 @@ public class ServerPlayerProfiles : MonoBehaviour {
 
         req.Dispose();
     }
-    IEnumerator DeleteUserProfileIEnum(string username, string password) {
-        string url = serverJSON["baseUrl"];
+    IEnumerator DeleteUserProfileIEnum() {
+        NameValueCollection queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
+        queryString.Add("id", LocalPlayer.Instance.playerId);
+
+        string url = serverJSON["baseUrl"] + "/Player?" + queryString.ToString();
         if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
 
-        byte[] passwordBytes = HashPassword.Hash(password);
-
-        WWWForm form = new WWWForm();
-        form.AddField("username", username);
-        form.AddBinaryData("password", passwordBytes);
-
-        UnityWebRequest req = UnityWebRequest.Post($"{url}", form);
-        req.method = "DELETE";
+        UnityWebRequest req = UnityWebRequest.Delete($"{url}");
         yield return req.SendWebRequest();
-        if (WasRequestSuccesful(req)) {
+
+        if (req.result != UnityWebRequest.Result.Success) {
+            Trace.LogWarning(req.error);
+            Trace.LogError("Error deleting profile!");
+        }
+        else {
             Trace.Log("Profile deletion successful!");
             LocalPlayer.Instance.LogOut();
         }
-        else {
-            Trace.LogError("Error deleting profile!");
-        }
+
+        // Update leaderboard
+        ScoreManager.Instance.ClearScores();
+        ServerPlayerProfiles.Instance.GetLeaderboardProfiles();
+
         req.Dispose();
     }
     IEnumerator ChangePasswordIEnum(string password, string newPassword) {
