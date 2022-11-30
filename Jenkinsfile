@@ -30,7 +30,7 @@ pipeline {
 
    // Initialize environment params
    environment{
-       UNITY_PATH="/InstallFolder/Editor/Unity"
+       UNITY_PATH="/InstallFolderTest/Editor/Unity"
        app_mode="mono"  // mono or IL2CPP
        repo="${build_repo}"
        branch="${branch_name}"
