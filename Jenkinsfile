@@ -54,10 +54,8 @@ pipeline {
         stage('Build') {
           steps {
             script {
-              sh """cd ${workingDir};\
-                  mkdir builds
+              sh """cd ${workingDir}/builds;\
                   sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -buildTarget Android -executeMethod BuilderUtility.BuildWebGL -nographics -quit;\
-                  mv test-app.apk ./builds
                 """
             }
           }
