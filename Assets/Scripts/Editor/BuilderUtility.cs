@@ -7,7 +7,7 @@ class Builder {
     static string[] SCENES = FindEnabledEditorScenes();
 
     static string APP_NAME = "SpeedokuRoyale";
-    static string TARGET_DIR = "Builds";
+    static string TARGET_DIR = "builds";
 
     [MenuItem("Custom/CI/Build WebGL")]
     static void BuildWebGL() {
