@@ -29,7 +29,7 @@ public class SetServerSettings : MonoBehaviour {
         }
         else {
             File.Create(serverSettingsPath).Dispose();
-            serverJSON.Add("baseUrl", "http://127.0.0.1:8000");
+            serverJSON.Add("baseUrl", "http://10.114.32.14:8000");
             string fileContent = serverJSON.ToString();
             File.WriteAllText(serverSettingsPath, fileContent);
         }
