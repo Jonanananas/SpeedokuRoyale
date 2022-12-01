@@ -47,7 +47,7 @@ pipeline {
 
         stage('PlayMode Test') {
             steps {
-              sh """git checkout ${branch};\
+              sh """
                     sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -runTests -testResults ${workingDir}/CI/results.xml -testPlatform PlayMode -nographics -quit;\
                 """
             }
