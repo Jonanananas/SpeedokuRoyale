@@ -48,7 +48,7 @@ pipeline {
         stage('PlayMode Test') {
             steps {
               sh """git checkout ${branch};\
-                    sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -runTests -testResults ${workingDir}/CI/results.xml -testPlatform PlayMode -nographics;\
+                    sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -runTests -testResults ${workingDir}/CI/results.xml -testPlatform PlayMode -nographics -quit;\
                 """
             }
         }
@@ -56,7 +56,7 @@ pipeline {
           steps {
             script {
               sh """cd ${workingDir}/builds;\
-                  sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -executeMethod BuilderUtility.BuildWebGL -nographics -quit;\
+                  sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -buildTarget WebGL -executeMethod BuilderUtility.BuildWebGL -nographics -quit;\
                 """
             }
           }

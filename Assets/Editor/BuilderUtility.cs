@@ -3,14 +3,14 @@ using System.Linq;
 using System;
 using System.Collections.Generic;
 
-class Builder {
+public class BuilderUtility {
     static string[] SCENES = FindEnabledEditorScenes();
 
     static string APP_NAME = "SpeedokuRoyale";
     static string TARGET_DIR = "builds";
 
     [MenuItem("Custom/CI/Build WebGL")]
-    static void BuildWebGL() {
+    public static void BuildWebGL() {
         string targetDir = APP_NAME + ".app";
         GenericBuild(SCENES, TARGET_DIR + "/" + targetDir, BuildTargetGroup.WebGL, BuildTarget.WebGL, BuildOptions.None);
     }
