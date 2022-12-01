@@ -44,13 +44,13 @@ pipeline {
             }
         }
 
-        stage('PlayMode Test') {
-            steps {
-              sh """git checkout ${branch};\
-                    sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -runTests -testResults ${workingDir}/CI/results.xml -testPlatform PlayMode -nographics;\
-                """
-            }
-        }
+        // stage('PlayMode Test') {
+        //     steps {
+        //       sh """git checkout ${branch};\
+        //             sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -runTests -testResults ${workingDir}/CI/results.xml -testPlatform PlayMode -nographics;\
+        //         """
+        //     }
+        // }
         stage('Build') {
           steps {
             script {
