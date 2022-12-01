@@ -39,8 +39,10 @@ pipeline {
     stages {
         stage('Pull Branch') {
             steps {
-              sh """git checkout ${branch} -f;\
-                    git pull;\
+              sh """
+                    cd /var/lib/jenkins/workspace/UnityProject;\
+                    sudo git checkout ${branch} -f;\
+                    sudo git pull;\
                 """
             }
         }
