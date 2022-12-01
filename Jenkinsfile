@@ -55,7 +55,7 @@ pipeline {
           steps {
             script {
               sh """cd ${workingDir}/builds;\
-                  sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -buildTarget Android -executeMethod BuilderUtility.BuildWebGL -nographics -quit;\
+                  sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -buildTarget WebGL -executeMethod BuilderUtility.BuildWebGL -nographics -quit;\
                 """
             }
           }
