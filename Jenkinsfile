@@ -30,7 +30,7 @@ pipeline {
 
    // Initialize environment params
    environment{
-       UNITY_PATH="/home/Unity-2021.3.8f1WebGL/Editor/Unity"
+       UNITY_PATH="/home/InstallFolder/Editor/Unity"
        app_mode="mono"  // mono or IL2CPP
        repo="${build_repo}"
        branch="${branch_name}"
