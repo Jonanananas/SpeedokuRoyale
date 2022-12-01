@@ -30,7 +30,7 @@ pipeline {
 
    // Initialize environment params
    environment{
-       UNITY_PATH="/home/InstallFolder/Editor/Unity"
+       UNITY_PATH="/InstallFolder/Editor/Unity"
        app_mode="mono"  // mono or IL2CPP
        repo="${build_repo}"
        branch="${branch_name}"
@@ -45,13 +45,13 @@ pipeline {
             }
         }
 
-        // stage('PlayMode Test') {
-        //     steps {
-        //       sh """git checkout ${branch};\
-        //             sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -runTests -testResults ${workingDir}/CI/results.xml -testPlatform PlayMode -nographics;\
-        //         """
-        //     }
-        // }
+        stage('PlayMode Test') {
+            steps {
+              sh """git checkout ${branch};\
+                    sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -runTests -testResults ${workingDir}/CI/results.xml -testPlatform PlayMode -nographics;\
+                """
+            }
+        }
         stage('Build') {
           steps {
             script {
