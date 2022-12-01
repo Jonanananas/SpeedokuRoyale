@@ -56,7 +56,7 @@ pipeline {
             script {
               sh """cd ${workingDir};\
                   mkdir builds
-                  ${UNITY_PATH} -batchmode -projectPath ${workingDir} -buildTarget Android -executeMethod BuilderUtility.BuildWebGL -nographics -quit;\
+                  sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -buildTarget Android -executeMethod BuilderUtility.BuildWebGL -nographics -quit;\
                   mv test-app.apk ./builds
                 """
             }
