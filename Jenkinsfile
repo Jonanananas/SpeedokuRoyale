@@ -39,7 +39,8 @@ pipeline {
     stages {
         stage('Pull Branch') {
             steps {
-              sh """sudo git pull ${repo} ${branch};\
+              sh """sudo git checkout ${branch};\
+                    sudo git pull;\
                 """
             }
         }
