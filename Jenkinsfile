@@ -51,6 +51,18 @@ pipeline {
                 """
             }
         }
+        stage('Build') {
+          steps {
+            script {
+              sh """cd ${workingDir};\
+                  mkdir builds
+                  ${UNITY_PATH} -batchmode -projectPath ${workingDir} -buildTarget Android -executeMethod BuilderUtility.BuildWebGL -nographics -quit;\
+                  mv test-app.apk ./builds
+                """
+            }
+          }
+        }
+
         stage('Send A Discord message') {
           steps {
             discordSend webhookURL: "https://discord.com/api/webhooks/1042527642915713094/Vm4aIEwDrTnH2j0fDozOdNdlrKaMXwjQMlNCBGrjf6gml01_2UsIaSr_iUNX-iYbUHZI",

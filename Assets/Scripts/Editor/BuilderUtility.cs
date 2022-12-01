@@ -9,14 +9,10 @@ class Builder {
     static string APP_NAME = "SpeedokuRoyale";
     static string TARGET_DIR = "Builds";
 
-    [MenuItem("Custom/CI/Build Mac OS X")]
-    static void PerformMacOSXBuild() {
-        string target_dir = APP_NAME + ".app";
-        GenericBuild(SCENES, TARGET_DIR + "/" + target_dir, BuildTarget.StandaloneOSXIntel, BuildOptions.None);
-    }
-    static void PerformWindowsBuild() {
-        string target_dir = APP_NAME + ".app";
-        GenericBuild(SCENES, TARGET_DIR + "/" + target_dir, BuildTarget.StandaloneWindows64, BuildOptions.None);
+    [MenuItem("Custom/CI/Build WebGL")]
+    static void BuildWebGL() {
+        string targetDir = APP_NAME + ".app";
+        GenericBuild(SCENES, TARGET_DIR + "/" + targetDir, BuildTargetGroup.WebGL, BuildTarget.WebGL, BuildOptions.None);
     }
 
     private static string[] FindEnabledEditorScenes() {
@@ -28,9 +24,10 @@ class Builder {
         return EditorScenes.ToArray();
     }
 
-    static void GenericBuild(string[] scenes, string target_dir, BuildTarget build_target, BuildOptions build_options) {
-        EditorUserBuildSettings.SwitchActiveBuildTarget(build_target);
-        BuildPipeline.BuildPlayer(scenes, target_dir, build_target, build_options);
+    static void GenericBuild(string[] scenes, string dir, BuildTargetGroup targetGroup, BuildTarget target, BuildOptions options) {
+        // EditorUserBuildSettings.SwitchActiveBuildTarget(build_target);
+        EditorUserBuildSettings.SwitchActiveBuildTarget(targetGroup, target);
+        BuildPipeline.BuildPlayer(scenes, dir, target, options);
         // string res = BuildPipeline.BuildPlayer(scenes,target_dir,build_target,build_options);
         // if (res.Length > 0) {
         //         throw new Exception("BuildPlayer failure: " + res);
