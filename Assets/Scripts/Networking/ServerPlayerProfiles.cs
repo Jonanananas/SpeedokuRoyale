@@ -11,19 +11,8 @@ using SimpleJSON;
 
 public class ServerPlayerProfiles : MonoBehaviour {
     public static ServerPlayerProfiles Instance;
-    JSONNode serverJSON = new JSONObject();
-
+    string baseServerURL = ServerSettings.baseURL;
     void Start() {
-        string serverSettingsPath = Application.dataPath + "/server-settings.json";
-
-        if (File.Exists(serverSettingsPath)) {
-            string fileContent = File.ReadAllText(serverSettingsPath);
-            serverJSON = JSONNode.Parse(fileContent);
-        }
-        else {
-            Trace.LogError("File \"server-settings\" is missing!");
-        }
-
         #region Singleton
         if (Instance != null) {
             Destroy(gameObject);
@@ -59,8 +48,8 @@ public class ServerPlayerProfiles : MonoBehaviour {
     IEnumerator LogInIEnum(string username, string password) {
         Trace.Log("username: " + username + "password: " + password);
 
-        string url = serverJSON["baseUrl"] + "/Player/Login";
-        if (url.Equals(serverJSON["baseUrl"])) {
+        string url = baseServerURL + "/Player/Login";
+        if (url.Equals(baseServerURL)) {
             // #region Test code without server connection
             // GameStates.SetLoggedStatus(true);
             // LoginButton.Instance.CloseLoginMenu();
@@ -102,8 +91,8 @@ public class ServerPlayerProfiles : MonoBehaviour {
         req.Dispose();
     }
     IEnumerator GetAndSetUserDataIEnum(ulong userId, string username) {
-        string url = serverJSON["baseUrl"] + "/MultiplayerSession";
-        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
+        string url = baseServerURL + "/MultiplayerSession";
+        if (url.Equals(baseServerURL)) { Trace.LogWarning("Full URL not set!"); yield break; }
 
         UnityWebRequest req = UnityWebRequest.Get($"{url}");
 
@@ -164,8 +153,8 @@ public class ServerPlayerProfiles : MonoBehaviour {
     IEnumerator RegisterUserIEnum(string username, string password) {
         GameStates.SetRegisterStatus("Registering...");
 
-        string url = serverJSON["baseUrl"] + "/Player";
-        if (url.Equals(serverJSON["baseUrl"])) {
+        string url = baseServerURL + "/Player";
+        if (url.Equals(baseServerURL)) {
             Trace.LogWarning("URL not set!");
             Trace.LogWarning("Creating test user.");
             LocalPlayer.Instance.SetLocalPlayerProfile(new PlayerProfile(username, 0, 0, "test"));
@@ -206,8 +195,8 @@ public class ServerPlayerProfiles : MonoBehaviour {
         NameValueCollection queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
         queryString.Add("id", LocalPlayer.Instance.playerId);
 
-        string url = serverJSON["baseUrl"] + "/Player?" + queryString.ToString();
-        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
+        string url = baseServerURL + "/Player?" + queryString.ToString();
+        if (url.Equals(baseServerURL)) { Trace.LogWarning("Full URL not set!"); yield break; }
 
         UnityWebRequest req = UnityWebRequest.Delete($"{url}");
         yield return req.SendWebRequest();
@@ -229,8 +218,8 @@ public class ServerPlayerProfiles : MonoBehaviour {
     }
     IEnumerator ChangePasswordIEnum(string password, string newPassword) {
         // Test login
-        string url = serverJSON["baseUrl"] + "/Player/Login";
-        if (url.Equals(serverJSON["baseUrl"])) {
+        string url = baseServerURL + "/Player/Login";
+        if (url.Equals(baseServerURL)) {
             Trace.LogWarning("Full URL not set!"); yield break;
         }
 
@@ -261,8 +250,8 @@ public class ServerPlayerProfiles : MonoBehaviour {
             GameStates.SetLoggedStatus(true);
             Trace.Log("Login successful!");
 
-            string urlGetEmail = serverJSON["baseUrl"] + "/Player/" + req.downloadHandler.text;
-            if (urlGetEmail.Equals(serverJSON["baseUrl"])) {
+            string urlGetEmail = baseServerURL + "/Player/" + req.downloadHandler.text;
+            if (urlGetEmail.Equals(baseServerURL)) {
                 Trace.LogWarning("Full URL not set!"); yield break;
             }
             UnityWebRequest reqGetEmail = UnityWebRequest.Get($"{urlGetEmail}");
@@ -270,8 +259,8 @@ public class ServerPlayerProfiles : MonoBehaviour {
             if (WasRequestSuccesful(reqGetEmail)) {
                 JSONNode json = JSONNode.Parse(reqGetEmail.downloadHandler.text);
 
-                string urlChangePass = serverJSON["baseUrl"] + "/Player"; ;
-                if (urlChangePass.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
+                string urlChangePass = baseServerURL + "/Player"; ;
+                if (urlChangePass.Equals(baseServerURL)) { Trace.LogWarning("Full URL not set!"); yield break; }
 
                 // Use these to send a hashed password to server later in development
                 // byte[] passwordBytes = HashPassword.Hash(password);
@@ -305,15 +294,15 @@ public class ServerPlayerProfiles : MonoBehaviour {
         req.Dispose();
     }
     IEnumerator GetLeaderboardProfilesIEnum() {
-        string url = serverJSON["baseUrl"] + "/MultiplayerSession";
-        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
+        string url = baseServerURL + "/MultiplayerSession";
+        if (url.Equals(baseServerURL)) { Trace.LogWarning("Full URL not set!"); yield break; }
         UnityWebRequest reqMPSessions = UnityWebRequest.Get($"{url}");
         yield return reqMPSessions.SendWebRequest();
 
         if (WasRequestSuccesful(reqMPSessions)) {
 
-            string urlPlayers = serverJSON["baseUrl"] + "/Player";
-            if (urlPlayers.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
+            string urlPlayers = baseServerURL + "/Player";
+            if (urlPlayers.Equals(baseServerURL)) { Trace.LogWarning("Full URL not set!"); yield break; }
             UnityWebRequest reqPlayers = UnityWebRequest.Get($"{urlPlayers}");
             yield return reqPlayers.SendWebRequest();
 
