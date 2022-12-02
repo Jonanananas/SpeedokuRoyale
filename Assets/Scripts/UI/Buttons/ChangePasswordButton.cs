@@ -5,10 +5,10 @@ using UnityEngine.UI;
 using TMPro;
 
 [RequireComponent(typeof(Button))]
-public class ChangePasswordButton : MonoBehaviour, IPointerUpHandler {
-    [SerializeField] TMP_InputField passwordField, passwordNewField, passwordNewFieldR;
+public class ChangePasswordButton : MonoBehaviour, IPointerUpHandler, ButtonInterface {
     public GameObject userSettingsGO, changePasswordGO;
-    Button btn;
+    [SerializeField] TMP_InputField passwordField, passwordNewField, passwordNewFieldR;
+    [SerializeField] Button btn;
     public static ChangePasswordButton Instance;
     void Awake() {
         #region Singleton
@@ -20,13 +20,10 @@ public class ChangePasswordButton : MonoBehaviour, IPointerUpHandler {
         Instance = this;
         #endregion
     }
-    void Start() {
-        btn = gameObject.GetComponent<Button>();
-    }
     public void OnPointerUp(PointerEventData eventData) {
         TryToPress();
     }
-    void TryToPress() {
+    public void TryToPress() {
         if (!btn.interactable) return;
         if (GameData.highscoreProfiles != null && GameData.highscoreProfiles.Count != 0) return;
         

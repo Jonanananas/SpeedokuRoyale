@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 
 [RequireComponent(typeof(Button))]
-public class LogoutOrLoginButton : MonoBehaviour, IPointerUpHandler {
+public class LogoutOrLoginButton : MonoBehaviour, IPointerUpHandler, ButtonInterface {
     [SerializeField] TextMeshProUGUI buttonTMP;
     [SerializeField] GameObject loginMenu, mainMenu;
     Button btn;
@@ -28,7 +28,7 @@ public class LogoutOrLoginButton : MonoBehaviour, IPointerUpHandler {
     void OnEnable() {
         UpdateButtonText();
     }
-    void TryToPress() {
+    public void TryToPress() {
         if (!btn.interactable) return;
 
         // Try to log out if the user is logged in

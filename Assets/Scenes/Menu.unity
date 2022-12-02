@@ -7252,11 +7252,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebab2a623ac0c7147a9a2ef4b27b293b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  userSettingsGO: {fileID: 656497862}
+  changePasswordGO: {fileID: 580270881}
   passwordField: {fileID: 1805285993}
   passwordNewField: {fileID: 1711966587}
   passwordNewFieldR: {fileID: 666819889}
-  userSettingsGO: {fileID: 656497862}
-  changePasswordGO: {fileID: 580270881}
+  btn: {fileID: 1050114211}
 --- !u!1 &1053572546
 GameObject:
   m_ObjectHideFlags: 0
@@ -8881,6 +8882,7 @@ MonoBehaviour:
   passwordRepeatInField: {fileID: 1797545198}
   registerMenuGO: {fileID: 322970258}
   registerInfoMenuGO: {fileID: 1481714227}
+  btn: {fileID: 1200905488}
 --- !u!1 &1203357075
 GameObject:
   m_ObjectHideFlags: 0
@@ -17499,6 +17501,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cbc89ce6a550c74b993a89323f18f00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  btn: {fileID: 1968366777}
 --- !u!1 &2016484767
 GameObject:
   m_ObjectHideFlags: 0
