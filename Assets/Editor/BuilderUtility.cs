@@ -7,11 +7,11 @@ public class BuilderUtility {
     static string[] SCENES = FindEnabledEditorScenes();
 
     static string APP_NAME = "SpeedokuRoyale";
-    static string TARGET_DIR = "builds";
+    static string TARGET_DIR = "Builds";
 
     [MenuItem("Custom/CI/Build WebGL")]
     public static void BuildWebGL() {
-        string targetDir = APP_NAME + ".app";
+        string targetDir = APP_NAME + "WebGL";
         GenericBuild(SCENES, TARGET_DIR + "/" + targetDir, BuildTargetGroup.WebGL, BuildTarget.WebGL, BuildOptions.None);
     }
 
