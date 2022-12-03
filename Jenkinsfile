@@ -43,10 +43,16 @@ pipeline {
     stage('Build') {
       steps {
         script {
-          catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-            sh """
+          if (currentBuild.currentResult != 'FAILURE') {
+            catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+              sh """
                 sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -buildTarget WebGL -executeMethod BuilderUtility.BuildWebGL -nographics -quit;\
             """
+            }
+          } else {
+            catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+              sh 'exit 2'
+            }
           }
         }
       }
