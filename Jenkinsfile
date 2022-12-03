@@ -40,10 +40,11 @@ pipeline {
       stage('Clear Workspace') {
             steps {
               script {
-                if(!fileExists(workingDir)) return
+                if(fileExists(workingDir)) {
                 sh """
                       sudo rm -rf ${workingDir};\
                   """
+                }
               }
             }
         }
