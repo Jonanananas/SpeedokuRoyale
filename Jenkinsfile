@@ -42,7 +42,7 @@ pipeline {
               script {
                 if(fileExists("UnityProject")) {
                   sh """
-                        sudo rm -rf ${workingDir};\
+                        sudo rm -rf "UnityProject";\
                     """
                 }
               }
