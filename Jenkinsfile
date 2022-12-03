@@ -46,24 +46,26 @@ pipeline {
                 """
             }
         }
-
         stage('PlayMode Test') {
             steps {
-              sh """
-                    sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -runTests -testResults ${workingDir}/CI/results.xml -testPlatform PlayMode -nographics -quit;\
-                """
+              catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                sh """
+                      sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -runTests -testResults ${workingDir}/CI/results.xml -testPlatform PlayMode -nographics -quit;\
+                  """
+              }
             }
         }
         stage('Build') {
           steps {
             script {
-              sh """cd ${workingDir}/builds;\
-                  sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -buildTarget WebGL -executeMethod BuilderUtility.BuildWebGL -nographics -quit;\
-                """
+              catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                sh """cd ${workingDir}/builds;\
+                    sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -buildTarget WebGL -executeMethod BuilderUtility.BuildWebGL -nographics -quit;\
+                  """
+              }
             }
           }
         }
-
         stage('Send A Discord message') {
           steps {
             discordSend webhookURL: "https://discord.com/api/webhooks/1042527642915713094/Vm4aIEwDrTnH2j0fDozOdNdlrKaMXwjQMlNCBGrjf6gml01_2UsIaSr_iUNX-iYbUHZI",

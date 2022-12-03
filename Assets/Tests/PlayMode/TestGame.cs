@@ -20,6 +20,8 @@ namespace TestGame {
             util.FindAndClickButton("Play Button", false);
 
             util.FindAndClickButton("Solo Button", false);
+
+            util.FindAndClickButton("Fail this test", false);
             yield return new WaitForSeconds(0.1f);
         }
     }
