@@ -40,9 +40,9 @@ pipeline {
       stage('Clear Workspace') {
             steps {
               script {
-                if(fileExists("UnityProject")) {
+                if(fileExists("UnityProject/${branch}")) {
                   sh """
-                        sudo rm -rf "UnityProject";\
+                        sudo rm -rf "UnityProject/${branch};\
                     """
                 }
               }
@@ -51,7 +51,7 @@ pipeline {
         stage('Clone Repo') {
             steps {
               sh """
-                    sudo git clone --branch ${branch} --depth 1 ${repo} ${workingDir};\
+                    sudo git clone --branch ${branch} --depth 1 ${repo} ${workingDir}/${branch};\
                 """
             }
         }
@@ -59,7 +59,7 @@ pipeline {
             steps {
               catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
                 sh """
-                      sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -runTests -testResults ${workingDir}/CI/results.xml -testPlatform PlayMode -nographics -quit;\
+                      sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir}/${branch} -runTests -testResults ${workingDir}/${branch}/CI/results.xml -testPlatform PlayMode -nographics -quit;\
                   """
               }
             }
@@ -68,8 +68,8 @@ pipeline {
           steps {
             script {
               catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                sh """cd ${workingDir}/builds;\
-                    sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -buildTarget WebGL -executeMethod BuilderUtility.BuildWebGL -nographics -quit;\
+                sh """cd ${workingDir}/${branch}/builds;\
+                    sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir}/${branch} -buildTarget WebGL -executeMethod BuilderUtility.BuildWebGL -nographics -quit;\
                   """
               }
             }
