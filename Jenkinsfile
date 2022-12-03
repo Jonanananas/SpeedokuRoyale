@@ -40,10 +40,10 @@ pipeline {
       stage('Clear Workspace') {
             steps {
               script {
-                if(fileExists(workingDir)) {
-                sh """
-                      sudo rm -rf ${workingDir};\
-                  """
+                if(fileExists("UnityProject")) {
+                  sh """
+                        sudo rm -rf ${workingDir};\
+                    """
                 }
               }
             }
