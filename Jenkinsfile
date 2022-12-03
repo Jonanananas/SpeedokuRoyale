@@ -39,7 +39,7 @@ pipeline {
     stages {
         stage('PlayMode Test') {
             steps {
-              catchError(currentBuild.result: 'FAILURE', stageResult: 'FAILURE') {
+              catchError(currentBuild.result = 'FAILURE', stageResult: 'FAILURE') {
                 sh """
                       sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -runTests -testResults ${workingDir}/CI/results.xml -testPlatform PlayMode -nographics;\
                   """
@@ -49,7 +49,7 @@ pipeline {
         stage('Build') {
           steps {
             script {
-              catchError(currentBuild.result: 'FAILURE', stageResult: 'FAILURE') {
+              catchError(currentBuild.result = 'FAILURE', stageResult: 'FAILURE') {
                 sh """
                     sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -buildTarget WebGL -executeMethod BuilderUtility.BuildWebGL -nographics -quit;\
                   """
