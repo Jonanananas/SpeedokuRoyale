@@ -48,21 +48,21 @@ pipeline {
         }
         stage('PlayMode Test') {
             steps {
-              catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+              // catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
                 sh """
                       sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -runTests -testResults ${workingDir}/CI/results.xml -testPlatform PlayMode -nographics -quit;\
                   """
-              }
+              // }
             }
         }
         stage('Build') {
           steps {
             script {
-              catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+              // catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
                 sh """cd ${workingDir}/builds;\
                     sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -buildTarget WebGL -executeMethod BuilderUtility.BuildWebGL -nographics -quit;\
                   """
-              }
+              // }
             }
           }
         }
