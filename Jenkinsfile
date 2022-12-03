@@ -37,29 +37,11 @@ pipeline {
        workingDir="/var/lib/jenkins/workspace/UnityProject"
    }
     stages {
-      // stage('Clear Workspace') {
-      //       steps {
-      //         script {
-      //           if(fileExists("UnityProject/${branch}")) {
-      //             sh """
-      //                   sudo rm -rf "UnityProject/;\
-      //               """
-      //           }
-      //         }
-      //       }
-      //   }
-      //   stage('Clone Repo') {
-      //       steps {
-      //         sh """
-      //               sudo git clone --branch ${branch} --depth 1 ${repo} ${workingDir}/${branch};\
-      //           """
-      //       }
-      //   }
         stage('PlayMode Test') {
             steps {
               catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
                 sh """
-                      sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -runTests -testResults ${workingDir}/CI/results.xml -testPlatform PlayMode -nographics -quit;\
+                      sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -runTests -testResults ${workingDir}/CI/results.xml -testPlatform PlayMode -nographics;\
                   """
               }
             }
