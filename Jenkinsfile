@@ -37,29 +37,29 @@ pipeline {
        workingDir="/var/lib/jenkins/workspace/UnityProject"
    }
     stages {
-      stage('Clear Workspace') {
-            steps {
-              script {
-                if(fileExists("UnityProject/${branch}")) {
-                  sh """
-                        sudo rm -rf "UnityProject/;\
-                    """
-                }
-              }
-            }
-        }
-        stage('Clone Repo') {
-            steps {
-              sh """
-                    sudo git clone --branch ${branch} --depth 1 ${repo} ${workingDir}/${branch};\
-                """
-            }
-        }
+      // stage('Clear Workspace') {
+      //       steps {
+      //         script {
+      //           if(fileExists("UnityProject/${branch}")) {
+      //             sh """
+      //                   sudo rm -rf "UnityProject/;\
+      //               """
+      //           }
+      //         }
+      //       }
+      //   }
+      //   stage('Clone Repo') {
+      //       steps {
+      //         sh """
+      //               sudo git clone --branch ${branch} --depth 1 ${repo} ${workingDir}/${branch};\
+      //           """
+      //       }
+      //   }
         stage('PlayMode Test') {
             steps {
               catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
                 sh """
-                      sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir}/${branch} -runTests -testResults ${workingDir}/${branch}/CI/results.xml -testPlatform PlayMode -nographics -quit;\
+                      sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -runTests -testResults ${workingDir}/CI/results.xml -testPlatform PlayMode -nographics -quit;\
                   """
               }
             }
@@ -68,8 +68,8 @@ pipeline {
           steps {
             script {
               catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                sh """cd ${workingDir}/${branch}/builds;\
-                    sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir}/${branch} -buildTarget WebGL -executeMethod BuilderUtility.BuildWebGL -nographics -quit;\
+                sh """
+                    sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -buildTarget WebGL -executeMethod BuilderUtility.BuildWebGL -nographics -quit;\
                   """
               }
             }
