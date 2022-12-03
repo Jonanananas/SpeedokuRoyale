@@ -37,32 +37,37 @@ pipeline {
        workingDir="/var/lib/jenkins/workspace/UnityProject"
    }
     stages {
-        stage('Pull Branch') {
+      stage('Clear Workspace') {
             steps {
               sh """
-                    cd /var/lib/jenkins/workspace/UnityProject;\
-                    sudo git checkout ${branch} -f;\
-                    sudo git pull;\
+                    sudo rm -rf ${workingDir};\
+                """
+            }
+        }
+        stage('Clone Repo') {
+            steps {
+              sh """
+                    sudo git clone --branch ${branch} --depth 1 ${repo} ${workingDir};\
                 """
             }
         }
         stage('PlayMode Test') {
             steps {
-              // catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+              catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
                 sh """
                       sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -runTests -testResults ${workingDir}/CI/results.xml -testPlatform PlayMode -nographics -quit;\
                   """
-              // }
+              }
             }
         }
         stage('Build') {
           steps {
             script {
-              // catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+              catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
                 sh """cd ${workingDir}/builds;\
                     sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -buildTarget WebGL -executeMethod BuilderUtility.BuildWebGL -nographics -quit;\
                   """
-              // }
+              }
             }
           }
         }
