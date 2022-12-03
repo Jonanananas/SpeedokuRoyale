@@ -39,10 +39,12 @@ pipeline {
     stages {
       stage('Clear Workspace') {
             steps {
-              if(!fileExists(workingDir)) return
-              sh """
-                    sudo rm -rf ${workingDir};\
-                """
+              script {
+                if(!fileExists(workingDir)) return
+                sh """
+                      sudo rm -rf ${workingDir};\
+                  """
+              }
             }
         }
         stage('Clone Repo') {
