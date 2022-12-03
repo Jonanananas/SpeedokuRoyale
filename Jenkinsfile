@@ -42,7 +42,7 @@ pipeline {
               script {
                 if(fileExists("UnityProject/${branch}")) {
                   sh """
-                        sudo rm -rf "UnityProject/${branch};\
+                        sudo rm -rf "UnityProject/;\
                     """
                 }
               }
