@@ -42,7 +42,7 @@ pipeline {
     // }
     stage('Publish NUnit Test Report') {
       steps {
-        nunit testResultsPattern: '/CI/results.xml',
+        nunit testResultsPattern: "${workingDir}/CI/results.xml",
         failIfNoResults : true
       }
     }
