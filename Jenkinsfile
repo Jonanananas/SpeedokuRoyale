@@ -42,7 +42,8 @@ pipeline {
     }
     stage('Publish NUnit Test Report') {
       steps {
-        nunit testResultsPattern: 'results.xml'
+        nunit testResultsPattern: '/CI/results.xml'
+        failIfNoResults : true
       }
     }
     stage('Build') {
