@@ -50,14 +50,14 @@ namespace TestGame {
             // Get and press register button
             util.FindAndClickButton("Register Button", true);
 
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(6f);
 
             util.FindAndClickButton("MainMenuButton", false);
             // yield return new WaitForSeconds(0.1f);
 
             // Logout
             util.FindAndClickButton("Login Button", true);
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(6f);
         }
         [UnityTest, Order(2)]
         public IEnumerator TestLogIn() {
@@ -66,7 +66,7 @@ namespace TestGame {
             util.FindTMP_InputFieldAndInsertText("Username", username);
             util.FindTMP_InputFieldAndInsertText("Password", password);
             util.FindAndClickButton("Login Button", true);
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(6f);
             util.FindAndClickButton("MainMenuButton", false);
         }
         [UnityTest, Order(3)]
@@ -84,7 +84,7 @@ namespace TestGame {
             util.FindTMP_InputFieldAndInsertText("NewPasswordRepeat", password);
 
             util.FindAndClickButtonWithTwoFunctions("Confirm Button");
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(6f);
 
             // Go back to main menu
             util.FindAndClickButton("Back Button", false);
@@ -93,7 +93,7 @@ namespace TestGame {
 
             // Logout
             util.FindAndClickButton("Login Button", true);
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(6f);
 
             TestLogIn();
         }
@@ -107,7 +107,7 @@ namespace TestGame {
             // Delete account
             util.FindAndClickButton("Delete Account", false);
             util.FindAndClickButtonWithTwoFunctions("Delete Button");
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(6f);
 
             // Go back to main menu
             util.FindAndClickButton("Back Button", false);

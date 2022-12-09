@@ -72,7 +72,7 @@ pipeline {
             description:  """**Build:** ${env.BUILD_NUMBER}
                           **Branch:** ${branch_name}
                           **Status:** ${currentBuild.currentResult}\n\u2060""", /* word joiner character forces a blank line */
-            enableArtifactsList: true,
+            // enableArtifactsList: true,
             showChangeset: true
       }
     }
