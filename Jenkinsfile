@@ -14,7 +14,7 @@ println('timeStamp: ' + timeStamp)
 def branch_name = 'jonathan-dev'
 println('branch_name: ' + timeStamp)
 
-// Your Github URL
+// The Github URL
 def build_repo = 'https://github.com/Jonanananas/SpeedokuRoyale.git'
 def result = currentBuild.currentResult.toLowerCase()
 
@@ -31,18 +31,18 @@ pipeline {
     workingDir = '/var/lib/jenkins/workspace/UnityProject'
   }
   stages {
-    // stage('PlayMode Test') {
-    //   steps {
-    //       catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-    //         sh """
-    //           sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -runTests -testResults ${workingDir}/CI/results.xml -testPlatform PlayMode -nographics;\
-    //         """
-    //       }
-    //   }
-    // }
+    stage('PlayMode Test') {
+      steps {
+          catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+            sh """
+              sudo ${UNITY_PATH} -batchmode -projectPath ${workingDir} -runTests -testResults ${workingDir}/TestResults.xml -testPlatform PlayMode -nographics;\
+            """
+          }
+      }
+    }
     stage('Publish NUnit Test Report') {
       steps {
-        nunit testResultsPattern: 'results.xml',
+        nunit testResultsPattern: 'TestResults.xml',
         failIfNoResults : true
       }
     }
