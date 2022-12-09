@@ -40,6 +40,11 @@ pipeline {
           }
       }
     }
+    stage('Publish NUnit Test Report') {
+      steps {
+        nunit testResultsPattern: 'results.xml'
+      }
+    }
     stage('Build') {
       steps {
         script {
