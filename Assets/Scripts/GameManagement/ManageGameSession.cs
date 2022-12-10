@@ -41,8 +41,8 @@ public class ManageGameSession : MonoBehaviour {
     public void EndGame() {
         Timer.Instance.StopTimer();
         sudoku.SudokuEnd();
-        string scene = ManageScenes.Instance.GetSceneName();
-        if (scene == "Singleplayer") {
+
+        if (!GameStates.isOnlineMode) {
             if (sudoku.GetWrong() > 0) {
                 setWinText(false);
             }

@@ -11,10 +11,13 @@ public class ScoreManager : MonoBehaviour {
     void Awake() {
         #region Singleton
         if (Instance != null) {
-            Trace.LogError("More than one instance of " + this.GetType().Name + " found!");
+            Destroy(gameObject);
+            // Trace.LogError("More than one instance of " + this.GetType().Name + " found!");
             return;
         }
         Instance = this;
+        // Don't destroy this gameobject on load
+        DontDestroyOnLoad(gameObject);
         #endregion
         sd = new ScoreData();
     }
@@ -25,7 +28,13 @@ public class ScoreManager : MonoBehaviour {
     }
 
     public void AddScore(Score score) {
+        print(score.name);
+        print(score.score);
         sd.scores.Add(score);
+    }
+
+    public void ClearScores() {
+        sd.scores.Clear();
     }
 
     void Parse() {

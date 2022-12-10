@@ -46,12 +46,12 @@ public class Royale : Sudoku {
         // Aseta numerot
         oneGamePoints += GetPoints();
         allGamePoints += oneGamePoints;
-        oneGamePoints = 0;
+        // oneGamePoints = 0;
         // Aseta checker aika & päivitä score
         ManageGameSession.Instance.SetTimeSpent(false);
-        ManageGameSession.Instance.UpdateScore((ulong)allGamePoints);
+        // ManageGameSession.Instance.UpdateScore((ulong)allGamePoints);
         // Anna pisteitä viimeisestä sudoku taulukosta vaikka jäisi kesken
-        ManageGameSession.Instance.AddPoints((ulong)oneGamePoints);
+        // ManageGameSession.Instance.AddPoints((ulong)oneGamePoints);
         oneGamePoints = 0;
     }
 }

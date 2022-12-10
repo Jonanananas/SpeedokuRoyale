@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 
 [RequireComponent(typeof(Button))]
-public class LoginButton : MonoBehaviour, IPointerUpHandler {
+public class LoginButton : MonoBehaviour, IPointerUpHandler, ButtonInterface {
     [SerializeField] GameObject mainMenu, loginMenu;
     public void CloseLoginMenu() {
         // Go to main menu
@@ -22,7 +22,7 @@ public class LoginButton : MonoBehaviour, IPointerUpHandler {
     public void OnPointerUp(PointerEventData eventData) {
         TryToPress();
     }
-    void TryToPress() {
+    public void TryToPress() {
         // if (!btn.interactable) return;
         // if (usernameInField.text.Length < minimumInputLength ||
         //     passwordInField.text.Length < minimumInputLength) {

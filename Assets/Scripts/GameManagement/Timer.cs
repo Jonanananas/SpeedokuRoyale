@@ -13,7 +13,7 @@ public class Timer : MonoBehaviour {
     public long elapsedTime { get; private set; }
     public bool isRunning { get; private set; }
     bool checkForDrops;
-    [SerializeField ]long eliminationInterval = 2000L; // Set in game scene in editor
+    [SerializeField] long eliminationInterval = 2000L; // Set in game scene in editor
     public void StartTimer() {
         if (isRunning == false) {
             timeLong = timeLimit;
@@ -44,7 +44,10 @@ public class Timer : MonoBehaviour {
     void FixedUpdate() {
         if (isRunning) {
             if (timeLong == 0) {
-                ManageGameSession.Instance.EndGame();
+                if (GameStates.isOnlineMode)
+                    ManageGameSession.Instance.WinGame();
+                else
+                    ManageGameSession.Instance.EndGame();
                 return;
             }
             elapsedTime++;
@@ -70,15 +73,17 @@ public class Timer : MonoBehaviour {
 
         string tuloste = "" + minutes;
 
-        if (seconds < 10){
+        if (seconds < 10) {
             tuloste += ":0" + seconds;
-        } else {
+        }
+        else {
             tuloste += ":" + seconds;
         }
 
-        if (fractions < 10){
+        if (fractions < 10) {
             tuloste += ".0" + fractions;
-        } else {
+        }
+        else {
             tuloste += "." + fractions;
         }
 

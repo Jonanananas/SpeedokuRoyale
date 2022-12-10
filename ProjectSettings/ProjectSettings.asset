@@ -12,7 +12,7 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: "Ryhm\xE410"
+  companyName: Ryhma10
   productName: SpeedokuRoyale
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
@@ -622,7 +622,7 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLDecompressionFallback: 0
   scriptingDefineSymbols:
-    Standalone: 
+    Standalone: ENABLE_LOGS
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}

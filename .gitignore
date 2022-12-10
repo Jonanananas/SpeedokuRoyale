@@ -78,3 +78,6 @@ crashlytics-build.properties
 # Streaming Assets
 /Assets/StreamingAssets/*
 /Assets/StreamingAssets.meta
+
+# Ignore CI results folder
+/CI/
