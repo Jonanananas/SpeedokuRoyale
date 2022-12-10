@@ -111,7 +111,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 2240204472320
-    m_Localized: Victory royale!
+    m_Localized: Victory Royale!
     m_Metadata:
       m_Items: []
   - m_Id: 2326187704320
@@ -190,11 +190,47 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 45214179229696
-    m_Localized: Defeat royale!
+    m_Localized: Defeat Royale!
     m_Metadata:
       m_Items: []
   - m_Id: 46954840555520
     m_Localized: Validate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 90151629324288
+    m_Localized: 'Placement:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 91048728035328
+    m_Localized: 'Score: '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 109079030104064
+    m_Localized: ' '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 109101415104512
+    m_Localized: Correct!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 109131945443328
+    m_Localized: Incorrect!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 113279076106240
+    m_Localized: Logout
+    m_Metadata:
+      m_Items: []
+  - m_Id: 116539614789632
+    m_Localized: 'Games won: '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 116516177018880
+    m_Localized: 'Best score: '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 116461479100416
+    m_Localized: Log in to see profile data!
     m_Metadata:
       m_Items: []
   references:
