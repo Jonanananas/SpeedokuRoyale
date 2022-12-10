@@ -11,10 +11,10 @@ public class LogoutOrLoginButton : MonoBehaviour, IPointerUpHandler, ButtonInter
     Button btn;
     public void UpdateButtonText() {
         if (GameStates.isLoggedIn) {
-            buttonTMP.text = "Log out";
+            buttonTMP.text = "Logout";
             return;
         }
-        buttonTMP.text = "Log in";
+        buttonTMP.text = "Login";
     }
     public void UpdateButtonText(string text) {
         buttonTMP.text = text;
