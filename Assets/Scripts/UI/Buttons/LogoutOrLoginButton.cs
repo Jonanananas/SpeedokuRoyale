@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+using UnityEngine.Localization.Settings;
+using UnityEngine.Localization.Components;
 using TMPro;
 
 [RequireComponent(typeof(Button))]
@@ -11,13 +13,14 @@ public class LogoutOrLoginButton : MonoBehaviour, IPointerUpHandler, ButtonInter
     Button btn;
     public void UpdateButtonText() {
         if (GameStates.isLoggedIn) {
-            buttonTMP.text = "Log out";
+            buttonTMP.GetComponent<LocalizeStringEvent>().StringReference.TableEntryReference = "Logout";
             return;
         }
-        buttonTMP.text = "Log in";
+        buttonTMP.GetComponent<LocalizeStringEvent>().StringReference.TableEntryReference = "Login";
     }
     public void UpdateButtonText(string text) {
-        buttonTMP.text = text;
+        buttonTMP.GetComponent<LocalizeStringEvent>().StringReference.TableEntryReference = text;
+        //buttonTMP.text = text;
     }
     public void OnPointerUp(PointerEventData eventData) {
         TryToPress();
