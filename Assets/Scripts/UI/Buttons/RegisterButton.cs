@@ -5,18 +5,15 @@ using UnityEngine.UI;
 using TMPro;
 
 [RequireComponent(typeof(Button))]
-public class RegisterButton : MonoBehaviour, IPointerUpHandler {
+public class RegisterButton : MonoBehaviour, IPointerUpHandler, ButtonInterface {
     [SerializeField] TMP_InputField usernameInField, passwordInField, passwordRepeatInField;
     [SerializeField] GameObject registerMenuGO, registerInfoMenuGO;
+    [SerializeField] Button btn;
     int minimumInputLength = GlobalVariables.minimumInputLength;
-    Button btn;
-    void Start() {
-        btn = gameObject.GetComponent<Button>();
-    }
     public void OnPointerUp(PointerEventData eventData) {
         TryToPress();
     }
-    void TryToPress() {
+    public void TryToPress() {
         if (!btn.interactable) return;
         // Check for proper login length
         // if (usernameInField.text.Length < minimumInputLength ||

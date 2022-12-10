@@ -5,15 +5,12 @@ using UnityEngine.UI;
 using TMPro;
 
 [RequireComponent(typeof(Button))]
-public class DeleteUserButton : MonoBehaviour, IPointerUpHandler {
-    Button btn;
-    void Start() {
-        btn = gameObject.GetComponent<Button>();
-    }
+public class DeleteUserButton : MonoBehaviour, IPointerUpHandler, ButtonInterface {
+    [SerializeField] Button btn;
     public void OnPointerUp(PointerEventData eventData) {
         TryToPress();
     }
-    void TryToPress() {
+    public void TryToPress() {
         if (!btn.interactable) return;
 
         if (!GameStates.isLoggedIn) {

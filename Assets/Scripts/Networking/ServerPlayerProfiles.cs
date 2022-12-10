@@ -11,19 +11,8 @@ using SimpleJSON;
 
 public class ServerPlayerProfiles : MonoBehaviour {
     public static ServerPlayerProfiles Instance;
-    JSONNode serverJSON = new JSONObject();
-
+    string baseServerURL = ServerSettings.baseURL;
     void Start() {
-        string serverSettingsPath = Application.dataPath + "/server-settings.json";
-
-        if (File.Exists(serverSettingsPath)) {
-            string fileContent = File.ReadAllText(serverSettingsPath);
-            serverJSON = JSONNode.Parse(fileContent);
-        }
-        else {
-            Trace.LogError("File \"server-settings\" is missing!");
-        }
-
         #region Singleton
         if (Instance != null) {
             Destroy(gameObject);
@@ -59,8 +48,8 @@ public class ServerPlayerProfiles : MonoBehaviour {
     IEnumerator LogInIEnum(string username, string password) {
         Trace.Log("username: " + username + "password: " + password);
 
-        string url = serverJSON["baseUrl"] + "/Player/Login";
-        if (url.Equals(serverJSON["baseUrl"])) {
+        string url = baseServerURL + "/Player/Login";
+        if (url.Equals(baseServerURL)) {
             // #region Test code without server connection
             // GameStates.SetLoggedStatus(true);
             // LoginButton.Instance.CloseLoginMenu();
@@ -102,69 +91,70 @@ public class ServerPlayerProfiles : MonoBehaviour {
         req.Dispose();
     }
     IEnumerator GetAndSetUserDataIEnum(ulong userId, string username) {
-        string url = serverJSON["baseUrl"] + "/MultiplayerSession";
-        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
+        string url = baseServerURL + "/MultiplayerSession";
+        if (url.Equals(baseServerURL)) { Trace.LogWarning("Full URL not set!"); yield break; }
 
         UnityWebRequest req = UnityWebRequest.Get($"{url}");
 
         yield return req.SendWebRequest();
 
-        JSONNode json = JSONNode.Parse(req.downloadHandler.text);
-        Trace.Log(json);
+        if (WasRequestSuccesful(req)) {
 
-        List<ulong> playedGamesIds = new List<ulong>();
-        ulong bestScore = 0;
-        string email = "";
+            JSONNode json = JSONNode.Parse(req.downloadHandler.text);
+            Trace.Log(json);
 
-        foreach (var item in json) {
-            ulong playerId = UInt64.Parse(item.Value["playerId"]);
-            if (playerId == userId) {
-                ulong gameScore = UInt64.Parse(item.Value["score"]);
-                if (gameScore > bestScore)
-                    bestScore = gameScore;
-                playedGamesIds.Add(UInt64.Parse(item.Value["multiplayerGameId"]));
-            }
-        }
-        Trace.Log("bestScore: " + bestScore);
+            List<ulong> playedGamesIds = new List<ulong>();
+            ulong bestScore = 0;
+            string email = "";
 
-        List<ulong> gameWinnerIds = new List<ulong>();
-        ulong loggedUserWins = 0;
-
-        foreach (ulong gameId in playedGamesIds) {
-            ulong gameBestScore = 0;
-            ulong gameWinnerId = 0;
-            Trace.Log(gameId.ToString());
             foreach (var item in json) {
-                if (item.Value["multiplayerGameId"] == gameId) {
+                ulong playerId = UInt64.Parse(item.Value["playerId"]);
+                if (playerId == userId) {
                     ulong gameScore = UInt64.Parse(item.Value["score"]);
-                    if (gameScore > gameBestScore) {
-                        gameBestScore = gameScore;
-                        gameWinnerId = UInt64.Parse(item.Value["playerId"]);
-                    }
+                    if (gameScore > bestScore)
+                        bestScore = gameScore;
+                    playedGamesIds.Add(UInt64.Parse(item.Value["multiplayerGameId"]));
                 }
             }
-            if (gameWinnerId == userId) {
-                loggedUserWins++;
+            Trace.Log("bestScore: " + bestScore);
+
+            List<ulong> gameWinnerIds = new List<ulong>();
+            ulong loggedUserWins = 0;
+
+            foreach (ulong gameId in playedGamesIds) {
+                ulong gameBestScore = 0;
+                ulong gameWinnerId = 0;
+                Trace.Log(gameId.ToString());
+                foreach (var item in json) {
+                    if (item.Value["multiplayerGameId"] == gameId) {
+                        ulong gameScore = UInt64.Parse(item.Value["score"]);
+                        if (gameScore > gameBestScore) {
+                            gameBestScore = gameScore;
+                            gameWinnerId = UInt64.Parse(item.Value["playerId"]);
+                        }
+                    }
+                }
+                if (gameWinnerId == userId) {
+                    loggedUserWins++;
+                }
             }
+            LocalPlayer.Instance.SetLocalPlayerProfile(new PlayerProfile(
+                username,
+                bestScore,
+                loggedUserWins,
+                email
+            ));
+
+            Trace.Log("loggedUserWins: " + loggedUserWins);
         }
-        LocalPlayer.Instance.SetLocalPlayerProfile(new PlayerProfile(
-            username,
-            bestScore,
-            loggedUserWins,
-            email
-        ));
-
-        Trace.Log("loggedUserWins: " + loggedUserWins);
-
-        WasRequestSuccesful(req);
 
         req.Dispose();
     }
     IEnumerator RegisterUserIEnum(string username, string password) {
         GameStates.SetRegisterStatus("Registering...");
 
-        string url = serverJSON["baseUrl"] + "/Player";
-        if (url.Equals(serverJSON["baseUrl"])) {
+        string url = baseServerURL + "/Player";
+        if (url.Equals(baseServerURL)) {
             Trace.LogWarning("URL not set!");
             Trace.LogWarning("Creating test user.");
             LocalPlayer.Instance.SetLocalPlayerProfile(new PlayerProfile(username, 0, 0, "test"));
@@ -205,8 +195,8 @@ public class ServerPlayerProfiles : MonoBehaviour {
         NameValueCollection queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
         queryString.Add("id", LocalPlayer.Instance.playerId);
 
-        string url = serverJSON["baseUrl"] + "/Player?" + queryString.ToString();
-        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
+        string url = baseServerURL + "/Player?" + queryString.ToString();
+        if (url.Equals(baseServerURL)) { Trace.LogWarning("Full URL not set!"); yield break; }
 
         UnityWebRequest req = UnityWebRequest.Delete($"{url}");
         yield return req.SendWebRequest();
@@ -228,8 +218,8 @@ public class ServerPlayerProfiles : MonoBehaviour {
     }
     IEnumerator ChangePasswordIEnum(string password, string newPassword) {
         // Test login
-        string url = serverJSON["baseUrl"] + "/Player/Login";
-        if (url.Equals(serverJSON["baseUrl"])) {
+        string url = baseServerURL + "/Player/Login";
+        if (url.Equals(baseServerURL)) {
             Trace.LogWarning("Full URL not set!"); yield break;
         }
 
@@ -260,8 +250,8 @@ public class ServerPlayerProfiles : MonoBehaviour {
             GameStates.SetLoggedStatus(true);
             Trace.Log("Login successful!");
 
-            string urlGetEmail = serverJSON["baseUrl"] + "/Player/" + req.downloadHandler.text;
-            if (urlGetEmail.Equals(serverJSON["baseUrl"])) {
+            string urlGetEmail = baseServerURL + "/Player/" + req.downloadHandler.text;
+            if (urlGetEmail.Equals(baseServerURL)) {
                 Trace.LogWarning("Full URL not set!"); yield break;
             }
             UnityWebRequest reqGetEmail = UnityWebRequest.Get($"{urlGetEmail}");
@@ -269,8 +259,8 @@ public class ServerPlayerProfiles : MonoBehaviour {
             if (WasRequestSuccesful(reqGetEmail)) {
                 JSONNode json = JSONNode.Parse(reqGetEmail.downloadHandler.text);
 
-                string urlChangePass = serverJSON["baseUrl"] + "/Player"; ;
-                if (urlChangePass.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
+                string urlChangePass = baseServerURL + "/Player"; ;
+                if (urlChangePass.Equals(baseServerURL)) { Trace.LogWarning("Full URL not set!"); yield break; }
 
                 // Use these to send a hashed password to server later in development
                 // byte[] passwordBytes = HashPassword.Hash(password);
@@ -304,52 +294,57 @@ public class ServerPlayerProfiles : MonoBehaviour {
         req.Dispose();
     }
     IEnumerator GetLeaderboardProfilesIEnum() {
-        string url = serverJSON["baseUrl"] + "/MultiplayerSession";
-        if (url.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
+        string url = baseServerURL + "/MultiplayerSession";
+        if (url.Equals(baseServerURL)) { Trace.LogWarning("Full URL not set!"); yield break; }
         UnityWebRequest reqMPSessions = UnityWebRequest.Get($"{url}");
         yield return reqMPSessions.SendWebRequest();
 
-        string urlPlayers = serverJSON["baseUrl"] + "/Player";
-        if (urlPlayers.Equals(serverJSON["baseUrl"])) { Trace.LogWarning("Full URL not set!"); yield break; }
-        UnityWebRequest reqPlayers = UnityWebRequest.Get($"{urlPlayers}");
-        yield return reqPlayers.SendWebRequest();
+        if (WasRequestSuccesful(reqMPSessions)) {
 
-        JSONNode jsonMPSessions = JSONNode.Parse(reqMPSessions.downloadHandler.text);
-        JSONNode jsonPlayers = JSONNode.Parse(reqPlayers.downloadHandler.text);
-        Trace.Log(reqMPSessions.downloadHandler.text);
-        Trace.Log(reqPlayers.downloadHandler.text);
+            string urlPlayers = baseServerURL + "/Player";
+            if (urlPlayers.Equals(baseServerURL)) { Trace.LogWarning("Full URL not set!"); yield break; }
+            UnityWebRequest reqPlayers = UnityWebRequest.Get($"{urlPlayers}");
+            yield return reqPlayers.SendWebRequest();
 
-        Dictionary<ulong, string> playersNames = new Dictionary<ulong, string>();
-        Dictionary<ulong, ulong> playersRecords = new Dictionary<ulong, ulong>();
+            if (WasRequestSuccesful(reqPlayers)) {
 
-        foreach (var item in jsonPlayers) {
-            playersNames.Add(UInt64.Parse(item.Value["id"]), item.Value["name"]);
-        }
+                JSONNode jsonMPSessions = JSONNode.Parse(reqMPSessions.downloadHandler.text);
+                JSONNode jsonPlayers = JSONNode.Parse(reqPlayers.downloadHandler.text);
+                Trace.Log(reqMPSessions.downloadHandler.text);
+                Trace.Log(reqPlayers.downloadHandler.text);
 
-        foreach (var item in jsonMPSessions) {
-            ulong playerId = UInt64.Parse(item.Value["playerId"]);
-            ulong gameScore = UInt64.Parse(item.Value["score"]);
+                Dictionary<ulong, string> playersNames = new Dictionary<ulong, string>();
+                Dictionary<ulong, ulong> playersRecords = new Dictionary<ulong, ulong>();
 
-            if (playersRecords.ContainsKey(playerId)) {
-                if (gameScore > playersRecords[playerId])
-                    playersRecords[playerId] = gameScore;
+                foreach (var item in jsonPlayers) {
+                    playersNames.Add(UInt64.Parse(item.Value["id"]), item.Value["name"]);
+                }
+
+                foreach (var item in jsonMPSessions) {
+                    ulong playerId = UInt64.Parse(item.Value["playerId"]);
+                    ulong gameScore = UInt64.Parse(item.Value["score"]);
+
+                    if (playersRecords.ContainsKey(playerId)) {
+                        if (gameScore > playersRecords[playerId])
+                            playersRecords[playerId] = gameScore;
+                    }
+                    else {
+                        playersRecords.Add(playerId, gameScore);
+                    }
+                    // if (!UInt64.TryParse(item.Value["score"], out highscore))
+                    //     Trace.LogError("Error parsing score data!");
+                }
+
+                foreach (var item in playersRecords) {
+                    ScoreManager.Instance.AddScore(
+                        new Score(playersNames[item.Key], item.Value));
+                }
+                reqPlayers.Dispose();
             }
-            else {
-                playersRecords.Add(playerId, gameScore);
-            }
-            // if (!UInt64.TryParse(item.Value["score"], out highscore))
-            //     Trace.LogError("Error parsing score data!");
         }
-
-        foreach (var item in playersRecords) {
-            ScoreManager.Instance.AddScore(
-                new Score(playersNames[item.Key], item.Value));
-        }
-
-        WasRequestSuccesful(reqMPSessions);
+        // WasRequestSuccesful(reqMPSessions);
 
         reqMPSessions.Dispose();
-        reqPlayers.Dispose();
     }
     bool SetPlayerId(string responseText) {
         ulong playerId;
