@@ -10,19 +10,19 @@ public class LocaleSelector : MonoBehaviour {
 
     private bool active = false;
 
-    // void Awake() {
-    //     dropdown.value = 0;
-    //     ChangeLocale(0);
-    // }
+    void Awake() {
+        dropdown.value = 0;
+        ChangeLocale(0);
+    }
 
     void Start() {
-        if (LocalizationSettings.SelectedLocale
-            == LocalizationSettings.AvailableLocales.GetLocale("en")) {
-            dropdown.value = 0;
-        }
-        else {
-            dropdown.value = 1;
-        }
+        // if (LocalizationSettings.SelectedLocale
+        //     == LocalizationSettings.AvailableLocales.GetLocale("en")) {
+        //     dropdown.value = 0;
+        // }
+        // else {
+        //     dropdown.value = 1;
+        // }
     }
 
     public void ChangeLocale(int localeID) {
