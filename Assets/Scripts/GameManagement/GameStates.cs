@@ -8,6 +8,7 @@ public static class GameStates {
     public static bool isLoggedIn { get; private set; }
     public static string registerStatus { get; private set; } = "";
     public static string loginStatus { get; private set; } = "";
+    public static bool localeGot = false;
     public static void SetOnlineMode(bool setOnlineMode) {
         isOnlineMode = setOnlineMode;
     }

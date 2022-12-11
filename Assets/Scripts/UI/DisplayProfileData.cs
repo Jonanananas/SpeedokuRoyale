@@ -2,21 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
-
+using UnityEngine.Localization.Components;
 using TMPro;
 
 public class DisplayProfileData : MonoBehaviour {
-    [SerializeField] TextMeshProUGUI usernameTMP, victoriesTMP, personalBestTMP;
+    [SerializeField] TextMeshProUGUI usernameTMP, victoriesValueTMP, personalBestValueTMP;
+    [SerializeField] LocalizeStringEvent usernameLSE, victoriesLSE, personalBestLSE;
 
     void OnEnable() {
         if (LocalPlayer.Instance.profile == null) {
-            usernameTMP.text = "Log in to see profile data!";
-            victoriesTMP.text = "";
-            personalBestTMP.text = "";
+            usernameLSE.StringReference.TableEntryReference = "Login2C";
+            victoriesLSE.StringReference.TableEntryReference = "Empty";
+            personalBestLSE.StringReference.TableEntryReference = "Empty";
+            victoriesValueTMP.text = "";
+            personalBestValueTMP.text = "";
             return;
         }
+        victoriesLSE.StringReference.TableEntryReference = "GamesWon";
+        personalBestLSE.StringReference.TableEntryReference = "BestScore";
+
         usernameTMP.text = LocalPlayer.Instance.profile.username;
-        victoriesTMP.text = "Games Won: " + LocalPlayer.Instance.profile.victories.ToString();
-        personalBestTMP.text = "Best Score: " + LocalPlayer.Instance.profile.bestScore.ToString();
+        victoriesValueTMP.text = LocalPlayer.Instance.profile.victories.ToString();
+        personalBestValueTMP.text = LocalPlayer.Instance.profile.bestScore.ToString();
     }
 }

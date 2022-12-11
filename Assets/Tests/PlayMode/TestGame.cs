@@ -7,20 +7,91 @@ using UnityEngine.TestTools;
 using UnityEngine.UI;
 
 using TMPro;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace TestGame {
-    public class TestSinglePlayerPlayButtons {
+    public class TestPlayButtons {
         TestUtility util = new TestUtility();
         [SetUp]
         public void SetUp() {
             UnityEngine.SceneManagement.SceneManager.LoadScene("Menu");
         }
         [UnityTest]
-        public IEnumerator TestMainMenuPlayButtons() {
+        public IEnumerator TestMainMenuPlaySoloButton() {
             util.FindAndClickButton("Play Button", false);
 
             util.FindAndClickButton("Solo Button", false);
-            
+
+            yield return new WaitForSeconds(0.1f);
+        }
+        [UnityTest]
+        public IEnumerator TestMainMenuPlayMultiplayerButton() {
+            util.FindAndClickButton("Play Button", false);
+
+            util.FindAndClickButton("Online Button", false);
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+    public class TestSingleplayerGame {
+        TestUtility util = new TestUtility();
+        [SetUp]
+        public void SetUp() {
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Singleplayer");
+        }
+        [UnityTest]
+        public IEnumerator TestSingleplayerPlay() {
+            Timer.Instance.timeLimit = 10;
+            util.FindAndClickButton("StartButton", true);
+
+            // Get a number input button
+            GameObject go = GameObject.Find("NumControlPrefab(Clone)");
+            Assert.NotNull(go);
+            Button numberInputButton = go.GetComponent<Button>();
+
+            var objects = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "FieldPrefab(Clone)");
+
+            // List<GameObject> buttonGOs = new List<GameObject>();
+
+            TextMeshProUGUI buttonText = null;
+
+            foreach (var item in objects) {
+                Button btn = item.GetComponent<Button>();
+                if (btn.isActiveAndEnabled == true) {
+                    if (buttonText == null) {
+                        buttonText = item.transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>();
+                        Assert.AreEqual("0", buttonText.text);
+                    }
+                    // buttonGOs.Add(item);
+                    util.ClickButton(btn);
+                    util.ClickButton(numberInputButton);
+                }
+            }
+            util.FindAndClickButton("ValidateBut", false);
+
+            Assert.AreNotEqual("0", buttonText.text);
+
+            yield return new WaitForSeconds(0.2f);
+            util.FindAndClickButton("NewGameButton", false);
+            yield return new WaitForSeconds(0.5f);
+            Timer.Instance.timeLimit = 10;
+            util.FindAndClickButton("StartButton", true);
+            yield return new WaitForSeconds(0.2f);
+            util.FindAndClickButton("QuitGame", false);
+        }
+        [UnityTest]
+        public IEnumerator TestSingleplayerQuit() {
+            util.FindAndClickButton("QuitButton", false);
+            yield return new WaitForSeconds(0.1f);
+        }
+        [UnityTest]
+        public IEnumerator TestSingleplayerQuitMidGame() {
+            util.FindAndClickButton("StartButton", true);
+            yield return new WaitForSeconds(0.1f);
+            util.FindAndClickButton("Quit", true);
+            util.FindAndClickButton("NoButton", false);
+            util.FindAndClickButton("Quit", true);
+            util.FindAndClickButton("YesButton", false);
             yield return new WaitForSeconds(0.1f);
         }
     }
@@ -53,7 +124,6 @@ namespace TestGame {
             yield return new WaitForSeconds(6f);
 
             util.FindAndClickButton("MainMenuButton", false);
-            // yield return new WaitForSeconds(0.1f);
 
             // Logout
             util.FindAndClickButton("Login Button", true);
@@ -68,13 +138,17 @@ namespace TestGame {
             util.FindAndClickButton("Login Button", true);
             yield return new WaitForSeconds(6f);
             util.FindAndClickButton("MainMenuButton", false);
+            yield return new WaitForSeconds(1f);
         }
         [UnityTest, Order(3)]
         public IEnumerator TestChangingPassword() {
             // Go to user settings
             util.FindAndClickButton("Statistics Button", false);
+            yield return new WaitForSeconds(1f);
             util.FindAndClickButton("Profile Button", false);
+            yield return new WaitForSeconds(1f);
             util.FindAndClickButton("UserSettings Button", false);
+            yield return new WaitForSeconds(1f);
 
             // Change password
             util.FindAndClickButton("Change Password", false);
@@ -123,6 +197,12 @@ namespace TestGame {
         bool clicked = false;
         private void Clicked() {
             clicked = true;
+        }
+        public void ClickButton(Button button) {
+            button.onClick.AddListener(Clicked);
+            button.onClick.Invoke();
+            Assert.IsTrue(clicked);
+            clicked = false;
         }
         public void FindAndClickButton(string buttonName, bool useOnPointerUp) {
             GameObject go = GameObject.Find(buttonName);

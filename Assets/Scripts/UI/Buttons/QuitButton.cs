@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 
 [RequireComponent(typeof(Button))]
-public class QuitButton : MonoBehaviour, IPointerUpHandler {
+public class QuitButton : MonoBehaviour, IPointerUpHandler, ButtonInterface {
     [SerializeField] GameObject quitConfirmationBox;
     Button btn;
     void Start() {
@@ -14,7 +14,7 @@ public class QuitButton : MonoBehaviour, IPointerUpHandler {
     public void OnPointerUp(PointerEventData eventData) {
         TryToPress();
     }
-    void TryToPress() {
+    public void TryToPress() {
         if (!btn.interactable) return;
 
         if (Timer.Instance.isRunning) {

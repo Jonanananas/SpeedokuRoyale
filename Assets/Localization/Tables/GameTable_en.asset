@@ -1,0 +1,238 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: GameTable_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 3442930741261b141b101ce18c2fffc6, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 193157627904
+    m_Localized: Solo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 249038340096
+    m_Localized: Online
+    m_Metadata:
+      m_Items: []
+  - m_Id: 987525251072
+    m_Localized: Password
+    m_Metadata:
+      m_Items: []
+  - m_Id: 952175656960
+    m_Localized: Username
+    m_Metadata:
+      m_Items: []
+  - m_Id: 927160827904
+    m_Localized: Login
+    m_Metadata:
+      m_Items: []
+  - m_Id: 902926139392
+    m_Localized: "No\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 859980660736
+    m_Localized: "Yes\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 800085999616
+    m_Localized: "Are you sure you want to quit?\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1012770766848
+    m_Localized: Repeat password
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1060686495744
+    m_Localized: Register
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1245751771136
+    m_Localized: "Registration failed\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1395140296704
+    m_Localized: Registration succeeded
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1585372954624
+    m_Localized: Statistics
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1689727238144
+    m_Localized: Leaderboard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1720286937088
+    m_Localized: Rank
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1760359317504
+    m_Localized: User
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1824322453504
+    m_Localized: Score
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1863086211072
+    m_Localized: User profile
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1930434150400
+    m_Localized: Options
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2026286579712
+    m_Localized: Volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2104917196800
+    m_Localized: Click to start
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2163041861632
+    m_Localized: Quit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2197049278464
+    m_Localized: Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2240204472320
+    m_Localized: Victory Royale!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2326187704320
+    m_Localized: Time spent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4372169195520
+    m_Localized: Play
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9916506406912
+    m_Localized: Main menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11424371277824
+    m_Localized: Registering...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13576011481088
+    m_Localized: Logging in...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16594522046464
+    m_Localized: User settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17186137014272
+    m_Localized: Delete account
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17223407599616
+    m_Localized: Change password
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18579304448000
+    m_Localized: 'Are you sure you want to delete this account?
+
+      This change
+      cannot be reverted.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19678627332096
+    m_Localized: Delete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20511293145088
+    m_Localized: Cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21364607516672
+    m_Localized: Confirm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21610288873472
+    m_Localized: New password
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21918415028224
+    m_Localized: Repeat new password
+    m_Metadata:
+      m_Items: []
+  - m_Id: 22405319196672
+    m_Localized: The changes to your account have been applied.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25164206538752
+    m_Localized: Action successful
+    m_Metadata:
+      m_Items: []
+  - m_Id: 41262134034432
+    m_Localized: 'Time left:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 44766584078336
+    m_Localized: New game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 45214179229696
+    m_Localized: Defeat Royale!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 46954840555520
+    m_Localized: Validate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 90151629324288
+    m_Localized: 'Placement:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 91048728035328
+    m_Localized: 'Score: '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 109079030104064
+    m_Localized: ' '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 109101415104512
+    m_Localized: Correct!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 109131945443328
+    m_Localized: Incorrect!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 113279076106240
+    m_Localized: Logout
+    m_Metadata:
+      m_Items: []
+  - m_Id: 116539614789632
+    m_Localized: 'Games won: '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 116516177018880
+    m_Localized: 'Best score: '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 116461479100416
+    m_Localized: Log in to see profile data!
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

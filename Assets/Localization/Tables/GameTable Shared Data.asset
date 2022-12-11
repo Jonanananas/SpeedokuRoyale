@@ -1,0 +1,241 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: GameTable Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: GameTable
+  m_TableCollectionNameGuidString: 3442930741261b141b101ce18c2fffc6
+  m_Entries:
+  - m_Id: 193157627904
+    m_Key: Solo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 249038340096
+    m_Key: Online
+    m_Metadata:
+      m_Items: []
+  - m_Id: 800085999616
+    m_Key: Are you sure
+    m_Metadata:
+      m_Items: []
+  - m_Id: 859980660736
+    m_Key: "Yes\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 902926139392
+    m_Key: "No\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 927160827904
+    m_Key: Login
+    m_Metadata:
+      m_Items: []
+  - m_Id: 952175656960
+    m_Key: Username
+    m_Metadata:
+      m_Items: []
+  - m_Id: 987525251072
+    m_Key: Password
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1012770766848
+    m_Key: Repeat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1060686495744
+    m_Key: Register
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1245751771136
+    m_Key: Failed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1395140296704
+    m_Key: Succeeded
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1585372954624
+    m_Key: Stats
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1689727238144
+    m_Key: Leaderboard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1720286937088
+    m_Key: Rank
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1760359317504
+    m_Key: User
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1824322453504
+    m_Key: Score
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1863086211072
+    m_Key: Profile
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1930434150400
+    m_Key: Options
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2026286579712
+    m_Key: Volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2104917196800
+    m_Key: Click to
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2163041861632
+    m_Key: Quit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2197049278464
+    m_Key: Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2240204472320
+    m_Key: Victory
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2326187704320
+    m_Key: Time spent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4372169195520
+    m_Key: Play
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9916506406912
+    m_Key: Main
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11424371277824
+    m_Key: Registering
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13576011481088
+    m_Key: Logging
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16594522046464
+    m_Key: User settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17186137014272
+    m_Key: Delete acc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17223407599616
+    m_Key: Change pass
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18579304448000
+    m_Key: Deletion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19678627332096
+    m_Key: Delete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20511293145088
+    m_Key: Cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21364607516672
+    m_Key: Confirm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21610288873472
+    m_Key: New password
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21918415028224
+    m_Key: Repeat new
+    m_Metadata:
+      m_Items: []
+  - m_Id: 22405319196672
+    m_Key: Changes applied
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25164206538752
+    m_Key: Action success
+    m_Metadata:
+      m_Items: []
+  - m_Id: 41262134034432
+    m_Key: TimeInfo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 44766584078336
+    m_Key: New game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 45214179229696
+    m_Key: Defeat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 46954840555520
+    m_Key: Validate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 90151629324288
+    m_Key: Placed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 91048728035328
+    m_Key: 'Score: '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 109079030104064
+    m_Key: Empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 109101415104512
+    m_Key: Correct
+    m_Metadata:
+      m_Items: []
+  - m_Id: 109131945443328
+    m_Key: Incorrect
+    m_Metadata:
+      m_Items: []
+  - m_Id: 113279076106240
+    m_Key: Logout
+    m_Metadata:
+      m_Items: []
+  - m_Id: 116461479100416
+    m_Key: Login2C
+    m_Metadata:
+      m_Items: []
+  - m_Id: 116516177018880
+    m_Key: BestScore
+    m_Metadata:
+      m_Items: []
+  - m_Id: 116539614789632
+    m_Key: GamesWon
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 7589727792260710424
+  references:
+    version: 2
+    RefIds:
+    - rid: 7589727792260710424
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables,
+        asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1670668212653
