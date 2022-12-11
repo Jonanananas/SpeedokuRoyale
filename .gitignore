@@ -81,3 +81,7 @@ crashlytics-build.properties
 
 # Ignore CI results folder
 /CI/
+
+# Ignore temporary player build addressables files
+/Assets/AddressableAssetsData/link.xml
+/Assets/AddressableAssetsData/link.xml.meta

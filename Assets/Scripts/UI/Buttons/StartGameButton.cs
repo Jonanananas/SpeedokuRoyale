@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 
 [RequireComponent(typeof(Button))]
-public class StartGameButton : MonoBehaviour, IPointerUpHandler {
+public class StartGameButton : MonoBehaviour, IPointerUpHandler, ButtonInterface {
     public static StartGameButton Instance;
     void Awake() {
         #region Singleton
@@ -33,7 +33,7 @@ public class StartGameButton : MonoBehaviour, IPointerUpHandler {
     public void OnPointerUp(PointerEventData eventData) {
         TryToPress();
     }
-    void TryToPress() {
+    public void TryToPress() {
         if (!btn.interactable) return;
 
         if (GameStates.isOnlineMode) {

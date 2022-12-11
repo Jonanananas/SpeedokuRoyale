@@ -42,7 +42,7 @@ namespace TestGame {
         [UnityTest]
         public IEnumerator TestSingleplayerPlay() {
             Timer.Instance.timeLimit = 10;
-            util.FindAndClickButton("StartButton", false);
+            util.FindAndClickButton("StartButton", true);
 
             // Get a number input button
             GameObject go = GameObject.Find("NumControlPrefab(Clone)");
@@ -75,7 +75,7 @@ namespace TestGame {
             util.FindAndClickButton("NewGameButton", false);
             yield return new WaitForSeconds(0.5f);
             Timer.Instance.timeLimit = 10;
-            util.FindAndClickButton("StartButton", false);
+            util.FindAndClickButton("StartButton", true);
             yield return new WaitForSeconds(0.2f);
             util.FindAndClickButton("QuitGame", false);
         }
@@ -86,7 +86,7 @@ namespace TestGame {
         }
         [UnityTest]
         public IEnumerator TestSingleplayerQuitMidGame() {
-            util.FindAndClickButton("StartButton", false);
+            util.FindAndClickButton("StartButton", true);
             yield return new WaitForSeconds(0.1f);
             util.FindAndClickButton("Quit", true);
             util.FindAndClickButton("NoButton", false);
@@ -121,13 +121,13 @@ namespace TestGame {
             // Get and press register button
             util.FindAndClickButton("Register Button", true);
 
-            yield return new WaitForSeconds(6f);
+            yield return new WaitForSeconds(3f);;
 
             util.FindAndClickButton("MainMenuButton", false);
 
             // Logout
             util.FindAndClickButton("Login Button", true);
-            yield return new WaitForSeconds(6f);
+            yield return new WaitForSeconds(3f);;
         }
         [UnityTest, Order(2)]
         public IEnumerator TestLogIn() {
@@ -136,15 +136,19 @@ namespace TestGame {
             util.FindTMP_InputFieldAndInsertText("Username", username);
             util.FindTMP_InputFieldAndInsertText("Password", password);
             util.FindAndClickButton("Login Button", true);
-            yield return new WaitForSeconds(6f);
+            yield return new WaitForSeconds(3f);
             util.FindAndClickButton("MainMenuButton", false);
+            yield return new WaitForSeconds(1f);
         }
         [UnityTest, Order(3)]
         public IEnumerator TestChangingPassword() {
             // Go to user settings
             util.FindAndClickButton("Statistics Button", false);
+            yield return new WaitForSeconds(1f);
             util.FindAndClickButton("Profile Button", false);
+            yield return new WaitForSeconds(1f);
             util.FindAndClickButton("UserSettings Button", false);
+            yield return new WaitForSeconds(1f);
 
             // Change password
             util.FindAndClickButton("Change Password", false);
@@ -154,7 +158,7 @@ namespace TestGame {
             util.FindTMP_InputFieldAndInsertText("NewPasswordRepeat", password);
 
             util.FindAndClickButtonWithTwoFunctions("Confirm Button");
-            yield return new WaitForSeconds(6f);
+            yield return new WaitForSeconds(3f);;
 
             // Go back to main menu
             util.FindAndClickButton("Back Button", false);
@@ -163,7 +167,7 @@ namespace TestGame {
 
             // Logout
             util.FindAndClickButton("Login Button", true);
-            yield return new WaitForSeconds(6f);
+            yield return new WaitForSeconds(3f);;
 
             TestLogIn();
         }
@@ -177,7 +181,7 @@ namespace TestGame {
             // Delete account
             util.FindAndClickButton("Delete Account", false);
             util.FindAndClickButtonWithTwoFunctions("Delete Button");
-            yield return new WaitForSeconds(6f);
+            yield return new WaitForSeconds(3f);;
 
             // Go back to main menu
             util.FindAndClickButton("Back Button", false);

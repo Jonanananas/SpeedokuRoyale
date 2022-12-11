@@ -6,20 +6,23 @@ using UnityEngine.Localization.Components;
 using TMPro;
 
 public class DisplayProfileData : MonoBehaviour {
-    [SerializeField] TextMeshProUGUI usernameTMP, victoriesTMP, personalBestTMP;
+    [SerializeField] TextMeshProUGUI usernameTMP, victoriesValueTMP, personalBestValueTMP;
+    [SerializeField] LocalizeStringEvent usernameLSE, victoriesLSE, personalBestLSE;
 
     void OnEnable() {
         if (LocalPlayer.Instance.profile == null) {
-            usernameTMP.gameObject.GetComponent<LocalizeStringEvent>().StringReference.TableEntryReference = "Login2C";
-            victoriesTMP.gameObject.GetComponent<LocalizeStringEvent>().StringReference.TableEntryReference = "Empty";
-            personalBestTMP.gameObject.GetComponent<LocalizeStringEvent>().StringReference.TableEntryReference = "Empty";
+            usernameLSE.StringReference.TableEntryReference = "Login2C";
+            victoriesLSE.StringReference.TableEntryReference = "Empty";
+            personalBestLSE.StringReference.TableEntryReference = "Empty";
+            victoriesValueTMP.text = "";
+            personalBestValueTMP.text = "";
             return;
         }
-        victoriesTMP.gameObject.GetComponent<LocalizeStringEvent>().StringReference.TableEntryReference = "GamesWon";
-        personalBestTMP.gameObject.GetComponent<LocalizeStringEvent>().StringReference.TableEntryReference = "BestScore";
+        victoriesLSE.StringReference.TableEntryReference = "GamesWon";
+        personalBestLSE.StringReference.TableEntryReference = "BestScore";
 
         usernameTMP.text = LocalPlayer.Instance.profile.username;
-        victoriesTMP.text = LocalPlayer.Instance.profile.victories.ToString();
-        personalBestTMP.text = LocalPlayer.Instance.profile.bestScore.ToString();
+        victoriesValueTMP.text = LocalPlayer.Instance.profile.victories.ToString();
+        personalBestValueTMP.text = LocalPlayer.Instance.profile.bestScore.ToString();
     }
 }
