@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Components;
 using UnityEngine;
@@ -10,7 +7,7 @@ public class ManageGameSession : MonoBehaviour {
     public static ManageGameSession Instance;
     public GameObject gameEndMenu;
     [SerializeField]
-    private TextMeshProUGUI checkerTMP, endHeaderTMP, 
+    private TextMeshProUGUI checkerTMP, endHeaderTMP,
     placementTMP, scoreTMP, userTMP, currentScoreTMP;
     [SerializeField] Sudoku sudoku;
 
@@ -52,18 +49,26 @@ public class ManageGameSession : MonoBehaviour {
         }
         gameEndMenu.SetActive(true);
     }
-
     public void AddPoints(ulong pointsToAdd) {
         LocalPlayer.Instance.AddPoints(pointsToAdd);
     }
     public void AddPoint() {
         LocalPlayer.Instance.AddPoints(1);
     }
+    /// <summary>
+    /// Update the score in the UI and try to update the player's local high score
+    /// </summary>
+    /// <param name="score"> 
+    /// The player's current score.
+    /// </param>
     public void UpdateScore(ulong score) {
         currentScoreTMP.text = score.ToString();
         scoreTMP.text = score.ToString();
         LocalPlayer.Instance.UpdateLocalHighScore();
     }
+    /// <summary>
+    /// Set an UI player placement text with a proper suffix.
+    /// </summary>
     public void SetPlacingText(int placing) {
         string placementSuffix = "";
         if (LocalizationSettings.SelectedLocale == LocalizationSettings.AvailableLocales.GetLocale("en")) {
@@ -87,6 +92,9 @@ public class ManageGameSession : MonoBehaviour {
         }
         placementTMP.text = $"{placing}{placementSuffix}";
     }
+    /// <summary>
+    /// Check if a singleplayer sudoku is solved correctly.
+    /// </summary>
     public void ButtonValidateClassic() {
         if (sudoku.GetWrong() != 0) {
             checkerTMP.color = Color.magenta;
@@ -98,6 +106,9 @@ public class ManageGameSession : MonoBehaviour {
             EndGame();
         }
     }
+    /// <summary>
+    /// Check if a multiplayer sudoku is solved correctly.
+    /// </summary>
     public void ButtonValidateRoyale() {
         Royale royale = (Royale)sudoku;
         if (royale.GetWrong() != 0) {
@@ -110,9 +121,18 @@ public class ManageGameSession : MonoBehaviour {
             royale.AfterCorrectButtonValidate();
         }
     }
+    /// <summary>
+    /// Clear the UI text which indicates if a sudoku was correctly solved or not.
+    /// </summary>
     public void ClearCheckerText() {
         checkerTMP.GetComponent<LocalizeStringEvent>().StringReference.TableEntryReference = "Empty";
     }
+    /// <summary>
+    /// Set the amount of time used on solving sudokus displayed in the UI. 
+    /// Use <code><paramref name="solo"/>= true</code> to use with singleplayer and
+    /// <code><paramref name="solo"/>= false</code> to use with multiplayer.
+    /// </summary>
+    /// <param name="solo"></param>
     public void SetTimeSpent(bool solo) {
         ClearCheckerText();
         if (solo) {
@@ -123,7 +143,12 @@ public class ManageGameSession : MonoBehaviour {
             checkerTMP.text += Timer.Instance.GetElapsedTime();
         }
     }
-
+    /// <summary>
+    /// Set an UI end screen text based on if the player won or not.
+    /// Use <code><paramref name="win"/>= true</code> if the player won and
+    /// <code><paramref name="win"/>= false</code> if the player lost.
+    /// </summary>
+    /// <param name="win"></param>
     private void setWinText(bool win) {
         if (win) {
             checkerTMP.color = Color.cyan;

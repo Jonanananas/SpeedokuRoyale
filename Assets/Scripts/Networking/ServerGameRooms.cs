@@ -23,29 +23,47 @@ public class ServerGameRooms : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
         #endregion
     }
-    public void UpdateCurrentScore(string userName, ulong score) {
-        StartCoroutine(UpdateCurrentScoreIEnum(userName, score));
-    }
+    /// <summary>
+    /// Start a coroutine to add an amount of points equal to the value of the 
+    /// <paramref name="score"/> parameter for the user on the server side.
+    /// </summary>
+    /// <param name="score">The amount of points to add</param>
     public void AddScore(ulong score) {
         StartCoroutine(AddScoreIEnum(score));
     }
+    /// <summary>
+    /// Start a coroutine to get available game rooms and join a game room with an open spot for the player.
+    /// </summary>
     public void GetAvailableGameRooms() {
         StartCoroutine(GetAvailableGameRoomsIEnum());
     }
+    /// <summary>
+    /// Start a coroutine to join a game room which name is equal to <paramref name="roomName"/>.
+    /// </summary>
+    /// <param name="roomName"></param>
     public void JoinGameRoom(string roomName) {
         StartCoroutine(JoinGameRoomIEnum(roomName));
     }
+    /// <summary>
+    /// Start a coroutine to get the status of a game room which name is equal to <paramref name="roomName"/>.
+    /// </summary>
+    /// <param name="roomName"></param>
     public void GetGameRoomStatus(string roomName) {
         StartCoroutine(GetGameRoomStatusIEnum(roomName));
     }
+    /// <summary>
+    /// Drop a player with the lowest score. Don't drop a player if there is only one left.
+    /// </summary>
     public void DropLastPlayer() {
+        // Use the scores which were last retrieved from the server
         JSONNode json = JSONNode.Parse(inGameStatus);
 
         int numberOfPlayers = json["players"].Count;
         ManageGameSession.Instance.SetPlacingText(numberOfPlayers);
+
+        // Don't drop a player if there is only one left
         if (numberOfPlayers <= 1) return;
 
-        // Drop a player with lowest score
         ulong lowestScore = 0;
         if (System.UInt64.TryParse(json["players"][0]["score"].Value, out lowestScore)) {
             Trace.Log("Score parse successful!");
@@ -61,6 +79,8 @@ public class ServerGameRooms : MonoBehaviour {
                 lowestScore = playerScore;
             }
         }
+
+        // Check if the local player will be dropped and lose the game.
         if (lowestScore == LocalPlayer.Instance.GetScore()) {
             Timer.Instance.StopTimer();
             ManageGameSession.Instance.LoseGame();
@@ -68,21 +88,11 @@ public class ServerGameRooms : MonoBehaviour {
         }
     }
     bool gameStarted, gameComplete;
-    IEnumerator UpdateCurrentScoreIEnum(string username, ulong score) {
-        string url = baseServerURL;
-        if (url.Equals(baseServerURL)) { Trace.LogWarning("Full URL not set!"); yield break; }
-
-        JSONObject json = new JSONObject();
-        json.Add("currentScore", score);
-
-        UnityWebRequest req = UnityWebRequest.Put($"{url}?username={username}", json);
-        req.SetRequestHeader("Content-Type", "application/json");
-
-        yield return req.SendWebRequest();
-        WasRequestSuccesful(req);
-
-        req.Dispose();
-    }
+    /// <summary>
+    /// Add an amount of points equal to the value of the 
+    /// <paramref name="score"/> parameter for the user on the server side.
+    /// </summary>
+    /// <param name="score">The amount of points to add</param>
     IEnumerator AddScoreIEnum(ulong score) {
         NameValueCollection queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
 
@@ -99,6 +109,9 @@ public class ServerGameRooms : MonoBehaviour {
 
         req.Dispose();
     }
+    /// <summary>
+    /// Get available game rooms and join a game room with an open spot for the player.
+    /// </summary>
     IEnumerator GetAvailableGameRoomsIEnum() {
         string url = baseServerURL + "/MultiplayerRuntime/AvaliableRooms";
         if (url.Equals(baseServerURL)) {
@@ -118,6 +131,10 @@ public class ServerGameRooms : MonoBehaviour {
 
         req.Dispose();
     }
+    /// <summary>
+    /// Join a game room which name is equal to <paramref name="roomName"/>
+    /// </summary>
+    /// <param name="roomName"></param>
     IEnumerator JoinGameRoomIEnum(string roomName) {
         Trace.Log("roomName:" + roomName);
         string url = baseServerURL + "/MultiplayerRuntime/" + roomName + "/Join?playerId=" + LocalPlayer.Instance.playerId;
@@ -136,6 +153,10 @@ public class ServerGameRooms : MonoBehaviour {
         }
         req.Dispose();
     }
+    /// <summary>
+    /// Get the status of a game room which name is equal to <paramref name="roomName"/>
+    /// </summary>
+    /// <param name="roomName"></param>
     IEnumerator GetGameRoomStatusIEnum(string roomName) {
         string statusCodeURL = baseServerURL + "/MultiplayerRuntime/" + roomName + "/Status";
         string statusURL = baseServerURL + "/MultiplayerRuntime/" + roomName + "/InGameStatus";
@@ -212,7 +233,6 @@ public class ServerGameRooms : MonoBehaviour {
 
         req.Dispose();
     }
-
     bool WasRequestSuccesful(UnityWebRequest req) {
         if (req.result != UnityWebRequest.Result.Success) {
             Trace.LogWarning(req.error);

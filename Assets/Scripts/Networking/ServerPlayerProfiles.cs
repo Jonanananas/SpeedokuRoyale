@@ -26,25 +26,55 @@ public class ServerPlayerProfiles : MonoBehaviour {
 
         GetLeaderboardProfiles();
     }
-    public void LogIn(string userName, string password) {
-        StartCoroutine(LogInIEnum(userName, password));
+    /// <summary>
+    /// Start a coroutine to log a player in on the server.
+    /// </summary>
+    /// <param name="username"></param>
+    /// <param name="password"></param>
+    public void LogIn(string username, string password) {
+        StartCoroutine(LogInIEnum(username, password));
     }
-    public void RegisterUser(string userName, string password) {
-        StartCoroutine(RegisterUserIEnum(userName, password));
+    /// <summary>
+    /// Start a coroutine to register a new player profile on the server.
+    /// </summary>
+    /// <param name="username"></param>
+    /// <param name="password"></param>
+    public void RegisterUser(string username, string password) {
+        StartCoroutine(RegisterUserIEnum(username, password));
     }
+    /// <summary>
+    /// Start a coroutine to get user data from the server and set the data locally.
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="username"></param>
     public void GetAndSetUserData(ulong userId, string username) {
         StartCoroutine(GetAndSetUserDataIEnum(userId, username));
     }
+    /// <summary>
+    /// Start a coroutine to delete the local user's profile on the server.
+    /// </summary>
     public void DeleteUserProfile() {
         StartCoroutine(DeleteUserProfileIEnum());
     }
+    /// <summary>
+    /// Start a coroutine to change the local user's password on the server.
+    /// </summary>
+    /// <param name="password"></param>
+    /// <param name="newPassword"></param>
     public void ChangePassword(string password, string newPassword) {
         StartCoroutine(ChangePasswordIEnum(password, newPassword));
     }
+    /// <summary>
+    /// Start a coroutine to get leaderboard data from the server.
+    /// </summary>
     public void GetLeaderboardProfiles() {
         StartCoroutine(GetLeaderboardProfilesIEnum());
     }
-
+    /// <summary>
+    /// Log a player in on the server.
+    /// </summary>
+    /// <param name="username"></param>
+    /// <param name="password"></param>
     IEnumerator LogInIEnum(string username, string password) {
         Trace.Log("username: " + username + "password: " + password);
 
@@ -90,6 +120,11 @@ public class ServerPlayerProfiles : MonoBehaviour {
 
         req.Dispose();
     }
+    /// <summary>
+    /// Get user data from the server and set the data locally.
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="username"></param>
     IEnumerator GetAndSetUserDataIEnum(ulong userId, string username) {
         string url = baseServerURL + "/MultiplayerSession";
         if (url.Equals(baseServerURL)) { Trace.LogWarning("Full URL not set!"); yield break; }
@@ -150,6 +185,11 @@ public class ServerPlayerProfiles : MonoBehaviour {
 
         req.Dispose();
     }
+    /// <summary>
+    /// Register a new player profile on the server.
+    /// </summary>
+    /// <param name="username"></param>
+    /// <param name="password"></param>
     IEnumerator RegisterUserIEnum(string username, string password) {
         GameStates.SetRegisterStatus("Registering...");
 
@@ -191,6 +231,9 @@ public class ServerPlayerProfiles : MonoBehaviour {
 
         req.Dispose();
     }
+    /// <summary>
+    /// Delete the local user's profile on the server.
+    /// </summary>
     IEnumerator DeleteUserProfileIEnum() {
         NameValueCollection queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
         queryString.Add("id", LocalPlayer.Instance.playerId);
@@ -216,8 +259,13 @@ public class ServerPlayerProfiles : MonoBehaviour {
 
         req.Dispose();
     }
+    /// <summary>
+    /// Change the local user's password on the server.
+    /// </summary>
+    /// <param name="password"></param>
+    /// <param name="newPassword"></param>
     IEnumerator ChangePasswordIEnum(string password, string newPassword) {
-        // Test login
+        #region Check the login credentials by trying to log in
         string url = baseServerURL + "/Player/Login";
         if (url.Equals(baseServerURL)) {
             Trace.LogWarning("Full URL not set!"); yield break;
@@ -245,20 +293,26 @@ public class ServerPlayerProfiles : MonoBehaviour {
         GameStates.SetLoginStatus("Logging in...");
 
         yield return req.SendWebRequest();
+        #endregion
+
         if (WasRequestSuccesful(req)) {
             GameStates.SetLoginStatus("Log in successful!");
             GameStates.SetLoggedStatus(true);
             Trace.Log("Login successful!");
 
+            #region Retrieve the user's email address
             string urlGetEmail = baseServerURL + "/Player/" + req.downloadHandler.text;
             if (urlGetEmail.Equals(baseServerURL)) {
                 Trace.LogWarning("Full URL not set!"); yield break;
             }
             UnityWebRequest reqGetEmail = UnityWebRequest.Get($"{urlGetEmail}");
             yield return reqGetEmail.SendWebRequest();
+            #endregion
+            
             if (WasRequestSuccesful(reqGetEmail)) {
                 JSONNode json = JSONNode.Parse(reqGetEmail.downloadHandler.text);
 
+                #region Change password
                 string urlChangePass = baseServerURL + "/Player"; ;
                 if (urlChangePass.Equals(baseServerURL)) { Trace.LogWarning("Full URL not set!"); yield break; }
 
@@ -283,6 +337,7 @@ public class ServerPlayerProfiles : MonoBehaviour {
                 }
 
                 reqChangePass.Dispose();
+                #endregion
             }
             reqGetEmail.Dispose();
         }
@@ -293,25 +348,31 @@ public class ServerPlayerProfiles : MonoBehaviour {
 
         req.Dispose();
     }
+    /// <summary>
+    /// Get leaderboard data from the server.
+    /// </summary>
     IEnumerator GetLeaderboardProfilesIEnum() {
+        // Get all multiplayer sessions from the server
         string url = baseServerURL + "/MultiplayerSession";
         if (url.Equals(baseServerURL)) { Trace.LogWarning("Full URL not set!"); yield break; }
         UnityWebRequest reqMPSessions = UnityWebRequest.Get($"{url}");
         yield return reqMPSessions.SendWebRequest();
 
         if (WasRequestSuccesful(reqMPSessions)) {
-
+            // Get all players' data from the server
             string urlPlayers = baseServerURL + "/Player";
             if (urlPlayers.Equals(baseServerURL)) { Trace.LogWarning("Full URL not set!"); yield break; }
             UnityWebRequest reqPlayers = UnityWebRequest.Get($"{urlPlayers}");
             yield return reqPlayers.SendWebRequest();
 
             if (WasRequestSuccesful(reqPlayers)) {
-
                 JSONNode jsonMPSessions = JSONNode.Parse(reqMPSessions.downloadHandler.text);
                 JSONNode jsonPlayers = JSONNode.Parse(reqPlayers.downloadHandler.text);
                 Trace.Log(reqMPSessions.downloadHandler.text);
                 Trace.Log(reqPlayers.downloadHandler.text);
+
+                // Get all the players' names from the server response json data and figure out
+                // their best records from occured multiplayer games.
 
                 Dictionary<ulong, string> playersNames = new Dictionary<ulong, string>();
                 Dictionary<ulong, ulong> playersRecords = new Dictionary<ulong, ulong>();
@@ -331,10 +392,9 @@ public class ServerPlayerProfiles : MonoBehaviour {
                     else {
                         playersRecords.Add(playerId, gameScore);
                     }
-                    // if (!UInt64.TryParse(item.Value["score"], out highscore))
-                    //     Trace.LogError("Error parsing score data!");
                 }
 
+                // Add highscores to the leaderboard
                 foreach (var item in playersRecords) {
                     ScoreManager.Instance.AddScore(
                         new Score(playersNames[item.Key], item.Value));
@@ -342,10 +402,13 @@ public class ServerPlayerProfiles : MonoBehaviour {
                 reqPlayers.Dispose();
             }
         }
-        // WasRequestSuccesful(reqMPSessions);
-
         reqMPSessions.Dispose();
     }
+    /// <summary>
+    /// Set the local player's id
+    /// </summary>
+    /// <param name="responseText"></param>
+    /// <returns></returns>
     bool SetPlayerId(string responseText) {
         ulong playerId;
         if (UInt64.TryParse(responseText, out playerId)) {
