@@ -70,7 +70,6 @@ pipeline {
             title: "${env.JOB_BASE_NAME} #${env.BUILD_NUMBER}",
             result: currentBuild.currentResult,
             description:  """**Build:** ${env.BUILD_NUMBER}
-                          **Branch:** ${BRANCH_NAME}
                           **Status:** ${currentBuild.currentResult}\n\u2060""", /* word joiner character forces a blank line */
             // enableArtifactsList: true,
             showChangeset: true
