@@ -11,7 +11,7 @@ def getLocalTime() {
 def timeStamp = getLocalTime()
 println('timeStamp: ' + timeStamp)
 
-def branch_name = 'jonathan-dev'
+def branch_name = 'dev'
 println('branch_name: ' + timeStamp)
 
 // The Github URL
@@ -70,7 +70,7 @@ pipeline {
             title: "${env.JOB_BASE_NAME} #${env.BUILD_NUMBER}",
             result: currentBuild.currentResult,
             description:  """**Build:** ${env.BUILD_NUMBER}
-                          **Branch:** ${branch_name}
+                          **Branch:** ${BRANCH_NAME}
                           **Status:** ${currentBuild.currentResult}\n\u2060""", /* word joiner character forces a blank line */
             // enableArtifactsList: true,
             showChangeset: true
