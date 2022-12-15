@@ -9,7 +9,7 @@ public class RegisterButton : MonoBehaviour, IPointerUpHandler, ButtonInterface 
     [SerializeField] TMP_InputField usernameInField, passwordInField, passwordRepeatInField;
     [SerializeField] GameObject registerMenuGO, registerInfoMenuGO;
     [SerializeField] Button btn;
-    int minimumInputLength = GlobalVariables.minimumInputLength;
+    int minimumInputLength = GlobalConstants.minimumInputLength;
     public void OnPointerUp(PointerEventData eventData) {
         TryToPress();
     }

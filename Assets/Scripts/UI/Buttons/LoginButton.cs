@@ -14,7 +14,7 @@ public class LoginButton : MonoBehaviour, IPointerUpHandler, ButtonInterface {
     }
     [SerializeField] TMP_InputField usernameInField, passwordInField;
     [SerializeField] GameObject loginInfoMenuGO, loginMenuGO;
-    int minimumInputLength = GlobalVariables.minimumInputLength;
+    int minimumInputLength = GlobalConstants.minimumInputLength;
     Button btn;
     void Start() {
         btn = gameObject.GetComponent<Button>();

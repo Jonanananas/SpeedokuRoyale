@@ -5,6 +5,9 @@ using System.Linq;
 
 using UnityEngine;
 
+/// <summary>
+/// Manage the scores which are displayed on the leaderboard
+/// </summary>
 public class ScoreManager : MonoBehaviour {
     public static ScoreManager Instance;
     private ScoreData sd;

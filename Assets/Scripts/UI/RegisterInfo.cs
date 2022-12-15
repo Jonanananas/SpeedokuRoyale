@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using TMPro;
-
+/// <summary>
+/// Display info about the registeration status while registering a user with a web request.
+/// </summary>
 public class RegisterInfo : MonoBehaviour {
     public static RegisterInfo Instance;
     bool registering;
@@ -35,6 +37,9 @@ public class RegisterInfo : MonoBehaviour {
     void OnDisable() {
         registering = false;
     }
+    /// <summary>
+    /// Update UI with the current registeration status while logging in.
+    /// </summary>
     void Update() {
         if (!registering) return;
 

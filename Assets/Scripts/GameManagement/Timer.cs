@@ -5,15 +5,33 @@ using UnityEngine;
 
 using TMPro;
 
+/// <summary>
+/// The game's timer functionality.
+/// </summary>
 public class Timer : MonoBehaviour {
     public static Timer Instance;
-    public long timeLimit = 100000L; // Set in game scene in editor
+    /// <summary>
+    /// How long a single game lasts
+    /// </summary>
+    public long timeLimit = 100000L; // Set in the game scene in the editor
+    /// <summary>
+    /// The timer's UI text element
+    /// </summary>
     public TextMeshProUGUI textTMP;
+    /// <summary>
+    /// Current game time
+    /// </summary>
     public long timeLong { get; private set; }
+    /// <summary>
+    /// How long a game has lasted
+    /// </summary>
     public long elapsedTime { get; private set; }
+    /// <summary>
+    /// Is the timer running
+    /// </summary>
     public bool isRunning { get; private set; }
     bool checkForDrops;
-    [SerializeField] long eliminationInterval = 2000L; // Set in game scene in editor
+    [SerializeField] long eliminationInterval = 2000L; // Set in the game scene in the editor
     public void StartTimer() {
         if (isRunning == false) {
             timeLong = timeLimit;
@@ -21,12 +39,18 @@ public class Timer : MonoBehaviour {
             isRunning = true;
         }
     }
+    /// <summary>
+    /// Start checking if players should be dropped when a multiplayer game session starts.
+    /// </summary>
     public void StartCheckingToDropPlayers() {
         checkForDrops = true;
     }
     public void StopTimer() {
         checkForDrops = false;
         isRunning = false;
+    }
+    public string GetElapsedTime() {
+        return GetStringTime(elapsedTime);
     }
     void Awake() {
         #region Singleton
@@ -61,12 +85,12 @@ public class Timer : MonoBehaviour {
             }
         }
     }
-
-    public string GetElapsedTime() {
-        return GetStringTime(elapsedTime);
-    }
-
-    private string GetStringTime(long time) {
+    /// <summary>
+    /// Convert the inserted gametime "<paramref name="time"/>" to a string format.
+    /// </summary>
+    /// <param name="time"></param>
+    /// <returns></returns>
+    string GetStringTime(long time) {
         long minutes = (time / 100L) / 60L,
             seconds = (time / 100L) - (60L * minutes),
             fractions = time % 100L;
@@ -89,6 +113,9 @@ public class Timer : MonoBehaviour {
 
         return tuloste;
     }
+    /// <summary>
+    /// Update the timer text in the UI.
+    /// </summary>
     void UpdateTimerText() {
         textTMP.text = GetStringTime(timeLong);
     }

@@ -21,7 +21,6 @@ public class ManageScenes : MonoBehaviour {
     public void ReloadCurrentScene() {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-
     public string GetSceneName() {
         return SceneManager.GetActiveScene().name;
     }

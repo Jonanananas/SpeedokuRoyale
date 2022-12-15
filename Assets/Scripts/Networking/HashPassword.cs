@@ -7,7 +7,6 @@ public static class HashPassword {
     const int saltSize = 16; // 128 bits
     const int hashSize = 20; // 160 bits
     const int iterations = 100000;
-
     public static byte[] Hash(string password) {
         byte[] salt;
         new RNGCryptoServiceProvider().GetBytes(salt = new byte[saltSize]);
@@ -26,7 +25,6 @@ public static class HashPassword {
 
         return hashBytes;
     }
-
     public static bool Verify(string password, string passwordHash) {
         // Extract the bytes
         byte[] hashBytes = Convert.FromBase64String(passwordHash);
