@@ -25,13 +25,11 @@ public class ChangePasswordButton : MonoBehaviour, IPointerUpHandler, ButtonInte
     }
     public void TryToPress() {
         if (!btn.interactable) return;
-        if (GameData.highscoreProfiles != null && GameData.highscoreProfiles.Count != 0) return;
         
         if (!passwordNewField.text.Equals(passwordNewFieldR.text)) {
             Trace.Log("Input passwords don't match.");
             return;
         }
-
         ServerPlayerProfiles.Instance.ChangePassword(passwordField.text, passwordNewField.text);
     }
 }
