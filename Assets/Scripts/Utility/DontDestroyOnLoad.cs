@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Attach this to a gameobject to make it non-destroybale on load.
+/// </summary>
 public class DontDestroyOnLoad : MonoBehaviour {
     public static DontDestroyOnLoad Instance;
     void Awake() {

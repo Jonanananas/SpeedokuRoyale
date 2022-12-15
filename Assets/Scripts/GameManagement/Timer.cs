@@ -5,6 +5,9 @@ using UnityEngine;
 
 using TMPro;
 
+/// <summary>
+/// The game's timer functionality.
+/// </summary>
 public class Timer : MonoBehaviour {
     public static Timer Instance;
     /// <summary>

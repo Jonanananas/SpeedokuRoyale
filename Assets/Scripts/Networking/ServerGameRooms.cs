@@ -7,6 +7,9 @@ using UnityEngine.Networking;
 
 using SimpleJSON;
 
+/// <summary>
+/// Contains methods to communicate with the server API concerning the game rooms.
+/// </summary>
 public class ServerGameRooms : MonoBehaviour {
     public static ServerGameRooms Instance;
     string baseServerURL = ServerSettings.baseURL;

@@ -9,6 +9,9 @@ using UnityEngine.Networking;
 
 using SimpleJSON;
 
+/// <summary>
+/// Contains methods to communicate with the server API concerning the players' profiles.
+/// </summary>
 public class ServerPlayerProfiles : MonoBehaviour {
     public static ServerPlayerProfiles Instance;
     string baseServerURL = ServerSettings.baseURL;

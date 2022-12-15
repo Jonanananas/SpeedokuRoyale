@@ -1,6 +1,9 @@
 ﻿using System.Diagnostics;
 
 using UnityEngine;
+/// <summary>
+/// Utility class for logging
+/// </summary>
 public static class Trace {
     [Range(0, 3)]
     public static int LoggingLevel = 3;

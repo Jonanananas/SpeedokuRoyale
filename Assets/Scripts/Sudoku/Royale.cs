@@ -7,11 +7,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Royale luokka on Sudokun perivä moninpelisovellutus.
+/// </summary>
 public class Royale : Sudoku {
-    //Royale luokka on Sudokun perivä moninpeli sovellutus
     private int oneGamePoints = 0;
-
-    // NewPuzzle() -metodilla nollataan ja asetetaan sudokuun uudet numerot
+    /// <summary>
+    /// NewPuzzle() -metodilla nollataan ja asetetaan sudokuun uudet numerot.
+    /// </summary>
     public void NewPuzzle() {
         currentSudokuNumber.Disable();
         currentSudokuNumber = null;
@@ -22,7 +25,9 @@ public class Royale : Sudoku {
         GenerateSudoku();
         SetNumbers();
     }
-    // Stop() -metodilla kytketään sudoku numerot "pois päältä" ManageGameSession -luokasta
+    /// <summary>
+    /// Stop() -metodilla kytketään sudoku numerot "pois päältä" ManageGameSession -luokasta.
+    /// </summary>
     public void Stop() {
         foreach (SudokuNumber number in numbers) {
             number.DisableOnly();
@@ -30,7 +35,9 @@ public class Royale : Sudoku {
         if (currentSudokuNumber != null) currentSudokuNumber.UnsetSelect();
         NumContPanel.SetActive(false);
     }
-    // AfterCorrectButtonValidate() -metodia kutsutaan ManageGameSession -luokasta validoinnin jälkeen
+    /// <summary>
+    /// AfterCorrectButtonValidate() -metodia kutsutaan ManageGameSession -luokasta validoinnin jälkeen.
+    /// </summary>
     public void AfterCorrectButtonValidate() {
         oneGamePoints += GetPoints();
         ManageGameSession.Instance.AddPoints((ulong)oneGamePoints);
@@ -41,7 +48,9 @@ public class Royale : Sudoku {
         K += 2;
         NewPuzzle();
     }
-    //SudokuEnd() -metodi kutsutaan pelin lopussa ManageGameSession -luokasta
+    /// <summary>
+    /// SudokuEnd() -metodi kutsutaan pelin lopussa ManageGameSession -luokasta.
+    /// </summary>
     public override void SudokuEnd() {
         // Aseta numerot
         oneGamePoints += GetPoints();

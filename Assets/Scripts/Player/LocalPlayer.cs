@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+/// <summary>
+/// Manage the local player's data
+/// </summary>
 public class LocalPlayer : MonoBehaviour {
     public static LocalPlayer Instance;
     public PlayerProfile profile { get; private set; }
@@ -24,16 +27,26 @@ public class LocalPlayer : MonoBehaviour {
     public void SetLocalPlayerProfile(PlayerProfile profile) {
         this.profile = profile;
     }
+    /// <summary>
+    /// Increase the player's number of victories by one.
+    /// </summary>
     public void IncrementVictories() {
         if (profile == null) { Trace.LogWarning("Not logged in!"); return; }
         profile.victories++;
     }
+    /// <summary>
+    /// Update the local value of the player's highscore.
+    /// </summary>
     public void UpdateLocalHighScore() {
         if (profile == null) { Trace.LogWarning("Not logged in!"); return; }
         if (score > profile.bestScore) {
             profile.bestScore = score;
         }
     }
+    /// <summary>
+    /// Give the player more points equal to the value of <paramref name="pointsToAdd"/>
+    /// </summary>
+    /// <param name="pointsToAdd"></param>
     public void AddPoints(ulong pointsToAdd) {
         score += pointsToAdd;
         if (GameStates.isOnlineMode) {
@@ -52,6 +65,9 @@ public class LocalPlayer : MonoBehaviour {
         //     ServerGameRooms.Instance.UpdateCurrentScore(profile.username, score);
         // }
     }
+    /// <summary>
+    /// Log the player out locally.
+    /// </summary>
     public void LogOut() {
         profile = null;
         GameStates.SetLoggedStatus(false);

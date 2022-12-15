@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+/// <summary>
+/// Adds the functionality to move from one input field to another using tab.
+/// </summary>
 public class TabInput : MonoBehaviour {
     public TMP_InputField[] fields;
     public int selected;

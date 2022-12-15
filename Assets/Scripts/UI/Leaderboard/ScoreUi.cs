@@ -8,6 +8,9 @@ public class ScoreUi : MonoBehaviour {
     public RowUi rowUi;
     List<GameObject> rows = new List<GameObject>();
 
+    /// <summary>
+    /// Update the scores in the leaderboard UI
+    /// </summary>
     void OnEnable() {
         print("Test");
 

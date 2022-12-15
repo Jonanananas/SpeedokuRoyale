@@ -5,6 +5,9 @@ using UnityEngine;
 
 using TMPro;
 
+/// <summary>
+/// Display info about the login status while logging in with a web request.
+/// </summary>
 public class LoginInfo : MonoBehaviour {
     public static LoginInfo Instance;
     void Awake() {
@@ -35,11 +38,14 @@ public class LoginInfo : MonoBehaviour {
     void OnDisable() {
         logginIn = false;
     }
+    /// <summary>
+    /// Update UI with the current login status while logging in.
+    /// </summary>
     void Update() {
         if (!logginIn) return;
 
         SetInfoText(GameStates.loginStatus);
-        
+
         if (GameStates.loginStatus.Equals("Log in successful!")) {
             ToggleMainMenuButton(true);
             SetInfoText(GameStates.loginStatus);

@@ -2,6 +2,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+/// <summary>
+/// A class used to help with testing the game.
+/// </summary>
 [RequireComponent(typeof(Button))]
 public class GivePoints : MonoBehaviour, IPointerUpHandler {
     Button btn;
